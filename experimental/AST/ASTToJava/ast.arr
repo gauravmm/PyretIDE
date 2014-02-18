@@ -1,11 +1,32 @@
 #lang pyret
-# from src/lang/racket-ffi/ast.arr
+# from src/lang/racket-ffi/ast.arr, with error.Location imported directly from moorings.arr
 
 provide *
 import pprint as PP
 
-Loc = error.Location
+
 loc = error.location
+
+#Loc = error.Location
+#Instead of the above line, this:
+data Loc:
+  | location(file :: String, line, column) with:
+    _equals(self, other):
+      is-location(other) and
+      (self.file == other.file) and
+      (self.line == other.line) and
+      (self.column == other.column)
+    end,
+    format(self):
+      self.file +
+      ": line " +
+      self.line.tostring() +
+      ", column " +
+      self.column.tostring()
+    end,
+    tostring(self): self.format() end
+end
+
 
 INDENT = 2
 
