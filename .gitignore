@@ -7,3 +7,7 @@
 
 # Python temp:
 *.pyc
+/experimental/Rope/Rope/nbproject/private/
+/experimental/Rope/Cutlass/nbproject/private/
+/production/Cutlass/nbproject/private/
+/production/Cutlass/build/
