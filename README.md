@@ -1,21 +1,43 @@
-PyretIDE
+Cutlass
 ========
 
-CS0320 Term Project
+CS0320 Term Project, Brown University, Fall 2014
 
-Files:
-
-
-To do list:
-
-Contact people to do interviews.
-Interview students and teachers. (will require well thought out questions, especially before teachers)
-Tentative UI  (can just be on paper)(prefferably before most interviews to show them?)
-Analyze the survey data that we already have.
+Dilip Arumugam, Gaurav Manek, Miles Holland, Zachary Zagorski
 
 
+Launching
+---------
 
-Other thoughts:
-Make Wednesday at three a weekly thing?
+Usage: ./Cutlass [OPTIONS] [FILES]
 
+
+OPTIONS
+
+  -h --help      Display this help and exit.
+  
+  -n --silent    Silent mode, do not output anything on the commandline.
+  
+  -v --verbose   Verbose mode, output all logged information.
+  
+  -w --warnings  Verbose mode, output all logged warnings and errors.
+  
+  -e --error     Verbose mode, output all errors.
+  
+  -f --fresh     Discard saved state and start a brand new session.
+  
+
+FILES
+
+   Paths of files to load on startup.
+   
+
+Exit status:
+
+  0	if OK,
+  
+  1	if the command-line options cannot be parsed,
+  
+  2	if the configuration file data cannot be loaded.
+  
 
