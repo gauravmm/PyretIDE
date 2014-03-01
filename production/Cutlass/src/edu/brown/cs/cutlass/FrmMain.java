@@ -1,6 +1,15 @@
 package edu.brown.cs.cutlass;
 
-import javax.swing.UIManager;
+import edu.brown.cs.cutlass.util.ConfigEngine;
+import edu.brown.cs.cutlass.util.Option;
+import edu.brown.cs.cutlass.util.Pair;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.util.Arrays;
+import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -11,13 +20,68 @@ import javax.swing.UIManager;
  *
  * @author Gaurav Manek
  */
-public class FrmMain extends javax.swing.JFrame {
+class FrmMain extends javax.swing.JFrame {
+
+    private final Launcher launcher;
+    private final ConfigEngine config;
 
     /**
-     * Creates new form NewJFrame
+     * Creates new main form.
+     *
+     * @param launcher
+     * @param configEngine The configuration information is stored here.
+     * @param optLaunchState The state to restore the program to, if one is
+     * available, is stored here.
      */
-    public FrmMain() {
+    FrmMain(Launcher launcher, ConfigEngine configEngine, Option<LaunchState> optLaunchState) {
         initComponents();
+
+        this.launcher = launcher;
+        this.config = configEngine;
+
+        //<editor-fold defaultstate="collapsed" desc="Load Toolbar Icons">
+        // Load this dimension from configEngine:
+        Dimension toolbarIconSize = new Dimension(60, 40);
+        List<Pair<JLabel, String>> labelIcons = Arrays.asList(new Pair<>(tbSave, "document-save-5.png"), new Pair<>(tbRun, "arrow-right-3.png"), new Pair<>(tbAutoIndent, "format-indent-more-3.png"), new Pair<>(tbBookmarkStop, "dialog-cancel-5.png"), new Pair<>(tbRedo, "edit-redo-3.png"), new Pair<>(tbUndo, "edit-undo-3.png"), new Pair<>(tbBookmarkBack, "arrow-up-double.png"), new Pair<>(tbBookmarkSet, "bookmark-2.png"), new Pair<>(tbBookmarkNext, "arrow-down-double.png"));
+        for (Pair<JLabel, String> p : labelIcons) {
+            JLabel lbl = p.getX();
+            lbl.setText("");
+            lbl.setMinimumSize(toolbarIconSize);
+            lbl.setPreferredSize(toolbarIconSize);
+            lbl.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            
+            ImageIcon tmpImg = new ImageIcon(getClass().getResource("/edu/brown/cs/cutlass/assets/icons/" + p.getY()));
+            
+            // Calculate the dimensions
+            Dimension thisIconSize = null;//new Dimension(tmpImg.getIconWidth(), tmpImg.getIconHeight());
+            // If the icon is larger than the space for it in at least one dimension, resize it:
+            if (tmpImg.getIconHeight() > toolbarIconSize.height || tmpImg.getIconWidth() > toolbarIconSize.width) {
+                float aspectRatio = tmpImg.getIconHeight() * 1.0f / tmpImg.getIconWidth(); // Height/Width
+                int tmpHeight = Math.round(aspectRatio * toolbarIconSize.width);
+                // If the width is not the limiting dimension:
+                if (tmpHeight > toolbarIconSize.height) {
+                    thisIconSize = new Dimension(Math.round(toolbarIconSize.height / aspectRatio), toolbarIconSize.height);
+                } else {
+                    thisIconSize = new Dimension(toolbarIconSize.width, tmpHeight);
+                }
+            }
+            
+            // If we don't need to resize the icon:
+            if (thisIconSize == null) {
+                lbl.setIcon(tmpImg);
+            } else {
+                lbl.setIcon(new ImageIcon(tmpImg.getImage().getScaledInstance(thisIconSize.width, thisIconSize.height, java.awt.Image.SCALE_SMOOTH)));
+            }
+        }
+//</editor-fold>
+        
+        if(optLaunchState.hasData()){
+            LaunchState launchState = optLaunchState.getData();
+            // Load data from the launchState
+        } else {
+            // Load default
+            tabEditors.addTab("Default", new PnlDefaultEditor());
+        }
     }
 
     /**
@@ -29,55 +93,42 @@ public class FrmMain extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jSplitPane1 = new javax.swing.JSplitPane();
+        spltPrimary = new javax.swing.JSplitPane();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel3 = new javax.swing.JPanel();
-        jSplitPane2 = new javax.swing.JSplitPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea3 = new javax.swing.JTextArea();
+        tabEditors = new javax.swing.JTabbedPane();
         jToolBar1 = new javax.swing.JToolBar();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
+        tbSave = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JToolBar.Separator();
-        jLabel15 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
+        tbRun = new javax.swing.JLabel();
+        tbBookmarkStop = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JToolBar.Separator();
-        jLabel19 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
+        tbUndo = new javax.swing.JLabel();
+        tbRedo = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JToolBar.Separator();
-        jLabel17 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel21 = new javax.swing.JLabel();
+        tbAutoIndent = new javax.swing.JLabel();
         jSeparator4 = new javax.swing.JToolBar.Separator();
-        jLabel20 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
+        tbBookmarkBack = new javax.swing.JLabel();
+        tbBookmarkSet = new javax.swing.JLabel();
+        tbBookmarkNext = new javax.swing.JLabel();
         jSeparator5 = new javax.swing.JToolBar.Separator();
-        jLabel23 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
+        mnuFile = new javax.swing.JMenu();
+        mnuEdit = new javax.swing.JMenu();
+        mnuHelp = new javax.swing.JMenu();
+        mnuHelpAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cutlass - Your Weapon of Choice");
+        setMinimumSize(new java.awt.Dimension(400, 120));
+        setPreferredSize(new java.awt.Dimension(500, 700));
 
-        jSplitPane1.setDividerLocation(500);
-        jSplitPane1.setResizeWeight(1.0);
+        spltPrimary.setDividerLocation(300);
+        spltPrimary.setResizeWeight(1.0);
 
+        jPanel2.setMinimumSize(new java.awt.Dimension(250, 100));
         jPanel2.setPreferredSize(new java.awt.Dimension(150, 665));
 
         jList1.setFont(new java.awt.Font("Monospaced", 0, 13)); // NOI18N
@@ -98,7 +149,7 @@ public class FrmMain extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -111,210 +162,191 @@ public class FrmMain extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jSplitPane1.setRightComponent(jPanel2);
+        spltPrimary.setRightComponent(jPanel2);
 
-        jSplitPane2.setDividerLocation(500);
-        jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane2.setResizeWeight(1.0);
+        tabEditors.setMinimumSize(new java.awt.Dimension(450, 100));
+        spltPrimary.setLeftComponent(tabEditors);
 
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setText("\ndata BinaryTree:\n  | mt\n  | node(value :: Number, left :: BinaryTree, right :: BinaryTree)\nend\n\nfun tree-to-list(tree :: BinaryTree) -> List:\n  doc: \"tree-to-list converts a binary tree into a list, preserving the order of the stored values.\"\n  cases(BinaryTree) tree:\n    | mt => []\n    | node(v, l, r) => tree-to-list(l) + [v] + tree-to-list(r)\n  end\nwhere:\n  tree-to-list(mt) is []\n  tree-to-list(node(4, node(2, mt, mt), node(6, mt, mt))) is [2, 4, 6]\nend\n\nfun is-sorted(lst :: List) -> Bool:\n  doc: \"is-sorted returns true if the list is sorted in ascending order.\"\n   cases(List) lst:\n    | empty => true\n    | link(f, r) => \n      min-rest = for fold(min from f+1, elt from r):\n          if (elt < min):\n            elt\n          else:\n            min\n          end\n      end\n      ((f < min-rest) and is-sorted(r))\n  end\nwhere:\n  is-sorted([]) is true\n  is-sorted([1]) is true\n  is-sorted([1, 2, 3]) is true\n  is-sorted([1, 3, 2]) is false\nend\nfun is-bst(tree :: BinaryTree) -> Bool:\n  doc: \"is-bst returns true if tree is a Binary Search Tree and false otherwise.\"\n  is-sorted(tree-to-list(tree))\nwhere:\n  is-bst(mt) is true\n  is-bst(node(4, node(2, mt, mt), node(6, mt, mt))) is true\n  is-bst(node(1, node(2, mt, mt), node(6, mt, mt))) is false\n  is-bst(node(4, node(5, mt, mt), node(6, mt, mt))) is false\nend\n\n");
-        jScrollPane1.setViewportView(jTextArea1);
-
-        jSplitPane2.setLeftComponent(jScrollPane1);
-
-        jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-        jTextArea3.setColumns(20);
-        jTextArea3.setRows(5);
-        jTextArea3.setText("\n\n\n\n> raco pyret test.arr\nAll 10 tests passed, mate!\n> _");
-        jScrollPane4.setViewportView(jTextArea3);
-
-        jSplitPane2.setRightComponent(jScrollPane4);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 635, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("tab2", jPanel3);
-
-        jSplitPane1.setLeftComponent(jTabbedPane1);
-
-        getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
+        getContentPane().add(spltPrimary, java.awt.BorderLayout.CENTER);
 
         jToolBar1.setRollover(true);
+        jToolBar1.setPreferredSize(new java.awt.Dimension(383, 42));
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javaapplication2/assets/document-new-6.gif"))); // NOI18N
-        jToolBar1.add(jLabel3);
-
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javaapplication2/assets/document-save-5.gif"))); // NOI18N
-        jToolBar1.add(jLabel4);
-
-        jLabel8.setText("   ");
-        jToolBar1.add(jLabel8);
+        tbSave.setText("[Icon]");
+        tbSave.setName(""); // NOI18N
+        tbSave.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbSaveMouseClicked(evt);
+            }
+        });
+        jToolBar1.add(tbSave);
         jToolBar1.add(jSeparator1);
 
-        jLabel15.setText("   ");
-        jToolBar1.add(jLabel15);
+        tbRun.setText("[Icon]");
+        tbRun.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbRunMouseClicked(evt);
+            }
+        });
+        jToolBar1.add(tbRun);
 
-        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javaapplication2/assets/run-rebuild.gif"))); // NOI18N
-        jToolBar1.add(jLabel10);
-
-        jLabel18.setText("   ");
-        jToolBar1.add(jLabel18);
+        tbBookmarkStop.setText("[Icon]");
+        tbBookmarkStop.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbBookmarkStopMouseClicked(evt);
+            }
+        });
+        jToolBar1.add(tbBookmarkStop);
         jToolBar1.add(jSeparator3);
 
-        jLabel19.setText("   ");
-        jToolBar1.add(jLabel19);
+        tbUndo.setText("[Icon]");
+        tbUndo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbUndoMouseClicked(evt);
+            }
+        });
+        jToolBar1.add(tbUndo);
 
-        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javaapplication2/assets/edit-undo-3.gif"))); // NOI18N
-        jToolBar1.add(jLabel14);
-
-        jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javaapplication2/assets/edit-redo-3.gif"))); // NOI18N
-        jToolBar1.add(jLabel13);
-
-        jLabel16.setText("   ");
-        jToolBar1.add(jLabel16);
+        tbRedo.setText("[Icon]");
+        tbRedo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbRedoMouseClicked(evt);
+            }
+        });
+        jToolBar1.add(tbRedo);
         jToolBar1.add(jSeparator2);
 
-        jLabel17.setText("   ");
-        jToolBar1.add(jLabel17);
-
-        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javaapplication2/assets/format-indent-more-3.gif"))); // NOI18N
-        jToolBar1.add(jLabel11);
-
-        jLabel21.setText("   ");
-        jToolBar1.add(jLabel21);
+        tbAutoIndent.setText("[Icon]");
+        tbAutoIndent.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbAutoIndentMouseClicked(evt);
+            }
+        });
+        jToolBar1.add(tbAutoIndent);
         jToolBar1.add(jSeparator4);
 
-        jLabel20.setText("   ");
-        jToolBar1.add(jLabel20);
+        tbBookmarkBack.setText("[Icon]");
+        tbBookmarkBack.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbBookmarkBackMouseClicked(evt);
+            }
+        });
+        jToolBar1.add(tbBookmarkBack);
 
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javaapplication2/assets/arrow-up-double.gif"))); // NOI18N
-        jToolBar1.add(jLabel6);
+        tbBookmarkSet.setText("[Icon]");
+        tbBookmarkSet.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbBookmarkSetMouseClicked(evt);
+            }
+        });
+        jToolBar1.add(tbBookmarkSet);
 
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javaapplication2/assets/bookmark-2.gif"))); // NOI18N
-        jToolBar1.add(jLabel7);
-
-        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javaapplication2/assets/arrow-down-double.gif"))); // NOI18N
-        jToolBar1.add(jLabel9);
-
-        jLabel22.setText("   ");
-        jToolBar1.add(jLabel22);
+        tbBookmarkNext.setText("[Icon]");
+        tbBookmarkNext.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbBookmarkNextMouseClicked(evt);
+            }
+        });
+        jToolBar1.add(tbBookmarkNext);
         jToolBar1.add(jSeparator5);
-
-        jLabel23.setText("   ");
-        jToolBar1.add(jLabel23);
-
-        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/javaapplication2/assets/application-exit-3.gif"))); // NOI18N
-        jToolBar1.add(jLabel12);
 
         getContentPane().add(jToolBar1, java.awt.BorderLayout.NORTH);
 
-        jMenu1.setText("File");
-        jMenuBar1.add(jMenu1);
+        mnuFile.setText("File");
+        jMenuBar1.add(mnuFile);
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
+        mnuEdit.setText("Edit");
+        jMenuBar1.add(mnuEdit);
 
-        jMenu3.setText("About");
-        jMenuBar1.add(jMenu3);
+        mnuHelp.setText("Help");
+
+        mnuHelpAbout.setText("About");
+        mnuHelpAbout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuHelpAboutActionPerformed(evt);
+            }
+        });
+        mnuHelp.add(mnuHelpAbout);
+
+        jMenuBar1.add(mnuHelp);
 
         setJMenuBar(jMenuBar1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            /*
-             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-             if ("Nimbus".equals(info.getName())) {
-             javax.swing.UIManager.setLookAndFeel(info.getClassName());
-             break;
-             }
-             }*/
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void tbSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbSaveMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbSaveMouseClicked
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrmMain().setVisible(true);
-            }
-        });
-    }
+    private void tbRunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbRunMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbRunMouseClicked
+
+    private void tbBookmarkStopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbBookmarkStopMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbBookmarkStopMouseClicked
+
+    private void tbUndoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbUndoMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbUndoMouseClicked
+
+    private void tbRedoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbRedoMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbRedoMouseClicked
+
+    private void tbAutoIndentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbAutoIndentMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbAutoIndentMouseClicked
+
+    private void tbBookmarkBackMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbBookmarkBackMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbBookmarkBackMouseClicked
+
+    private void tbBookmarkSetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbBookmarkSetMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbBookmarkSetMouseClicked
+
+    private void tbBookmarkNextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbBookmarkNextMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbBookmarkNextMouseClicked
+    
+    private void mnuHelpAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpAboutActionPerformed
+        JOptionPane.showMessageDialog(this,
+                "Cutlass - Pyret IDE\n" +
+                "For CSCI 0320 Spring 2014, Term Project\n" +
+                "By: Dilip Arumugam, Gaurav Manek,\n" +
+                "      Miles Holland, Zachary Zagorski",
+                "About", JOptionPane.INFORMATION_MESSAGE);
+
+    }//GEN-LAST:event_mnuHelpAboutActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JList jList1;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar.Separator jSeparator5;
-    private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JSplitPane jSplitPane2;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea3;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JMenu mnuEdit;
+    private javax.swing.JMenu mnuFile;
+    private javax.swing.JMenu mnuHelp;
+    private javax.swing.JMenuItem mnuHelpAbout;
+    private javax.swing.JSplitPane spltPrimary;
+    private javax.swing.JTabbedPane tabEditors;
+    private javax.swing.JLabel tbAutoIndent;
+    private javax.swing.JLabel tbBookmarkBack;
+    private javax.swing.JLabel tbBookmarkNext;
+    private javax.swing.JLabel tbBookmarkSet;
+    private javax.swing.JLabel tbBookmarkStop;
+    private javax.swing.JLabel tbRedo;
+    private javax.swing.JLabel tbRun;
+    private javax.swing.JLabel tbSave;
+    private javax.swing.JLabel tbUndo;
     // End of variables declaration//GEN-END:variables
 }

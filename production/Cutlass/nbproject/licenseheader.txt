@@ -1,0 +1,8 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}Cutlass - Pyret IDE
+${licensePrefix}For CSCI 0320 Spring 2014, Term Project
+<#if licenseLast??>
+${licenseLast}
+</#if>

@@ -28,7 +28,7 @@ public class Lumberjack {
 
     private static Level level = Level.ERROR;
     private static boolean keepLog = false;
-    private static boolean displayLog = true;
+    private static boolean displayLog = false;
     private static LinkedList<String> log;
     private static int sz;
     private static int maxSize = 10;
