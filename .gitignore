@@ -5,10 +5,14 @@
 *.war
 *.ear
 
-# Python temp:
+# Eclipse Default #
+.classpath
+.project
+
+# Python Temp #
 *.pyc
-/experimental/Rope/Rope/nbproject/private/
-/experimental/Rope/Cutlass/nbproject/private/
+
+# Netbeans Auto #
 /production/Cutlass/nbproject/private/
 /production/Cutlass/build/
 /production/Cutlass/dist/
