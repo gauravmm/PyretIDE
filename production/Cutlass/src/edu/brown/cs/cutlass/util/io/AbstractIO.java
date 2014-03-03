@@ -58,5 +58,26 @@ public interface AbstractIO {
      * locate the resource or if the resource cannot be written to.
      */
     public void setUserFile(String identifier, String contents) throws AbstractIOException;
+    
+    /**
+     * Ask the user to pick a file to save. This is a file that contains source
+     * code.
+     *
+     * @return A String that is a unique identifier for a resource.
+     * @throws AbstractIOException If the underlying implementation cannot
+     * locate the resource or if the resource cannot be written to.
+     */
+    public String requestUserFileDestination() throws AbstractIOException;
+    
+    /**
+     * Ask the user to pick a file to load. This is a file that contains source
+     * code.
+     *
+     * @return A String that is a unique identifier for a resource.
+     * @throws AbstractIOException If the underlying implementation cannot
+     * locate the resource or if the resource cannot be written to.
+     */
+    public String requestUserFileSource() throws AbstractIOException;
+    
 
 }
