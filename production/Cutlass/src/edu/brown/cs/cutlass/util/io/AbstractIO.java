@@ -4,6 +4,8 @@
  */
 package edu.brown.cs.cutlass.util.io;
 
+import java.util.List;
+
 /**
  * This interface is used to provide centralized access to I/O from any source
  * (i.e. disk, though Java Web Start's Sandbox IO and/or some other I/O). In
@@ -11,9 +13,13 @@ package edu.brown.cs.cutlass.util.io;
  * implementations are free to load them from any source, such as a hard drive
  * or a remote server or even a stack of punched cards.
  *
+ * For the sake of simplicity, these are all blocking IO calls.
+ * 
+ * T is the underlying representation of the AbstractIdentifier used.
+ * 
  * @author Gaurav Manek
  */
-public interface AbstractIO {
+public interface AbstractIO<T extends AbstractIdentifier> {
 
     /**
      * Request a configuration file. This is a file that is used to store
@@ -24,7 +30,7 @@ public interface AbstractIO {
      * @throws AbstractIOException If the underlying implementation cannot
      * locate the resource or if the resource cannot be read.
      */
-    public String getConfigurationFile(String identifier) throws AbstractIOException;
+    public List<String> getConfigurationFile(String identifier) throws AbstractIOException;
 
     /**
      * Store a configuration file. This is a file that is used to store metadata
@@ -36,7 +42,7 @@ public interface AbstractIO {
      * @throws AbstractIOException If the underlying implementation cannot
      * locate the resource or if the resource cannot be written to.
      */
-    public void setConfigurationFile(String identifier, String contents) throws AbstractIOException;
+    public void setConfigurationFile(String identifier, Iterable<? extends CharSequence> contents) throws AbstractIOException;
 
     /**
      * Request a user file. This is a file that contains source code.
@@ -46,7 +52,7 @@ public interface AbstractIO {
      * @throws AbstractIOException If the underlying implementation cannot
      * locate the resource or if the resource cannot be read.
      */
-    public String getUserFile(String identifier) throws AbstractIOException;
+    public List<String> getUserFile(T identifier) throws AbstractIOException;
 
     /**
      * Store a user file. This is a file that contains source code.
@@ -57,7 +63,7 @@ public interface AbstractIO {
      * @throws AbstractIOException If the underlying implementation cannot
      * locate the resource or if the resource cannot be written to.
      */
-    public void setUserFile(String identifier, String contents) throws AbstractIOException;
+    public void setUserFile(T identifier, Iterable<? extends CharSequence> contents) throws AbstractIOException;
     
     /**
      * Ask the user to pick a file to save. This is a file that contains source
@@ -67,7 +73,7 @@ public interface AbstractIO {
      * @throws AbstractIOException If the underlying implementation cannot
      * locate the resource or if the resource cannot be written to.
      */
-    public String requestUserFileDestination() throws AbstractIOException;
+    public T requestUserFileDestination() throws AbstractIOException;
     
     /**
      * Ask the user to pick a file to load. This is a file that contains source
@@ -77,7 +83,7 @@ public interface AbstractIO {
      * @throws AbstractIOException If the underlying implementation cannot
      * locate the resource or if the resource cannot be written to.
      */
-    public String requestUserFileSource() throws AbstractIOException;
+    public T requestUserFileSource() throws AbstractIOException;
     
 
 }
