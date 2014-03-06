@@ -4,6 +4,7 @@
  */
 package edu.brown.cs.cutlass.util.io;
 
+import edu.brown.cs.cutlass.util.Option;
 import java.util.List;
 
 /**
@@ -14,9 +15,9 @@ import java.util.List;
  * or a remote server or even a stack of punched cards.
  *
  * For the sake of simplicity, these are all blocking IO calls.
- * 
+ *
  * T is the underlying representation of the AbstractIdentifier used.
- * 
+ *
  * @author Gaurav Manek
  */
 public interface AbstractIO<T extends AbstractIdentifier> {
@@ -64,7 +65,7 @@ public interface AbstractIO<T extends AbstractIdentifier> {
      * locate the resource or if the resource cannot be written to.
      */
     public void setUserFile(T identifier, Iterable<? extends CharSequence> contents) throws AbstractIOException;
-    
+
     /**
      * Ask the user to pick a file to save. This is a file that contains source
      * code.
@@ -73,17 +74,17 @@ public interface AbstractIO<T extends AbstractIdentifier> {
      * @throws AbstractIOException If the underlying implementation cannot
      * locate the resource or if the resource cannot be written to.
      */
-    public T requestUserFileDestination() throws AbstractIOException;
-    
+    public Option<T> requestUserFileDestination() throws AbstractIOException;
+
     /**
      * Ask the user to pick a file to load. This is a file that contains source
      * code.
      *
-     * @return A String that is a unique identifier for a resource.
+     * @return An Option containing an AbstractIdentifier that is a unique
+     * identifier for a resource, or empty if the user chooses to cancel.
      * @throws AbstractIOException If the underlying implementation cannot
      * locate the resource or if the resource cannot be written to.
      */
-    public T requestUserFileSource() throws AbstractIOException;
-    
+    public Option<T> requestUserFileSource() throws AbstractIOException;
 
 }

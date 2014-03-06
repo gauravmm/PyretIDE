@@ -20,4 +20,8 @@ public class AbstractIOException extends RuntimeException {
     public AbstractIOException(String message) {
         super(message);
     }
+
+    public AbstractIOException(Throwable cause) {
+        super(cause);
+    }
 }
