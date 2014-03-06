@@ -3,19 +3,23 @@
  * For CSCI 0320 Spring 2014, Term Project
  */
 
-package edu.brown.cs.cutlass;
+package edu.brown.cs.cutlass.editor;
 
 /**
  *
  * @author Gaurav Manek
  */
-public class PnlEditor extends javax.swing.JPanel {
-
+public class PnlEditor extends javax.swing.JPanel implements Editor {
+    
+    private final EditorClient client;
+    
     /**
      * Creates new form EditorPanel
      */
-    public PnlEditor() {
+    public PnlEditor(EditorClient client) {
         initComponents();
+        
+        this.client = client;
     }
 
     /**
@@ -76,4 +80,54 @@ public class PnlEditor extends javax.swing.JPanel {
     private javax.swing.JScrollPane scrlCMD;
     private javax.swing.JScrollPane scrlEditor;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void run() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void halt() throws IllegalStateException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void clipboardCut() throws IllegalStateException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void clipboardCopy() throws IllegalStateException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void clipboardPaste() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getBuffer() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean hasSelection() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getSelection() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void close() throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void handleJumpTo(long offset) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
