@@ -11,6 +11,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 
+import javax.swing.JFileChooser;
+
 /**
  *
  * @author YOUR NAME HERE
@@ -47,18 +49,33 @@ public class DiskIO implements AbstractIO<DiskIdentifier> {
             throw new AbstractIOException(ex.getMessage());
         }
     }
-
+    
+    
+    /**requestUserFileDestination - Saves a file and returns a DI about it.
+     * 
+     * specs:????
+     */
     @Override
     public DiskIdentifier requestUserFileDestination() throws AbstractIOException {
         // You need to return a DiskIdentifier object. Given a java.nio.Path p, use "new DiskIdentifier(p)" to convert it
         // into a DiskIdentifier.
         // See: http://docs.oracle.com/javase/tutorial/uiswing/components/filechooser.html#show
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        JFileChooser chooser = new JFileChooser();
+        int something = chooser.showSaveDialog(null);
+        return new DiskIdentifier(chooser.getSelectedFile().getCanonicalPath());
     }
-
+    
+    /**requestUserFileSource - Selects a file and returns a DI about it
+     * 
+     * specs:????
+     */
     @Override
     public DiskIdentifier requestUserFileSource() throws AbstractIOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        JFileChooser chooser = new JFileChooser();
+        int something = chooser.showOpenDialog(null);
+        return new DiskIdentifier(chooser.getSelectedFile().getCanonicalPath());
     }
     
 }
