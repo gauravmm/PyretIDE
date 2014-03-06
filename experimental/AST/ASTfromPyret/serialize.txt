@@ -1,0 +1,567 @@
+AST Serialize Code
+Generated 2014-03-06 01:05:19.790000 on Gaurav Manek
+
+
+	# For Loc.location (file :: String, line :: Any, column :: Any):
+	serialize(self):
+		"{ \"_type\" : \"location\""
+		.append(", \"file\" : ").append(file.tostring())
+		.append(", \"line\" : ").append(line.serialize())
+		.append(", \"column\" : ").append(column.serialize()).append("}")
+	end
+
+	# For Program.s_program (l :: Loc, imports :: List<Header>, block :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_program\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"imports\" : ").append(pyret_list_serializer(imports, fun(x): x.serialize();))
+		.append(", \"block\" : ").append(block.serialize()).append("}")
+	end
+
+	# For Header.s_import (l :: Loc, file :: ImportType, name :: String):
+	serialize(self):
+		"{ \"_type\" : \"s_import\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"file\" : ").append(file.serialize())
+		.append(", \"name\" : ").append(name.tostring()).append("}")
+	end
+
+	# For Header.s_provide (l :: Loc, block :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_provide\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"block\" : ").append(block.serialize()).append("}")
+	end
+
+	# For Header.s_provide_all (l :: Loc):
+	serialize(self):
+		"{ \"_type\" : \"s_provide_all\""
+		.append(", \"l\" : ").append(l.serialize()).append("}")
+	end
+
+	# For ImportType.s_file_import (file :: String):
+	serialize(self):
+		"{ \"_type\" : \"s_file_import\""
+		.append(", \"file\" : ").append(file.tostring()).append("}")
+	end
+
+	# For ImportType.s_const_import (module :: String):
+	serialize(self):
+		"{ \"_type\" : \"s_const_import\""
+		.append(", \"module\" : ").append(module.tostring()).append("}")
+	end
+
+	# For Hint.h_use_loc (l :: Loc):
+	serialize(self):
+		"{ \"_type\" : \"h_use_loc\""
+		.append(", \"l\" : ").append(l.serialize()).append("}")
+	end
+
+	# For Expr.s_hint_exp (l :: Loc, hints :: List<Hint>, e :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_hint_exp\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"hints\" : ").append(pyret_list_serializer(hints, fun(x): x.serialize();))
+		.append(", \"e\" : ").append(e.serialize()).append("}")
+	end
+
+	# For Expr.s_block (l :: Loc, stmts :: List<Expr>):
+	serialize(self):
+		"{ \"_type\" : \"s_block\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"stmts\" : ").append(pyret_list_serializer(stmts, fun(x): x.serialize();)).append("}")
+	end
+
+	# For Expr.s_user_block (l :: Loc, body :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_user_block\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"body\" : ").append(body.serialize()).append("}")
+	end
+
+	# For Expr.s_fun (l :: Loc, name :: String, params :: List<String>, args :: List<Bind>, ann :: Ann, doc :: String, body :: Expr, check :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_fun\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"name\" : ").append(name.tostring())
+		.append(", \"params\" : ").append(pyret_list_serializer(params, fun(x): x.tostring();))
+		.append(", \"args\" : ").append(pyret_list_serializer(args, fun(x): x.serialize();))
+		.append(", \"ann\" : ").append(ann.serialize())
+		.append(", \"doc\" : ").append(doc.tostring())
+		.append(", \"body\" : ").append(body.serialize())
+		.append(", \"check\" : ").append(check.serialize()).append("}")
+	end
+
+	# For Expr.s_var (l :: Loc, name :: Bind, value :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_var\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"name\" : ").append(name.serialize())
+		.append(", \"value\" : ").append(value.serialize()).append("}")
+	end
+
+	# For Expr.s_let (l :: Loc, name :: Bind, value :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_let\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"name\" : ").append(name.serialize())
+		.append(", \"value\" : ").append(value.serialize()).append("}")
+	end
+
+	# For Expr.s_graph (l :: Loc, bindings :: List<is-s_let>):
+	serialize(self):
+		"{ \"_type\" : \"s_graph\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"bindings\" : ").append(pyret_list_serializer(bindings, fun(x): x.serialize();)).append("}")
+	end
+
+	# For Expr.s_when (l :: Loc, test :: Expr, block :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_when\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"test\" : ").append(test.serialize())
+		.append(", \"block\" : ").append(block.serialize()).append("}")
+	end
+
+	# For Expr.s_assign (l :: Loc, id :: String, value :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_assign\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"id\" : ").append(id.tostring())
+		.append(", \"value\" : ").append(value.serialize()).append("}")
+	end
+
+	# For Expr.s_if (l :: Loc, branches :: List<IfBranch>):
+	serialize(self):
+		"{ \"_type\" : \"s_if\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"branches\" : ").append(pyret_list_serializer(branches, fun(x): x.serialize();)).append("}")
+	end
+
+	# For Expr.s_if_else (l :: Loc, branches :: List<IfBranch>, _else :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_if_else\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"branches\" : ").append(pyret_list_serializer(branches, fun(x): x.serialize();))
+		.append(", \"_else\" : ").append(_else.serialize()).append("}")
+	end
+
+	# For Expr.s_cases (l :: Loc, type :: Ann, val :: Expr, branches :: List<CasesBranch>):
+	serialize(self):
+		"{ \"_type\" : \"s_cases\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"type\" : ").append(type.serialize())
+		.append(", \"val\" : ").append(val.serialize())
+		.append(", \"branches\" : ").append(pyret_list_serializer(branches, fun(x): x.serialize();)).append("}")
+	end
+
+	# For Expr.s_cases_else (l :: Loc, type :: Ann, val :: Expr, branches :: List<CasesBranch>, _else :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_cases_else\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"type\" : ").append(type.serialize())
+		.append(", \"val\" : ").append(val.serialize())
+		.append(", \"branches\" : ").append(pyret_list_serializer(branches, fun(x): x.serialize();))
+		.append(", \"_else\" : ").append(_else.serialize()).append("}")
+	end
+
+	# For Expr.s_try (l :: Loc, body :: Expr, id :: Bind, _except :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_try\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"body\" : ").append(body.serialize())
+		.append(", \"id\" : ").append(id.serialize())
+		.append(", \"_except\" : ").append(_except.serialize()).append("}")
+	end
+
+	# For Expr.s_op (l :: Loc, op :: String, left :: Expr, right :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_op\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"op\" : ").append(op.tostring())
+		.append(", \"left\" : ").append(left.serialize())
+		.append(", \"right\" : ").append(right.serialize()).append("}")
+	end
+
+	# For Expr.s_check_test (l :: Loc, op :: String, left :: Expr, right :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_check_test\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"op\" : ").append(op.tostring())
+		.append(", \"left\" : ").append(left.serialize())
+		.append(", \"right\" : ").append(right.serialize()).append("}")
+	end
+
+	# For Expr.s_not (l :: Loc, expr :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_not\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"expr\" : ").append(expr.serialize()).append("}")
+	end
+
+	# For Expr.s_paren (l :: Loc, expr :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_paren\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"expr\" : ").append(expr.serialize()).append("}")
+	end
+
+	# For Expr.s_lam (l :: Loc, params :: List<String>, args :: List<Bind>, ann :: Ann, doc :: String, body :: Expr, check :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_lam\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"params\" : ").append(pyret_list_serializer(params, fun(x): x.tostring();))
+		.append(", \"args\" : ").append(pyret_list_serializer(args, fun(x): x.serialize();))
+		.append(", \"ann\" : ").append(ann.serialize())
+		.append(", \"doc\" : ").append(doc.tostring())
+		.append(", \"body\" : ").append(body.serialize())
+		.append(", \"check\" : ").append(check.serialize()).append("}")
+	end
+
+	# For Expr.s_method (l :: Loc, args :: List<Bind>, ann :: Ann, doc :: String, body :: Expr, check :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_method\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"args\" : ").append(pyret_list_serializer(args, fun(x): x.serialize();))
+		.append(", \"ann\" : ").append(ann.serialize())
+		.append(", \"doc\" : ").append(doc.tostring())
+		.append(", \"body\" : ").append(body.serialize())
+		.append(", \"check\" : ").append(check.serialize()).append("}")
+	end
+
+	# For Expr.s_extend (l :: Loc, super :: Expr, fields :: List<Member>):
+	serialize(self):
+		"{ \"_type\" : \"s_extend\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"super\" : ").append(super.serialize())
+		.append(", \"fields\" : ").append(pyret_list_serializer(fields, fun(x): x.serialize();)).append("}")
+	end
+
+	# For Expr.s_update (l :: Loc, super :: Expr, fields :: List<Member>):
+	serialize(self):
+		"{ \"_type\" : \"s_update\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"super\" : ").append(super.serialize())
+		.append(", \"fields\" : ").append(pyret_list_serializer(fields, fun(x): x.serialize();)).append("}")
+	end
+
+	# For Expr.s_obj (l :: Loc, fields :: List<Member>):
+	serialize(self):
+		"{ \"_type\" : \"s_obj\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"fields\" : ").append(pyret_list_serializer(fields, fun(x): x.serialize();)).append("}")
+	end
+
+	# For Expr.s_list (l :: Loc, values :: List<Expr>):
+	serialize(self):
+		"{ \"_type\" : \"s_list\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"values\" : ").append(pyret_list_serializer(values, fun(x): x.serialize();)).append("}")
+	end
+
+	# For Expr.s_app (l :: Loc, _fun :: Expr, args :: List<Expr>):
+	serialize(self):
+		"{ \"_type\" : \"s_app\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"_fun\" : ").append(_fun.serialize())
+		.append(", \"args\" : ").append(pyret_list_serializer(args, fun(x): x.serialize();)).append("}")
+	end
+
+	# For Expr.s_left_app (l :: Loc, obj :: Expr, _fun :: Expr, args :: List<Expr>):
+	serialize(self):
+		"{ \"_type\" : \"s_left_app\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"obj\" : ").append(obj.serialize())
+		.append(", \"_fun\" : ").append(_fun.serialize())
+		.append(", \"args\" : ").append(pyret_list_serializer(args, fun(x): x.serialize();)).append("}")
+	end
+
+	# For Expr.s_id (l :: Loc, id :: String):
+	serialize(self):
+		"{ \"_type\" : \"s_id\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"id\" : ").append(id.tostring()).append("}")
+	end
+
+	# For Expr.s_num (l :: Loc, n :: Number):
+	serialize(self):
+		"{ \"_type\" : \"s_num\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"n\" : ").append(n.tostring()).append("}")
+	end
+
+	# For Expr.s_bool (l :: Loc, b :: Bool):
+	serialize(self):
+		"{ \"_type\" : \"s_bool\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"b\" : ").append(b.serialize()).append("}")
+	end
+
+	# For Expr.s_str (l :: Loc, s :: String):
+	serialize(self):
+		"{ \"_type\" : \"s_str\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"s\" : ").append(s.tostring()).append("}")
+	end
+
+	# For Expr.s_dot (l :: Loc, obj :: Expr, field :: String):
+	serialize(self):
+		"{ \"_type\" : \"s_dot\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"obj\" : ").append(obj.serialize())
+		.append(", \"field\" : ").append(field.tostring()).append("}")
+	end
+
+	# For Expr.s_get_bang (l :: Loc, obj :: Expr, field :: String):
+	serialize(self):
+		"{ \"_type\" : \"s_get_bang\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"obj\" : ").append(obj.serialize())
+		.append(", \"field\" : ").append(field.tostring()).append("}")
+	end
+
+	# For Expr.s_bracket (l :: Loc, obj :: Expr, field :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_bracket\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"obj\" : ").append(obj.serialize())
+		.append(", \"field\" : ").append(field.serialize()).append("}")
+	end
+
+	# For Expr.s_colon (l :: Loc, obj :: Expr, field :: String):
+	serialize(self):
+		"{ \"_type\" : \"s_colon\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"obj\" : ").append(obj.serialize())
+		.append(", \"field\" : ").append(field.tostring()).append("}")
+	end
+
+	# For Expr.s_colon_bracket (l :: Loc, obj :: Expr, field :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_colon_bracket\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"obj\" : ").append(obj.serialize())
+		.append(", \"field\" : ").append(field.serialize()).append("}")
+	end
+
+	# For Expr.s_data (l :: Loc, name :: String, params :: List<String>, mixins :: List<Expr>, variants :: List<Variant>, shared_members :: List<Member>, check :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_data\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"name\" : ").append(name.tostring())
+		.append(", \"params\" : ").append(pyret_list_serializer(params, fun(x): x.tostring();))
+		.append(", \"mixins\" : ").append(pyret_list_serializer(mixins, fun(x): x.serialize();))
+		.append(", \"variants\" : ").append(pyret_list_serializer(variants, fun(x): x.serialize();))
+		.append(", \"shared_members\" : ").append(pyret_list_serializer(shared_members, fun(x): x.serialize();))
+		.append(", \"check\" : ").append(check.serialize()).append("}")
+	end
+
+	# For Expr.s_datatype (l :: Loc, name :: String, params :: List<String>, variants :: List<Variant>, check :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_datatype\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"name\" : ").append(name.tostring())
+		.append(", \"params\" : ").append(pyret_list_serializer(params, fun(x): x.tostring();))
+		.append(", \"variants\" : ").append(pyret_list_serializer(variants, fun(x): x.serialize();))
+		.append(", \"check\" : ").append(check.serialize()).append("}")
+	end
+
+	# For Expr.s_for (l :: Loc, iterator :: Expr, bindings :: List<ForBind>, ann :: Ann, body :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_for\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"iterator\" : ").append(iterator.serialize())
+		.append(", \"bindings\" : ").append(pyret_list_serializer(bindings, fun(x): x.serialize();))
+		.append(", \"ann\" : ").append(ann.serialize())
+		.append(", \"body\" : ").append(body.serialize()).append("}")
+	end
+
+	# For Expr.s_check (l :: Loc, body :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_check\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"body\" : ").append(body.serialize()).append("}")
+	end
+
+	# For Bind.s_bind (l :: Loc, id :: String, ann :: Ann):
+	serialize(self):
+		"{ \"_type\" : \"s_bind\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"id\" : ").append(id.tostring())
+		.append(", \"ann\" : ").append(ann.serialize()).append("}")
+	end
+
+	# For Member.s_data_field (l :: Loc, name :: Expr, value :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_data_field\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"name\" : ").append(name.serialize())
+		.append(", \"value\" : ").append(value.serialize()).append("}")
+	end
+
+	# For Member.s_mutable_field (l :: Loc, name :: Expr, ann :: Ann, value :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_mutable_field\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"name\" : ").append(name.serialize())
+		.append(", \"ann\" : ").append(ann.serialize())
+		.append(", \"value\" : ").append(value.serialize()).append("}")
+	end
+
+	# For Member.s_once_field (l :: Loc, name :: Expr, ann :: Ann, value :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_once_field\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"name\" : ").append(name.serialize())
+		.append(", \"ann\" : ").append(ann.serialize())
+		.append(", \"value\" : ").append(value.serialize()).append("}")
+	end
+
+	# For Member.s_method_field (l :: Loc, name :: Expr, args :: List<Bind>, ann :: Ann, doc :: String, body :: Expr, check :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_method_field\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"name\" : ").append(name.serialize())
+		.append(", \"args\" : ").append(pyret_list_serializer(args, fun(x): x.serialize();))
+		.append(", \"ann\" : ").append(ann.serialize())
+		.append(", \"doc\" : ").append(doc.tostring())
+		.append(", \"body\" : ").append(body.serialize())
+		.append(", \"check\" : ").append(check.serialize()).append("}")
+	end
+
+	# For ForBind.s_for_bind (l :: Loc, bind :: Bind, value :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_for_bind\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"bind\" : ").append(bind.serialize())
+		.append(", \"value\" : ").append(value.serialize()).append("}")
+	end
+
+	# For VariantMember.s_variant_member (l :: Loc, member_type :: String, bind :: Bind):
+	serialize(self):
+		"{ \"_type\" : \"s_variant_member\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"member_type\" : ").append(member_type.tostring())
+		.append(", \"bind\" : ").append(bind.serialize()).append("}")
+	end
+
+	# For Variant.s_variant (l :: Loc, name :: String, members :: List<VariantMember>, with_members :: List<Member>):
+	serialize(self):
+		"{ \"_type\" : \"s_variant\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"name\" : ").append(name.tostring())
+		.append(", \"members\" : ").append(pyret_list_serializer(members, fun(x): x.serialize();))
+		.append(", \"with_members\" : ").append(pyret_list_serializer(with_members, fun(x): x.serialize();)).append("}")
+	end
+
+	# For Variant.s_singleton_variant (l :: Loc, name :: String, with_members :: List<Member>):
+	serialize(self):
+		"{ \"_type\" : \"s_singleton_variant\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"name\" : ").append(name.tostring())
+		.append(", \"with_members\" : ").append(pyret_list_serializer(with_members, fun(x): x.serialize();)).append("}")
+	end
+
+	# For Variant.s_datatype_variant (l :: Loc, name :: String, members :: List<VariantMember>, constructor :: Constructor):
+	serialize(self):
+		"{ \"_type\" : \"s_datatype_variant\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"name\" : ").append(name.tostring())
+		.append(", \"members\" : ").append(pyret_list_serializer(members, fun(x): x.serialize();))
+		.append(", \"constructor\" : ").append(constructor.serialize()).append("}")
+	end
+
+	# For Variant.s_datatype_singleton_variant (l :: Loc, name :: String, constructor :: Constructor):
+	serialize(self):
+		"{ \"_type\" : \"s_datatype_singleton_variant\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"name\" : ").append(name.tostring())
+		.append(", \"constructor\" : ").append(constructor.serialize()).append("}")
+	end
+
+	# For Constructor.s_datatype_constructor (l :: Loc, self :: String, body :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_datatype_constructor\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"self\" : ").append(self.tostring())
+		.append(", \"body\" : ").append(body.serialize()).append("}")
+	end
+
+	# For IfBranch.s_if_branch (l :: Loc, test :: Expr, body :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_if_branch\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"test\" : ").append(test.serialize())
+		.append(", \"body\" : ").append(body.serialize()).append("}")
+	end
+
+	# For CasesBranch.s_cases_branch (l :: Loc, name :: String, args :: List<Bind>, body :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"s_cases_branch\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"name\" : ").append(name.tostring())
+		.append(", \"args\" : ").append(pyret_list_serializer(args, fun(x): x.serialize();))
+		.append(", \"body\" : ").append(body.serialize()).append("}")
+	end
+
+	# For Ann.a_name (l :: Loc, id :: String):
+	serialize(self):
+		"{ \"_type\" : \"a_name\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"id\" : ").append(id.tostring()).append("}")
+	end
+
+	# For Ann.a_arrow (l :: Loc, args :: List<Ann>, ret :: Ann):
+	serialize(self):
+		"{ \"_type\" : \"a_arrow\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"args\" : ").append(pyret_list_serializer(args, fun(x): x.serialize();))
+		.append(", \"ret\" : ").append(ret.serialize()).append("}")
+	end
+
+	# For Ann.a_method (l :: Loc, args :: List<Ann>, ret :: Ann):
+	serialize(self):
+		"{ \"_type\" : \"a_method\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"args\" : ").append(pyret_list_serializer(args, fun(x): x.serialize();))
+		.append(", \"ret\" : ").append(ret.serialize()).append("}")
+	end
+
+	# For Ann.a_record (l :: Loc, fields :: List<AField>):
+	serialize(self):
+		"{ \"_type\" : \"a_record\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"fields\" : ").append(pyret_list_serializer(fields, fun(x): x.serialize();)).append("}")
+	end
+
+	# For Ann.a_app (l :: Loc, ann :: Ann, args :: List<Ann>):
+	serialize(self):
+		"{ \"_type\" : \"a_app\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"ann\" : ").append(ann.serialize())
+		.append(", \"args\" : ").append(pyret_list_serializer(args, fun(x): x.serialize();)).append("}")
+	end
+
+	# For Ann.a_pred (l :: Loc, ann :: Ann, exp :: Expr):
+	serialize(self):
+		"{ \"_type\" : \"a_pred\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"ann\" : ").append(ann.serialize())
+		.append(", \"exp\" : ").append(exp.serialize()).append("}")
+	end
+
+	# For Ann.a_dot (l :: Loc, obj :: String, field :: String):
+	serialize(self):
+		"{ \"_type\" : \"a_dot\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"obj\" : ").append(obj.tostring())
+		.append(", \"field\" : ").append(field.tostring()).append("}")
+	end
+
+	# For AField.a_field (l :: Loc, name :: String, ann :: Ann):
+	serialize(self):
+		"{ \"_type\" : \"a_field\""
+		.append(", \"l\" : ").append(l.serialize())
+		.append(", \"name\" : ").append(name.tostring())
+		.append(", \"ann\" : ").append(ann.serialize()).append("}")
+	end
