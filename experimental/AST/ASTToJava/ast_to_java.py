@@ -76,7 +76,7 @@ package {0[package]};
  * This class corresponds to the {0[variant]} variant of type {0[data]}
  * in the Pyret AST.
  *
- * data {0[variant]}:
+ * data {0[data]}:
  *   {0[typestr]}
  *   ...
  * end
