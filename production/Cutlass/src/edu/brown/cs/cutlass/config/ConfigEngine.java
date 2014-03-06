@@ -12,7 +12,7 @@ public class ConfigEngine {
 
     private Properties defaultProps;
     private Properties userProps;
-    private final String defaultPath = "defaultProperties"; //change to path of default props file
+    private final String defaultPath = "defaultProperties.txt"; //change to path of default props file
     private final String userPath;
 
     public ConfigEngine(String userPath) throws ConfigFileInvalidException {
@@ -39,100 +39,85 @@ public class ConfigEngine {
     public Boolean getBoolean(String key) {
         String value = userProps.getProperty(key);
         if (value == null) {
-            new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
-            userProps.setProperty(key, false + "");
-            return false;
+            throw new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
         }
         if (value.equals("true") || value.equals("false")) {
             boolean ret = Boolean.parseBoolean(value);
             return ret;
         } else {
-            new ConfigTypeException("Key " + key + " is not associated with a Boolean value");
-            return false; //default value
+            throw new ConfigTypeException("Key " + key + " is not associated with a Boolean value");
         }
     }
 
     public Integer getInteger(String key) {
         String value = userProps.getProperty(key);
         if (value == null) {
-            new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
-            userProps.setProperty(key, Integer.MIN_VALUE + "");
-            return Integer.MIN_VALUE;
+            throw new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
         }
         if (value.matches("^\\d+$")) {
             Integer ret = Integer.parseInt(value);
             return ret;
         } else {
-            new ConfigTypeException("Key " + key + " is not associated with an Integer value");
-            return Integer.MIN_VALUE; //default value
+            throw new ConfigTypeException("Key " + key + " is not associated with an Integer value");
         }
     }
 
     public Double getDouble(String key) {
         String value = userProps.getProperty(key);
         if (value == null) {
-            new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
-            userProps.setProperty(key, 0 + "");
-            return Double.MIN_VALUE;
+            throw new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
         }
         if (value.matches("^\\d+$|^\\d+.\\d+$")) {
             Double ret = Double.parseDouble(value);
             return ret;
         } else {
-            new ConfigTypeException("Key " + key + " is not associated with an Integer value");
-            return Double.MIN_VALUE; //default value
+            throw new ConfigTypeException("Key " + key + " is not associated with an Integer value");
         }
     }
 
     public String getString(String key) {
         String value = userProps.getProperty(key);
         if (value == null) {
-            new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
-            userProps.setProperty(key, "");
-            return ""; //default
+            throw new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
         }
         return value;
     }
 
     public Dimension getDimension(String key) {
-        int width = getInteger(key + "width" + key.hashCode());
-        int height = getInteger(key + "height" + key.hashCode());
-        if (width >= 0 && height >= 0) {
+        String value = userProps.getProperty(key);
+        if (value == null){
+            throw new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
+        }
+        if (value.matches("^Dimension: [\\d+,\\d+]$")) {
+            int width = Integer.parseInt(value.substring(12, value.indexOf(",")));
+            int height = Integer.parseInt(value.substring(value.indexOf(","+1), value.indexOf("]")));
             return new Dimension(width, height);
         } else {
-            new ConfigTypeException("Key " + key + " is not associated with a Dimension value");
-            return null; //default
+            throw new ConfigTypeException("Key " + key + " is not associated with a Dimension value");
         }
     }
 
     public Color getColor(String key) {
-        int red = getInteger(key + "red" + key.hashCode());
-        int green = getInteger(key + "green" + key.hashCode());
-        int blue = getInteger(key + "blue" + key.hashCode());
-        int transparency = getInteger(key + "transparency");
-        if (isValidColorValue(red) && isValidColorValue(green) && isValidColorValue(blue) && isValidColorValue(transparency)) {
-            return new Color(red, green, blue, transparency);
-        } else {
-            new ConfigTypeException("Key " + key + " is not associated with a Color value");
-            return null; //default
+        String value = userProps.getProperty(key);
+        if (value == null){
+            throw new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
         }
-    }
-
-    private boolean isValidColorValue(int colorVal) {
-        return colorVal >= 0 && colorVal <= 255;
+        if (value.matches("Color: #[0-9a-fA-F]+")){
+            long colorHex = Long.parseLong(value.substring(value.indexOf("#") + 1), 16);
+            return new Color((int)colorHex, true);
+        } else {
+            throw new ConfigTypeException("Key " + key + " is not associated with a Color value");
+        }
     }
 
     public List<String> getList(String key) {
         String value = userProps.getProperty(key);
         if (value == null) {
-            new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
-            userProps.setProperty(key, "");
-            return null; //default
+            throw new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
         }
         String[] valueSplit = value.split(",");
         List<String> ret = new ArrayList<>();
         for (String s : valueSplit) {
-
             ret.add(s.replace("(0^^^^@", ","));
         }
         return ret;
@@ -155,15 +140,11 @@ public class ConfigEngine {
     }
 
     public void setDimension(String key, Dimension value) {
-        setInteger(key + "width" + key.hashCode(), value.width);
-        setInteger(key + "height" + key.hashCode(), value.height);
+        setString(key, "Dimension: [" + value.width + "," + value.height + "]");
     }
 
     public void setColor(String key, Color value) {
-        setInteger(key + "red" + key.hashCode(), value.getRed());
-        setInteger(key + "green" + key.hashCode(), value.getGreen());
-        setInteger(key + "glue" + key.hashCode(), value.getBlue());
-        setInteger(key + "transparency" + key.hashCode(), value.getAlpha());
+        setString(key, "Color: #" + Integer.toHexString(value.getRGB()));
     }
 
     public void setList(String key, List<String> value) { //non-empty list
@@ -205,8 +186,10 @@ public class ConfigEngine {
         for (String s : eng.getList("nameList")) {
             System.out.println(s);
         }
-        
-        eng.setString("test1", "i have a \' in this\n\\n\"");
+        //eng.setColor("defColor", Color.blue);
+        eng.setDimension("dimens", new Dimension(34, 23));
+        System.out.println(eng.getColor("defColor"));
+        //eng.setString("test1", "i have a \' in this\n\\n\"");
         System.out.println(eng.getString("test1"));
         eng.save();
     }
