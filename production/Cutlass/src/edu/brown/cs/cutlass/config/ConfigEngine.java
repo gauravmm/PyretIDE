@@ -9,11 +9,52 @@ import java.io.*;
 
 public class ConfigEngine {
 
+    /**
+     * @deprecated Remove this
+     */
     private Properties defaultProps;
-    private Properties userProps;
+    private final Properties userProps;
+    /**
+     * @deprecated Remove this.
+     */
     private final String defaultPath = "defaultProperties.txt"; //change to path of default props file
     private final String userPath;
 
+    /**
+     * Package constructor for testing.
+     */
+    ConfigEngine() {
+        throw new UnsupportedOperationException("not yet written");
+    }
+
+    /**
+     * Private Access Constructor used for fromString.
+     *
+     * @param cfgFile The contents of the cfgFile, as passed by
+     * @throws ConfigFileInvalidException if the configuration file cannot be
+     * parsed.
+     */
+    private ConfigEngine(List<String> cfgData) throws ConfigFileInvalidException {
+        throw new UnsupportedOperationException("not yet written");
+    }
+
+    /**
+     *
+     * @param cfgData
+     * @return
+     * @throws ConfigFileInvalidException
+     */
+    public static ConfigEngine fromString(List<String> cfgData) throws ConfigFileInvalidException {
+        return new ConfigEngine(cfgData);
+    }
+
+    /**
+     * Change contract
+     *
+     * @param userPath
+     * @throws ConfigFileInvalidException
+     * @deprecated
+     */
     public ConfigEngine(String userPath) throws ConfigFileInvalidException {
         this.userPath = userPath;
         defaultProps = new Properties();
@@ -84,12 +125,12 @@ public class ConfigEngine {
 
     public Dimension getDimension(String key) {
         String value = userProps.getProperty(key);
-        if (value == null){
+        if (value == null) {
             throw new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
         }
         if (value.matches("^Dimension: [\\d+,\\d+]$")) {
             int width = Integer.parseInt(value.substring(12, value.indexOf(",")));
-            int height = Integer.parseInt(value.substring(value.indexOf(","+1), value.indexOf("]")));
+            int height = Integer.parseInt(value.substring(value.indexOf("," + 1), value.indexOf("]")));
             return new Dimension(width, height);
         } else {
             throw new ConfigTypeException("Key " + key + " is not associated with a Dimension value");
@@ -98,12 +139,12 @@ public class ConfigEngine {
 
     public Color getColor(String key) {
         String value = userProps.getProperty(key);
-        if (value == null){
+        if (value == null) {
             throw new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
         }
-        if (value.matches("Color: #[0-9a-fA-F]+")){
+        if (value.matches("Color: #[0-9a-fA-F]+")) {
             long colorHex = Long.parseLong(value.substring(value.indexOf("#") + 1), 16);
-            return new Color((int)colorHex, true);
+            return new Color((int) colorHex, true);
         } else {
             throw new ConfigTypeException("Key " + key + " is not associated with a Color value");
         }
@@ -162,6 +203,9 @@ public class ConfigEngine {
         userProps.remove(key);
     }
 
+    /**
+     * @deprecated @return
+     */
     public boolean save() {
         try (FileOutputStream out = new FileOutputStream(userPath)) {
             userProps.store(out, "---No Comment---");
@@ -173,23 +217,10 @@ public class ConfigEngine {
         }
     }
 
-    public static void main(String[] args) throws ConfigFileInvalidException, ConfigTypeException {
-        ConfigEngine eng = new ConfigEngine("appProperties");
-        System.out.println(eng.getString("user.name"));
-        eng.setString("user.name", "cutlass 2.0");
-        System.out.println(eng.getString("user.name"));
-        List<String> lst = new ArrayList<>();
-        lst.add("Hi, my name is");
-        lst.add("david");
-        eng.setList("nameList", lst);
-        for (String s : eng.getList("nameList")) {
-            System.out.println(s);
-        }
-        //eng.setColor("defColor", Color.blue);
-        eng.setDimension("dimens", new Dimension(34, 23));
-        System.out.println(eng.getColor("defColor"));
-        //eng.setString("test1", "i have a \' in this\n\\n\"");
-        System.out.println(eng.getString("test1"));
-        eng.save();
+    // Serialized output, will be stored in the file:
+    @Override
+    public String toString() {
+        throw new UnsupportedOperationException("Not yet written.");
     }
+    
 }
