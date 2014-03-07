@@ -10,18 +10,8 @@ package edu.brown.cs.cutlass.sys.io;
  *
  * @author Gaurav Manek
  */
-public abstract class AbstractIdentifier<T> {
+public interface AbstractIdentifier {
 
-    protected final T id;
-
-    public AbstractIdentifier(T id) {
-        this.id = id;
-    }
-
-    public T get() {
-        return id;
-    }
-    
-    public abstract String toString();
+    public String toString();
     
 }

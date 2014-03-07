@@ -11,14 +11,16 @@ import java.nio.file.Paths;
  *
  * @author Miles Holland
  */
-public class DiskIdentifier extends AbstractIdentifier<Path> {
+public class DiskIdentifier implements AbstractIdentifier {
 
-    public DiskIdentifier(Path id) {
-        super(id);
+	private final Path id;
+	
+    public DiskIdentifier(Path id0) {
+		id = id0;
     }
 
-    public DiskIdentifier(String id) {
-        super(Paths.get(id));
+    public DiskIdentifier(String id0) {
+    	this(Paths.get(id0));
     }
 
     @Override
