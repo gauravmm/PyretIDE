@@ -49,7 +49,7 @@ class LaunchState<T extends AbstractIdentifier> {
      *
      */
     public LaunchState() {
-        openFiles = new ArrayList<T>();
+        openFiles = new ArrayList<>();
         this.currentTabId = 0;
     }
 
