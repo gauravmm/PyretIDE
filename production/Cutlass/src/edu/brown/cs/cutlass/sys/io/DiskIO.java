@@ -5,9 +5,12 @@
 package edu.brown.cs.cutlass.sys.io;
 
 import edu.brown.cs.cutlass.util.Option;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 
@@ -20,10 +23,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class DiskIO implements AbstractIO<DiskIdentifier> {
 
-    private static final String cfgPath = "./.cutlass/";
+    private static final Path cfgPath = Paths.get(System.getProperty("user.home") + File.separator + ".cutlass" + File.separator);
     private static final Charset charset = Charset.forName("UTF8");
-    // Keep a single fileChooser object, keeps memory of last directory opened/saved.
-    private final JFileChooser fileChooser = new JFileChooser();
+    private final JFileChooser fileChooser = new JFileChooser(); // Keep a single fileChooser object, keeps memory of last directory opened/saved.
 
     public DiskIO() {
         // Set up the JFileChooser
@@ -34,12 +36,21 @@ public class DiskIO implements AbstractIO<DiskIdentifier> {
 
     @Override
     public List<String> getConfigurationFile(String identifier) throws AbstractIOException {
-        return getUserFile(new DiskIdentifier(cfgPath.concat(identifier)));
+        return getUserFile(new DiskIdentifier(cfgPath.resolve(identifier)));
     }
 
     @Override
     public void setConfigurationFile(String identifier, Iterable<? extends CharSequence> contents) throws AbstractIOException {
-        setUserFile(new DiskIdentifier(cfgPath.concat(identifier)), contents);
+        // Create folder if it does not exist.
+        if (!Files.exists(cfgPath)) {
+            try {
+                Files.createDirectory(cfgPath);
+            } catch (IOException ex) {
+                throw new AbstractIOException("Could not create config directory!");
+            }
+        }
+
+        setUserFile(new DiskIdentifier(cfgPath.resolve(identifier)), contents);
     }
 
     @Override
