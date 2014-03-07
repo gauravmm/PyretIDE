@@ -19,7 +19,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
- * @author YOUR NAME HERE
+ * @author Gaurav Manek, Miles Holland
  */
 public class DiskIO implements AbstractIO<DiskIdentifier> {
 
@@ -34,14 +34,7 @@ public class DiskIO implements AbstractIO<DiskIdentifier> {
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
     }
 
-    @Override
-    public List<String> getConfigurationFile(String identifier) throws AbstractIOException {
-        return getUserFile(new DiskIdentifier(cfgPath.resolve(identifier)));
-    }
-
-    @Override
-    public void setConfigurationFile(String identifier, Iterable<? extends CharSequence> contents) throws AbstractIOException {
-        // Create folder if it does not exist.
+    private void checkCfgFolder() throws AbstractIOException {
         if (!Files.exists(cfgPath)) {
             try {
                 Files.createDirectory(cfgPath);
@@ -49,7 +42,24 @@ public class DiskIO implements AbstractIO<DiskIdentifier> {
                 throw new AbstractIOException("Could not create config directory!");
             }
         }
+    }
 
+    @Override
+    public List<String> getConfigurationFile(String identifier) throws AbstractIOException {
+        return getUserFile(new DiskIdentifier(cfgPath.resolve(identifier)));
+    }
+
+    @Override
+    public void setConfigurationFile(String identifier, List<? extends CharSequence> contents) throws AbstractIOException {
+        // Create folder if it does not exist.
+        checkCfgFolder();
+        setUserFile(new DiskIdentifier(cfgPath.resolve(identifier)), contents);
+    }
+
+    @Override
+    public void setConfigurationFile(String identifier, CharSequence contents) throws AbstractIOException {
+        // Create folder if it does not exist.
+        checkCfgFolder();
         setUserFile(new DiskIdentifier(cfgPath.resolve(identifier)), contents);
     }
 
@@ -63,7 +73,16 @@ public class DiskIO implements AbstractIO<DiskIdentifier> {
     }
 
     @Override
-    public void setUserFile(DiskIdentifier identifier, Iterable<? extends CharSequence> contents) throws AbstractIOException {
+    public void setUserFile(DiskIdentifier identifier, CharSequence contents) throws AbstractIOException {
+        try {
+            Files.write(identifier.getId(), (contents.toString().getBytes(charset)), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (IOException ex) {
+            throw new AbstractIOException(ex.getMessage());
+        }
+    }
+
+    @Override
+    public void setUserFile(DiskIdentifier identifier, List<? extends CharSequence> contents) throws AbstractIOException {
         try {
             Files.write(identifier.getId(), contents, charset, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException ex) {
@@ -104,5 +123,10 @@ public class DiskIO implements AbstractIO<DiskIdentifier> {
         } else {
             return new Option<>();
         }
+    }
+
+    @Override
+    public AbstractIdentifierParser<DiskIdentifier> getIdentifierParser() {
+        return new DiskIdentifierParser();
     }
 }

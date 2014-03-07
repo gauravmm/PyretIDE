@@ -39,11 +39,21 @@ public interface AbstractIO<T extends AbstractIdentifier> {
      *
      * @param identifier A unique identifier for a resource.
      * @param contents The new value to store in the resource.
-     * @return A String with the entire contents of the resource (if it exists).
      * @throws AbstractIOException If the underlying implementation cannot
      * locate the resource or if the resource cannot be written to.
      */
-    public void setConfigurationFile(String identifier, Iterable<? extends CharSequence> contents) throws AbstractIOException;
+    public void setConfigurationFile(String identifier, List<? extends CharSequence> contents) throws AbstractIOException;
+
+    /**
+     * Store a configuration file. This is a file that is used to store metadata
+     * about the user or the program.
+     *
+     * @param identifier A unique identifier for a resource.
+     * @param contents The new value to store in the resource.
+     * @throws AbstractIOException If the underlying implementation cannot
+     * locate the resource or if the resource cannot be written to.
+     */
+    public void setConfigurationFile(String identifier, CharSequence contents) throws AbstractIOException;
 
     /**
      * Request a user file. This is a file that contains source code.
@@ -60,11 +70,20 @@ public interface AbstractIO<T extends AbstractIdentifier> {
      *
      * @param identifier A unique identifier for a resource.
      * @param contents The new value to store in the resource.
-     * @return A String with the entire contents of the resource (if it exists).
      * @throws AbstractIOException If the underlying implementation cannot
      * locate the resource or if the resource cannot be written to.
      */
-    public void setUserFile(T identifier, Iterable<? extends CharSequence> contents) throws AbstractIOException;
+    public void setUserFile(T identifier, List<? extends CharSequence> contents) throws AbstractIOException;
+
+    /**
+     * Store a user file. This is a file that contains source code.
+     *
+     * @param identifier A unique identifier for a resource.
+     * @param contents The new value to store in the resource.
+     * @throws AbstractIOException If the underlying implementation cannot
+     * locate the resource or if the resource cannot be written to.
+     */
+    public void setUserFile(T identifier, CharSequence contents) throws AbstractIOException;
 
     /**
      * Ask the user to pick a file to save. This is a file that contains source
@@ -87,4 +106,11 @@ public interface AbstractIO<T extends AbstractIdentifier> {
      */
     public Option<T> requestUserFileSource() throws AbstractIOException;
 
+    /**
+     * Get an object that is used to parse AbstractIdentifiers.
+     *
+     * @return An AbstractIdentifierParser that is used to parse the
+     * AbstractIdentifiers for this AbstractIO implementation.
+     */
+    public AbstractIdentifierParser<T> getIdentifierParser();
 }
