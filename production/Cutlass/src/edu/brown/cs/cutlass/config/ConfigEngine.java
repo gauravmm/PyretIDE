@@ -21,7 +21,7 @@ public class ConfigEngine {
     private ConfigEngine(List<String> cfgFile) throws ConfigFileInvalidException {
         StringBuilder strBld = new StringBuilder();
         userProps = new Properties();
-        if (!cfgFile.isEmpty()) {
+        if (!(cfgFile == null || cfgFile.isEmpty())) {
             strBld.append(cfgFile.get(0));
             for (int index = 1; index < cfgFile.size(); index++) {
                 strBld.append("\n");
@@ -192,6 +192,14 @@ public class ConfigEngine {
             //There is, like, no chance of this occurring
             throw new ConfigFileInvalidException("Something went wrong when converting your properties! Sorry.");
         }
+    }
+    
+    @Override
+    public boolean equals(Object other){
+        if (this == other) return true;
+        if (! (other instanceof ConfigEngine)) return false;
+        ConfigEngine oth = (ConfigEngine) other;
+        return oth.userProps.equals(this.userProps);
     }
 
 }
