@@ -1,6 +1,5 @@
 package edu.brown.cs.cutlass.config;
 
-import com.sun.org.apache.xalan.internal.xsltc.runtime.BasisLibrary;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
