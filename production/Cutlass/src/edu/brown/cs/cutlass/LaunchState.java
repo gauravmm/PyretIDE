@@ -132,7 +132,6 @@ class LaunchState<T extends AbstractIdentifier> {
         			Lumberjack.log(Level.ERROR, "Line did not match any known entry types");
         			throw new IllegalArgumentException("Error: This line did not match any known "
         					+ "entry types.");
-        			break;
         		}
         	}
         }
