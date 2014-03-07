@@ -1,6 +1,6 @@
 package edu.brown.cs.cutlass;
 
-import edu.brown.cs.cutlass.util.ConfigEngine;
+import edu.brown.cs.cutlass.config.ConfigEngine;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
 import java.awt.Cursor;
