@@ -12,13 +12,6 @@ public class ConfigEngine {
     private final Properties userProps;
 
     /**
-     * Package constructor for testing.
-     */
-    ConfigEngine() {
-        throw new UnsupportedOperationException("not yet written");
-    }
-
-    /**
      * Private Access Constructor used for fromString.
      *
      * @param cfgFile The contents of the cfgFile, as passed by
