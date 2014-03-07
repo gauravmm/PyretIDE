@@ -87,4 +87,11 @@ public interface AbstractIO<T extends AbstractIdentifier> {
      */
     public Option<T> requestUserFileSource() throws AbstractIOException;
 
+    /**
+     * Get an object that is used to parse AbstractIdentifiers.
+     *
+     * @return An AbstractIdentifierParser that is used to parse the
+     * AbstractIdentifiers for this AbstractIO implementation.
+     */
+    public AbstractIdentifierParser<T> getIdentifierParser();
 }

@@ -19,7 +19,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
- * @author YOUR NAME HERE
+ * @author Gaurav Manek, Miles Holland
  */
 public class DiskIO implements AbstractIO<DiskIdentifier> {
 
@@ -104,5 +104,10 @@ public class DiskIO implements AbstractIO<DiskIdentifier> {
         } else {
             return new Option<>();
         }
+    }
+
+    @Override
+    public AbstractIdentifierParser<DiskIdentifier> getIdentifierParser() {
+        return new DiskIdentifierParser();
     }
 }
