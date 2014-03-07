@@ -10,7 +10,8 @@ from ast_python import pyret_ast
 # Global constants
 #
 
-output = "serialize.txt"
+input = "./add_to_ast/ast_tpl.arr"
+output = "./add_to_ast/ast.arr"
 header = "AST Serialize Code\nGenerated " + str(datetime.datetime.now()) + " on " + os.environ['LOGNAME'] + "\n\n"
 
 #
@@ -18,30 +19,27 @@ header = "AST Serialize Code\nGenerated " + str(datetime.datetime.now()) + " on 
 #
 
 def createNewType(typeName, variants=[], isRootType=False):
-	print("" + typeName + "");
-			
+	#print("" + typeName + "");
+	return
+	
 def createNewTypeVariant(typeName, variantName, arguments):
-	print("     |- " + variantName + " (" + getTypeVariantArgumentsString(typeName, variantName, arguments) + ")");
+	#print("     |- " + variantName + " (" + getTypeVariantArgumentsString(typeName, variantName, arguments) + ")")
 	
 	return """
-	# For {0[data]}.{0[typestr]}:
-	serialize(self):
+	serialize(self): # For {0[data]}.{0[variant]}:
 		"{{ \\\"_type\\\" : \\\"{0[variant]}\\\""
 		{0[serializestr]}.append("}}")
-	end
-""".format({
+	end,""".format({
 	'data': typeName,
 	'variant': variantName,
-	'typestr': variantName + " (" + getTypeVariantArgumentsString(typeName, variantName, arguments) + ")",
-	'serializestr': "\n\t\t".join(map(lambda (name, type): serializingString(name, type), arguments))
-	})
+	'serializestr': "\n\t\t".join(map(lambda (name, type): serializingString(name, type), arguments))})
 
 
 def key(name):
 	return ".append(\", \\\"" + str(name) + "\\\" : \")"
 
 def qn(name, fn):
-	return key(name) + ".append(" +  str(name) + "." + fn + ")"
+	return key(name) + ".append(self." +  str(name) + "." + fn + ")"
 	
 def serializingString(name, type):
 	if type == "String" or type == "Number":
@@ -54,7 +52,7 @@ def serializingString(name, type):
 			lfunc = "fun(x): x.serialize();"
 		
 		# Call the list serializer:
-		return key(name) + ".append(pyret_list_serializer(" + name + ", " + lfunc + "))"
+		return key(name) + ".append(pyret_list_serializer(self." + name + ", " + lfunc + "))"
 	else :
 		return qn(name, "serialize()") 
 			
@@ -77,14 +75,35 @@ def getTypeVariantsString(typeName, variants, prefix=""):
 # Main method:
 #
 def main():
-	f = open(output, 'w')
-	f.write(header)
+	with open(input, 'r') as inp:
+		data = inp.read()
+	
 	
 	for (data_type_name, variants) in pyret_ast:
 		createNewType(data_type_name, variants)
 		for (variant_name, args) in variants:
-			f.write(createNewTypeVariant(data_type_name, variant_name, args))
-		print("");
+			serstr = createNewTypeVariant(data_type_name, variant_name, args)
+			startpos = data.find("data " + data_type_name + ":")
+			if startpos == -1:
+				print(data_type_name + " not found!")
+				print(serstr)
+				continue
+			startpos = data.find("| " + variant_name, startpos)
+			if startpos == -1:
+				print(variant_name + " not found!")
+				print(serstr)
+				continue
+			startpos = data.find("with:", startpos)
+			if startpos == -1:
+				exit("with: not found!")
+			startpos += 5
+			
+			data = data[:startpos] + serstr + data[startpos:]
+			
+			#f.write()
+		#print("");
+	f = open(output, 'w')
+	f.write(data)
 	f.close()
 	
 main()		
