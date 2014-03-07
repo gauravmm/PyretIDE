@@ -6,6 +6,9 @@
 package edu.brown.cs.cutlass;
 
 import edu.brown.cs.cutlass.config.ConfigEngine;
+import edu.brown.cs.cutlass.sys.io.AbstractIO;
+import edu.brown.cs.cutlass.sys.io.AbstractIOException;
+import edu.brown.cs.cutlass.sys.io.DiskIO;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.clargs.CLArg;
@@ -51,6 +54,7 @@ public class Launcher {
         });
     }
 
+    // Commandline Arguments:
     private static final CLArg argHelp = new CLArg("help", new String[]{"-h", "--help"});
     // Logger:
     private static final CLArg argLogAll = new CLArg("verbose", new String[]{"-v", "--verbose"});
@@ -59,6 +63,11 @@ public class Launcher {
     // Loading process:
     private static final CLArg argDontLoadPreviousState = new CLArg("freshstart", new String[]{"-f", "--fresh", "--reset"});
     private static final List<CLArg> expectedArgs = Arrays.asList(new CLArg[]{argHelp, argLogAll, argLogWarn, argLogError, argDontLoadPreviousState});
+
+    // IO:
+    private AbstractIO io;
+    private final String fnLaunchState = "launchstate";
+    private final String fnConfig = "config";
 
     private Launcher(String[] args) {
         CLArgs argParsed = null;
@@ -89,6 +98,9 @@ public class Launcher {
             Lumberjack.setDisplayLog(true);
         }
 
+        // Prepare IO:
+        io = new DiskIO();
+
         // Load configuration engine
         ConfigEngine configEngine = null;
 
@@ -99,8 +111,17 @@ public class Launcher {
         if (argParsed.hasArg(argDontLoadPreviousState)) {
             launchState = new Option<>();
         } else {
-            launchState = new Option<>();
+            // Load the LaunchState from file:
+            try {
+                List<String> launchStateContents = io.getConfigurationFile(fnLaunchState);
+                launchState = new Option<>(LaunchState.fromString(launchStateContents, io.getIdentifierParser()));
+            } catch (AbstractIOException | IllegalArgumentException e) {
+                // Could not load file (if AbstractIOException) or unparsable (if IllegalArgumentException)
+                Lumberjack.log(Lumberjack.Level.WARN, e);
+                launchState = new Option<>();
+            }
         }
+        assert launchState != null;
 
         // Hand off control to FrmMain
         (new FrmMain(this, configEngine, launchState)).setVisible(true);
@@ -138,6 +159,14 @@ public class Launcher {
      * If necessary, write log files to disk.
      */
     public void quit(LaunchState lState) {
+
+        // Store LaunchState:
+        try {
+            io.setConfigurationFile(fnLaunchState, lState.toStringArr());
+        } catch (AbstractIOException e) {
+            Lumberjack.log(Lumberjack.Level.ERROR, "Could not save current LaunchState!");
+        }
+
         System.exit(ExitCode.OK.getCode());
     }
 }
