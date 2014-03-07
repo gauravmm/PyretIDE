@@ -13,14 +13,18 @@ import java.nio.file.Paths;
  */
 public class DiskIdentifier implements AbstractIdentifier {
 
-	private final Path id;
-	
+    private final Path id;
+
     public DiskIdentifier(Path id0) {
-		id = id0;
+        id = id0;
+    }
+
+    public Path getId() {
+        return id;
     }
 
     public DiskIdentifier(String id0) {
-    	this(Paths.get(id0));
+        this(Paths.get(id0));
     }
 
     @Override

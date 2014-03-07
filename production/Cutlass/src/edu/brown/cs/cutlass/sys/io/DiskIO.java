@@ -56,7 +56,7 @@ public class DiskIO implements AbstractIO<DiskIdentifier> {
     @Override
     public List<String> getUserFile(DiskIdentifier identifier) throws AbstractIOException {
         try {
-            return Files.readAllLines(identifier.get(), charset);
+            return Files.readAllLines(identifier.getId(), charset);
         } catch (IOException ex) {
             throw new AbstractIOException(ex.getMessage());
         }
@@ -65,7 +65,7 @@ public class DiskIO implements AbstractIO<DiskIdentifier> {
     @Override
     public void setUserFile(DiskIdentifier identifier, Iterable<? extends CharSequence> contents) throws AbstractIOException {
         try {
-            Files.write(identifier.get(), contents, charset, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+            Files.write(identifier.getId(), contents, charset, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException ex) {
             throw new AbstractIOException(ex.getMessage());
         }
