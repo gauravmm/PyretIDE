@@ -22,5 +22,6 @@ public abstract class AbstractIdentifier<T> {
         return id;
     }
     
-    //public abstract <T> AbstractIdentifier<T> fromString(String s);
+    public abstract String toString();
+    
 }

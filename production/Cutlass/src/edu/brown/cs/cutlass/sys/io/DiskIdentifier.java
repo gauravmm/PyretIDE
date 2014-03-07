@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 
 /**
  *
- * @author Gaurav Manek
+ * @author Miles Holland
  */
 public class DiskIdentifier extends AbstractIdentifier<Path> {
 
@@ -19,5 +19,10 @@ public class DiskIdentifier extends AbstractIdentifier<Path> {
 
     public DiskIdentifier(String id) {
         super(Paths.get(id));
+    }
+
+    @Override
+    public String toString() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
