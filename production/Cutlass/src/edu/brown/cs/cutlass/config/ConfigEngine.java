@@ -9,16 +9,7 @@ import java.io.*;
 
 public class ConfigEngine {
 
-    /**
-     * @deprecated Remove this
-     */
-    private Properties defaultProps;
     private final Properties userProps;
-    /**
-     * @deprecated Remove this.
-     */
-    private final String defaultPath = "defaultProperties.txt"; //change to path of default props file
-    private final String userPath;
 
     /**
      * Package constructor for testing.
@@ -34,8 +25,23 @@ public class ConfigEngine {
      * @throws ConfigFileInvalidException if the configuration file cannot be
      * parsed.
      */
-    private ConfigEngine(List<String> cfgData) throws ConfigFileInvalidException {
-        throw new UnsupportedOperationException("not yet written");
+    private ConfigEngine(List<String> cfgFile) throws ConfigFileInvalidException {
+        StringBuilder strBld = new StringBuilder();
+        userProps = new Properties();
+        if (!cfgFile.isEmpty()) {
+            strBld.append(cfgFile.get(0));
+            for (int index = 1; index < cfgFile.size(); index++) {
+                strBld.append("\n");
+                strBld.append(cfgFile.get(index));
+            }
+            String cfgString = strBld.toString();
+            try {
+                InputStream str = new ByteArrayInputStream(cfgString.getBytes("UTF-8"));
+                userProps.load(str);
+            } catch (IOException e) {
+                throw new ConfigFileInvalidException("An error occurred while reading the configuration file");
+            }
+        }
     }
 
     /**
@@ -46,34 +52,6 @@ public class ConfigEngine {
      */
     public static ConfigEngine fromString(List<String> cfgData) throws ConfigFileInvalidException {
         return new ConfigEngine(cfgData);
-    }
-
-    /**
-     * Change contract
-     *
-     * @param userPath
-     * @throws ConfigFileInvalidException
-     * @deprecated
-     */
-    public ConfigEngine(String userPath) throws ConfigFileInvalidException {
-        this.userPath = userPath;
-        defaultProps = new Properties();
-        try (FileInputStream inStream = new FileInputStream(defaultPath)) {
-            defaultProps.load(inStream);
-        } catch (FileNotFoundException e) {
-            throw new ConfigFileInvalidException("No configuration file found at " + defaultPath);
-        } catch (IOException e) {
-            throw new ConfigFileInvalidException("IO error occurred while reading " + defaultPath);
-        }
-
-        userProps = new Properties(defaultProps);
-        try (FileInputStream inStream = new FileInputStream(userPath)) {
-            userProps.load(inStream);
-        } catch (FileNotFoundException e) {
-            throw new ConfigFileInvalidException("No configuration file found at " + userPath);
-        } catch (IOException e) {
-            throw new ConfigFileInvalidException("IO error occurred while reading " + userPath);
-        }
     }
 
     public Boolean getBoolean(String key) {
@@ -155,12 +133,17 @@ public class ConfigEngine {
         if (value == null) {
             throw new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
         }
-        String[] valueSplit = value.split(",");
-        List<String> ret = new ArrayList<>();
-        for (String s : valueSplit) {
-            ret.add(s.replace("(0^^^^@", ","));
+        if (value.charAt(0) == '{' && value.charAt(value.length() - 1) == '}') {
+            String[] valueSplit = value.split("(?<!\\\\), ");
+            List<String> ret = new ArrayList<>();
+            for (String s : valueSplit) {
+                ret.add(s.replace("\\,", ","));
+            }
+            return ret;
+        } else {
+            throw new ConfigTypeException("Key " + key + " is not associated with a List value");
         }
-        return ret;
+
     }
 
     public void setBoolean(String key, Boolean value) {
@@ -189,13 +172,14 @@ public class ConfigEngine {
 
     public void setList(String key, List<String> value) { //non-empty list
         if (value.isEmpty()) {
-            setString(key, "");
+            setString(key, "{}");
             return;
         }
-        String write = value.get(0).replace(",", "(0^^^^@");
+        String write = "{" + value.get(0).replace(",", "\\,");
         for (int i = 1; i < value.size(); i++) {
-            write += "," + value.get(i).replace(",", "(0^^^^@");
+            write += "," + value.get(i).replace(",", "\\,");
         }
+        write += "}";
         setString(key, write);
     }
 
@@ -203,24 +187,18 @@ public class ConfigEngine {
         userProps.remove(key);
     }
 
-    /**
-     * @deprecated @return
-     */
-    public boolean save() {
-        try (FileOutputStream out = new FileOutputStream(userPath)) {
-            userProps.store(out, "---No Comment---");
-            return true;
-        } catch (FileNotFoundException e) {
-            throw new ConfigFileInvalidException("No configuration file found at " + userPath);
-        } catch (IOException e) {
-            throw new ConfigFileInvalidException("IO error occurred while reading " + userPath);
-        }
-    }
-
     // Serialized output, will be stored in the file:
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("Not yet written.");
+        try {
+            ByteArrayOutputStream op = new ByteArrayOutputStream();
+            userProps.store(op, "");
+            String out = new String(op.toByteArray(), "UTF-8");
+            return out;
+        } catch (IOException ex) {
+            //There is, like, no chance of this occurring
+            throw new ConfigFileInvalidException("Something went wrong when converting your properties! Sorry.");
+        }
     }
-    
+
 }
