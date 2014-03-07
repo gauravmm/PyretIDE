@@ -16,15 +16,18 @@ import java.util.List;
  * Holds (and handles serializing/unserializing of) the program state at launch.
  * This includes the files currently open. This is an immutable object.
  *
- * @author Gaurav Manek
+ * @author Gaurav Manek T is an arrPointer
  */
 class LaunchState<T extends AbstractIdentifier> {
+    // T is an AbstractIdentifer that identifies a unique resource on the 
+    // current I/O media (Ex. a path object to a space in disk).
 
     /**
-     * 
+     *
+     *
      */
     private final List<T> openFiles;
-    
+
     /**
      * Defaults to 0.
      */
@@ -59,13 +62,16 @@ class LaunchState<T extends AbstractIdentifier> {
     public String toString() {
         throw new UnsupportedOperationException("Not yet written");
     }
-
+    
+    
     // R is the same type as T, but defined in the static scope.
+    
     /**
-     * Convert a LaunchState-encoded file into a LaunchState object
+     * Convert a LaunchState-encoded file into a LaunchState object.
      *
      * Note: If an AbstractIdentifer cannot be parsed, a warning is logged and
-     * the function ignores it.
+     * the function ignores it. File path representation anything we decide on
+     * later.
      *
      * @param <R> The underlying type of the I/O system, as defined by the
      * AbstractIdentifier.
@@ -78,6 +84,7 @@ class LaunchState<T extends AbstractIdentifier> {
      * @throws IllegalArgumentException If the structure of the file is
      * incorrect.
      */
+
     public static <R extends AbstractIdentifier> LaunchState<R> fromString(List<String> in, AbstractIdentifierParser<R> parser) throws IllegalArgumentException {
         throw new UnsupportedOperationException("Not yet written");
     }
