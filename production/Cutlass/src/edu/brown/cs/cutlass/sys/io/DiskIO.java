@@ -32,7 +32,6 @@ public class DiskIO implements AbstractIO<DiskIdentifier> {
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Pyret Source File", "arr");
         fileChooser.setFileFilter(filter);
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        System.err.println(cfgPath.toAbsolutePath().toString());
     }
 
     private void checkCfgFolder() throws AbstractIOException {

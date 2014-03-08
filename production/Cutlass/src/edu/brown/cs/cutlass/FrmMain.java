@@ -1,10 +1,12 @@
 package edu.brown.cs.cutlass;
 
 import edu.brown.cs.cutlass.config.ConfigEngine;
+import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -120,10 +122,15 @@ class FrmMain extends javax.swing.JFrame {
         mnuHelp = new javax.swing.JMenu();
         mnuHelpAbout = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cutlass - Your Weapon of Choice");
         setMinimumSize(new java.awt.Dimension(400, 120));
         setPreferredSize(new java.awt.Dimension(500, 700));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         spltPrimary.setDividerLocation(300);
         spltPrimary.setResizeWeight(1.0);
@@ -320,6 +327,10 @@ class FrmMain extends javax.swing.JFrame {
                 "About", JOptionPane.INFORMATION_MESSAGE);
 
     }//GEN-LAST:event_mnuHelpAboutActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        launcher.quit(LaunchState.toState(new ArrayList<AbstractIdentifier>(), 0));
+    }//GEN-LAST:event_formWindowClosed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
