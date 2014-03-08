@@ -39,17 +39,27 @@ public class DiskIdentifierParserTest {
 
     /**
      * Test of parse method, of class DiskIdentifierParser.
+     * Tests by making sure the outputted string is what we'd expect.
      */
     @Test
     public void testParse() {
         System.out.println("parse");
-        String in = "";
+        String in = "/documents";
         DiskIdentifierParser instance = new DiskIdentifierParser();
-        DiskIdentifier expResult = null;
         DiskIdentifier result = instance.parse(in);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(result.toString(), in);
     }
+    
+    /**Error Test of parse, makes sure that it complains about null entries.
+     * 
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void badPathTest1(){
+        System.out.println("bad path 1");
+        String in = null;
+        DiskIdentifierParser instance = new DiskIdentifierParser();
+        DiskIdentifier result = instance.parse(in);
+    }
+    
     
 }

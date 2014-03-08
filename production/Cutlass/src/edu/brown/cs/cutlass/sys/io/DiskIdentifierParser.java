@@ -5,6 +5,13 @@
 
 package edu.brown.cs.cutlass.sys.io;
 
+import edu.brown.cs.cutlass.util.Lumberjack;
+import edu.brown.cs.cutlass.util.Lumberjack;
+import edu.brown.cs.cutlass.util.Lumberjack.Level;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  *
  * @author Miles Holland
@@ -13,7 +20,16 @@ public class DiskIdentifierParser implements AbstractIdentifierParser<DiskIdenti
 
     @Override
     public DiskIdentifier parse(String in) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try{
+            Path input = Paths.get(in);    
+            return new DiskIdentifier(input);
+        }
+        catch(InvalidPathException | NullPointerException e){
+            Lumberjack.log(Level.WARN, "DiskIDParser recieved an invalid path.");
+            throw new IllegalArgumentException("Invalid Path.");
+        }
+        //need testing to assure that this leads to a legitimate place
+        
     }
     
 }

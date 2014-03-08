@@ -4,6 +4,7 @@
  */
 package edu.brown.cs.cutlass.sys.io;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -29,6 +30,6 @@ public class DiskIdentifier implements AbstractIdentifier {
 
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return id.toString();
     }
 }

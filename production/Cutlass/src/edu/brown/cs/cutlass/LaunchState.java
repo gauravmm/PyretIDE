@@ -122,10 +122,10 @@ public class LaunchState<T extends AbstractIdentifier> {
             if (line.isEmpty() || line.startsWith(comment)) {
                 // if empty or comment line, do nothing
             } else {
-                String[] parts = line.split(sep, 1);
+                String[] parts = line.split("\t");
                 if (parts.length != 2) {
-                    Lumberjack.log(Level.ERROR, "Line did not match any known entry types");
-                    throw new IllegalArgumentException("Error: This line did not match any known entry types.");
+                    Lumberjack.log(Level.ERROR, "Line did not have two sections (header <tab> data)");
+                    throw new IllegalArgumentException("Error: This line does not have 2 parts.");
                 }
 
                 switch (parts[0]) {
@@ -151,7 +151,13 @@ public class LaunchState<T extends AbstractIdentifier> {
                 }
             }
         }
-
+        
+        //this check is important, please do not remove it.
+        if(currentTabID0 < 0 || currentTabID0 >= openFiles0.size()){
+             Lumberjack.log(Level.ERROR, "Tab is was not in bounds");
+                        throw new IllegalArgumentException("Error: Tab is was not in bounds.");
+  
+        }
         // Note: LaunchState is not responsible for checking the consistency of the data it holds.
         // Actual creating and returning of a LaunchState
         return new LaunchState<>(openFiles0, currentTabID0);
