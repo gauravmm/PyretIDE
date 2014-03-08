@@ -70,7 +70,7 @@ public class ConfigEngine {
         if (value == null) {
             throw new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
         }
-        if (value.matches("^\\d+$")) {
+        if (value.matches("^-\\d+|\\d+$")) {
             Integer ret = Integer.parseInt(value);
             return ret;
         } else {
@@ -83,7 +83,7 @@ public class ConfigEngine {
         if (value == null) {
             throw new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
         }
-        if (value.matches("^\\d+$|^\\d+.\\d+$")) {
+        if (value.matches("^-\\d+$|^\\d+$|^\\d+.\\d+$|-\\d+.\\d+$")) {
             Double ret = Double.parseDouble(value);
             return ret;
         } else {
@@ -104,9 +104,11 @@ public class ConfigEngine {
         if (value == null) {
             throw new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
         }
-        if (value.matches("^Dimension:\\s+[\\s+\\d+\\s+,\\s+\\d+\\s+]$")) {
-            int width = Integer.parseInt(value.substring(12, value.indexOf(",")));
-            int height = Integer.parseInt(value.substring(value.indexOf("," + 1), value.indexOf("]")));
+        
+        if (value.matches("^Dimension: \\[(-\\d+|\\d+),(-\\d+|\\d+)\\]$")) {
+            value = value.substring(value.indexOf("[") + 1, value.indexOf("]"));
+            int width = Integer.parseInt(value.substring(0, value.indexOf(",")));
+            int height = Integer.parseInt(value.substring(value.indexOf(",") + 1));
             return new Dimension(width, height);
         } else {
             throw new ConfigTypeException("Key " + key + " is not associated with a Dimension value, \"" + value + "\" found instead.");
@@ -132,10 +134,13 @@ public class ConfigEngine {
             throw new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
         }
         if (value.charAt(0) == '{' && value.charAt(value.length() - 1) == '}') {
-            String[] valueSplit = value.split("(?<!\\\\), ");
+            value = value.substring(1, value.length() - 1);
+            String[] valueSplit = value.split("//");
+            
             List<String> ret = new ArrayList<>();
+            if (value.isEmpty()) return ret;
             for (String s : valueSplit) {
-                ret.add(s.replace("\\,", ","));
+                ret.add(s);
             }
             return ret;
         } else {
@@ -154,9 +159,14 @@ public class ConfigEngine {
         userProps.setProperty(key, value.toString());
     }
 
+    //Doing things this way prevents wrapping to scientific notation while preserving precision of a double value
     public void setDouble(String key, Double value) {
         changed = true;
-        userProps.setProperty(key, value.toString());
+        long ipart = (long) value.doubleValue();
+        double fpartdouble = value - ipart;
+        String helper = "" + fpartdouble;
+        long fpart = Long.parseLong(helper.substring(2));
+        userProps.setProperty(key, ipart + "." + fpart);
     }
 
     public void setString(String key, String value) {
@@ -180,9 +190,9 @@ public class ConfigEngine {
             setString(key, "{}");
             return;
         }
-        String write = "{" + value.get(0).replace(",", "\\,");
+        String write = "{" + value.get(0);
         for (int i = 1; i < value.size(); i++) {
-            write += "," + value.get(i).replace(",", "\\,");
+            write += "//" + value.get(i);
         }
         write += "}";
         setString(key, write);
@@ -202,7 +212,7 @@ public class ConfigEngine {
     public String toString() {
         try {
             ByteArrayOutputStream op = new ByteArrayOutputStream();
-            userProps.store(op, "");
+            userProps.store(op, "Format: key=value");
             String out = new String(op.toByteArray(), "UTF-8");
             return out;
         } catch (IOException ex) {
