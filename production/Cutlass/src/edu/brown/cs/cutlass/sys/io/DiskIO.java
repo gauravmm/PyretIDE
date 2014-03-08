@@ -32,12 +32,13 @@ public class DiskIO implements AbstractIO<DiskIdentifier> {
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Pyret Source File", "arr");
         fileChooser.setFileFilter(filter);
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        System.err.println(cfgPath.toAbsolutePath().toString());
     }
 
     private void checkCfgFolder() throws AbstractIOException {
         if (!Files.exists(cfgPath)) {
             try {
-                Files.createDirectory(cfgPath);
+                Files.createDirectories(cfgPath);
             } catch (IOException ex) {
                 throw new AbstractIOException("Could not create config directory!");
             }
