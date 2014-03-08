@@ -10,6 +10,11 @@ import java.io.*;
 public class ConfigEngine {
 
     private final Properties userProps;
+    private boolean changed = false;
+
+    public ConfigEngine() {
+        userProps = new Properties();
+    }
 
     /**
      * Private Access Constructor used for fromString.
@@ -99,12 +104,12 @@ public class ConfigEngine {
         if (value == null) {
             throw new ConfigKeyNotFoundException("Key " + key + " does not exist yet");
         }
-        if (value.matches("^Dimension: [\\d+,\\d+]$")) {
+        if (value.matches("^Dimension:\\s+[\\s+\\d+\\s+,\\s+\\d+\\s+]$")) {
             int width = Integer.parseInt(value.substring(12, value.indexOf(",")));
             int height = Integer.parseInt(value.substring(value.indexOf("," + 1), value.indexOf("]")));
             return new Dimension(width, height);
         } else {
-            throw new ConfigTypeException("Key " + key + " is not associated with a Dimension value");
+            throw new ConfigTypeException("Key " + key + " is not associated with a Dimension value, \"" + value + "\" found instead.");
         }
     }
 
@@ -140,30 +145,37 @@ public class ConfigEngine {
     }
 
     public void setBoolean(String key, Boolean value) {
+        changed = true;
         userProps.setProperty(key, value.toString());
     }
 
     public void setInteger(String key, Integer value) {
+        changed = true;
         userProps.setProperty(key, value.toString());
     }
 
     public void setDouble(String key, Double value) {
+        changed = true;
         userProps.setProperty(key, value.toString());
     }
 
     public void setString(String key, String value) {
+        changed = true;
         userProps.setProperty(key, value);
     }
 
     public void setDimension(String key, Dimension value) {
+        changed = true;
         setString(key, "Dimension: [" + value.width + "," + value.height + "]");
     }
 
     public void setColor(String key, Color value) {
+        changed = true;
         setString(key, "Color: #" + Integer.toHexString(value.getRGB()));
     }
 
     public void setList(String key, List<String> value) { //non-empty list
+        changed = true;
         if (value.isEmpty()) {
             setString(key, "{}");
             return;
@@ -177,7 +189,12 @@ public class ConfigEngine {
     }
 
     public void removeProperty(String key) {
+        changed = true;
         userProps.remove(key);
+    }
+
+    public boolean isChanged() {
+        return changed;
     }
 
     // Serialized output, will be stored in the file:
@@ -193,11 +210,15 @@ public class ConfigEngine {
             throw new ConfigFileInvalidException("Something went wrong when converting your properties! Sorry.");
         }
     }
-    
+
     @Override
-    public boolean equals(Object other){
-        if (this == other) return true;
-        if (! (other instanceof ConfigEngine)) return false;
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof ConfigEngine)) {
+            return false;
+        }
         ConfigEngine oth = (ConfigEngine) other;
         return oth.userProps.equals(this.userProps);
     }

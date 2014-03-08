@@ -14,6 +14,7 @@ import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.clargs.CLArg;
 import edu.brown.cs.cutlass.util.clargs.CLArgs;
 import edu.brown.cs.cutlass.util.clargs.IncorrectCommandlineArgumentException;
+import java.awt.Dimension;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.UIManager;
@@ -69,6 +70,9 @@ public class Launcher {
     private final String fnLaunchState = "launchstate";
     private final String fnConfig = "config";
 
+    // Config:
+    private final ConfigEngine config;
+
     private Launcher(String[] args) {
         CLArgs argParsed = null;
         try {
@@ -101,8 +105,18 @@ public class Launcher {
         // Prepare IO:
         io = new DiskIO();
 
-        // Load configuration engine
-        ConfigEngine configEngine = null;
+        // Load configuration engine:
+        ConfigEngine tmpConfig = null;
+        try {
+            tmpConfig = ConfigEngine.fromString(io.getConfigurationFile(fnConfig));
+        } catch (AbstractIOException | IllegalArgumentException e) {
+            // Could not load file (if AbstractIOException) or unparsable (if IllegalArgumentException)
+            Lumberjack.log(Lumberjack.Level.ERROR, e);
+            // Manually initialize the ConfigEngine:
+            tmpConfig = new ConfigEngine();
+            tmpConfig.setDimension("ui.toolbar.iconsize", new Dimension(60, 40));
+        }
+        config = tmpConfig;
 
         // Load launch state
         Option<LaunchState> launchState = null;
@@ -124,7 +138,7 @@ public class Launcher {
         assert launchState != null;
 
         // Hand off control to FrmMain
-        (new FrmMain(this, configEngine, launchState)).setVisible(true);
+        (new FrmMain(this, config, launchState)).setVisible(true);
     }
 
     private static String generateCLHelp() {
@@ -165,6 +179,15 @@ public class Launcher {
             io.setConfigurationFile(fnLaunchState, lState.toStringArr());
         } catch (AbstractIOException e) {
             Lumberjack.log(Lumberjack.Level.ERROR, "Could not save current LaunchState!");
+        }
+
+        // Store ConfigEngine:
+        if (config.isChanged()) {
+            try {
+                io.setConfigurationFile(fnConfig, config.toString());
+            } catch (AbstractIOException e) {
+                Lumberjack.log(Lumberjack.Level.ERROR, "Could not save current ConfigEngine!");
+            }
         }
 
         System.exit(ExitCode.OK.getCode());

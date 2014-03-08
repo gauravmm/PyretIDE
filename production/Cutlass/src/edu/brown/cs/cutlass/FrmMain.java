@@ -41,7 +41,7 @@ class FrmMain extends javax.swing.JFrame {
 
         //<editor-fold defaultstate="collapsed" desc="Load Toolbar Icons">
         // Load this dimension from configEngine:
-        Dimension toolbarIconSize = new Dimension(60, 40);
+        Dimension toolbarIconSize = config.getDimension("ui.toolbar.iconsize");
         List<Pair<JLabel, String>> labelIcons = Arrays.asList(new Pair<>(tbSave, "document-save-5.png"), new Pair<>(tbRun, "arrow-right-3.png"), new Pair<>(tbAutoIndent, "format-indent-more-3.png"), new Pair<>(tbBookmarkStop, "dialog-cancel-5.png"), new Pair<>(tbRedo, "edit-redo-3.png"), new Pair<>(tbUndo, "edit-undo-3.png"), new Pair<>(tbBookmarkBack, "arrow-up-double.png"), new Pair<>(tbBookmarkSet, "bookmark-2.png"), new Pair<>(tbBookmarkNext, "arrow-down-double.png"));
         for (Pair<JLabel, String> p : labelIcons) {
             JLabel lbl = p.getX();
