@@ -6,6 +6,9 @@
 package edu.brown.cs.cutlass.sys.io;
 
 import edu.brown.cs.cutlass.util.Option;
+import java.io.File;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -20,11 +23,23 @@ import static org.junit.Assert.*;
  */
 public class DiskIOTest {
     
+    static DiskIO testIO;
+    static String inputIdentifier;
+    static List<String> inputContent;
+    static DiskIdentifier testDID;
+    
     public DiskIOTest() {
     }
     
     @BeforeClass
     public static void setUpClass() {
+        testIO = new DiskIO();
+        inputIdentifier = System.getProperty("user.home") + File.separator + "Desktop" + File.separator + "cutLassTest.arr";
+        inputContent = new ArrayList<>();
+        inputContent.add("line 1");
+        inputContent.add("line 2");
+        inputContent.add("line 3");
+        testDID = new DiskIdentifier(inputIdentifier);
     }
     
     @AfterClass
@@ -45,13 +60,8 @@ public class DiskIOTest {
     @Test
     public void testGetConfigurationFile() {
         System.out.println("getConfigurationFile");
-        String identifier = "";
-        DiskIO instance = new DiskIO();
-        List<String> expResult = null;
-        List<String> result = instance.getConfigurationFile(identifier);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        List<String> result = testIO.getConfigurationFile(inputIdentifier);
+        assertEquals(result.get(0), "line 1");
     }
 
     /**
@@ -60,12 +70,8 @@ public class DiskIOTest {
     @Test
     public void testSetConfigurationFile_String_List() {
         System.out.println("setConfigurationFile");
-        String identifier = "";
-        List<? extends CharSequence> contents = null;
-        DiskIO instance = new DiskIO();
-        instance.setConfigurationFile(identifier, contents);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        testIO.setConfigurationFile(inputIdentifier, inputContent);
+        assertEquals(false, true);
     }
 
     /**
@@ -74,12 +80,8 @@ public class DiskIOTest {
     @Test
     public void testSetConfigurationFile_String_CharSequence() {
         System.out.println("setConfigurationFile");
-        String identifier = "";
-        CharSequence contents = null;
-        DiskIO instance = new DiskIO();
-        instance.setConfigurationFile(identifier, contents);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        testIO.setConfigurationFile(inputIdentifier, inputContent);
+        assertEquals(false, true);
     }
 
     /**
@@ -88,13 +90,8 @@ public class DiskIOTest {
     @Test
     public void testGetUserFile() {
         System.out.println("getUserFile");
-        DiskIdentifier identifier = null;
-        DiskIO instance = new DiskIO();
-        List<String> expResult = null;
-        List<String> result = instance.getUserFile(identifier);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        List<String> result = testIO.getUserFile(testDID);
+        assertEquals(result.get(0), "line 1");
     }
 
     /**
@@ -103,12 +100,8 @@ public class DiskIOTest {
     @Test
     public void testSetUserFile_DiskIdentifier_CharSequence() {
         System.out.println("setUserFile");
-        DiskIdentifier identifier = null;
-        CharSequence contents = null;
-        DiskIO instance = new DiskIO();
-        instance.setUserFile(identifier, contents);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        testIO.setUserFile(testDID, inputContent);
+        assertEquals(false, true);
     }
 
     /**
@@ -117,12 +110,8 @@ public class DiskIOTest {
     @Test
     public void testSetUserFile_DiskIdentifier_List() {
         System.out.println("setUserFile");
-        DiskIdentifier identifier = null;
-        List<? extends CharSequence> contents = null;
-        DiskIO instance = new DiskIO();
-        instance.setUserFile(identifier, contents);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        testIO.setUserFile(testDID, inputContent);
+        assertEquals(false, true);
     }
 
     /**
@@ -131,12 +120,8 @@ public class DiskIOTest {
     @Test
     public void testRequestUserFileDestination() {
         System.out.println("requestUserFileDestination");
-        DiskIO instance = new DiskIO();
-        Option<DiskIdentifier> expResult = null;
-        Option<DiskIdentifier> result = instance.requestUserFileDestination();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Option<DiskIdentifier> result = testIO.requestUserFileDestination();
+        assertEquals(result.hasData(), false);
     }
 
     /**
@@ -145,12 +130,8 @@ public class DiskIOTest {
     @Test
     public void testRequestUserFileSource() {
         System.out.println("requestUserFileSource");
-        DiskIO instance = new DiskIO();
-        Option<DiskIdentifier> expResult = null;
-        Option<DiskIdentifier> result = instance.requestUserFileSource();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Option<DiskIdentifier> result = testIO.requestUserFileSource();
+        assertEquals(false, true);
     }
 
     /**
@@ -159,12 +140,9 @@ public class DiskIOTest {
     @Test
     public void testGetIdentifierParser() {
         System.out.println("getIdentifierParser");
-        DiskIO instance = new DiskIO();
         AbstractIdentifierParser<DiskIdentifier> expResult = null;
-        AbstractIdentifierParser<DiskIdentifier> result = instance.getIdentifierParser();
+        AbstractIdentifierParser<DiskIdentifier> result = testIO.getIdentifierParser();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }
