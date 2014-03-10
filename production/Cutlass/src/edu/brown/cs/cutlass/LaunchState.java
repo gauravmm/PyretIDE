@@ -71,7 +71,7 @@ public class LaunchState<T extends AbstractIdentifier> {
      *
      * @return A serialized representation of this object as a List of String.
      */
-    private List<String> toStringArr() {
+    public List<String> toStringArr() {
         List<String> builtString = new ArrayList<>();
         builtString.add("CURRENT_TAB" + sep + Integer.toString(currentTabId));
         for (T t : openFiles) {
