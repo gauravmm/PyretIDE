@@ -6,7 +6,6 @@
 package edu.brown.cs.cutlass.sys.io;
 
 import edu.brown.cs.cutlass.util.Lumberjack;
-import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Lumberjack.Level;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;

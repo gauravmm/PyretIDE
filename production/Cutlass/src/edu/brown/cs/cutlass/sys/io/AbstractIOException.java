@@ -11,7 +11,7 @@ package edu.brown.cs.cutlass.sys.io;
  *
  * @author Gaurav Manek
  */
-public class AbstractIOException extends RuntimeException {
+public class AbstractIOException extends Exception {
 
     public AbstractIOException() {
         this("Abstract IO has encountered an error.");

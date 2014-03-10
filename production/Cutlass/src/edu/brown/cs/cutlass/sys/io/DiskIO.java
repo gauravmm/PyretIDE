@@ -23,6 +23,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class DiskIO implements AbstractIO<DiskIdentifier> {
 
+    private static final String ext = ".cfg";
     private static final Path cfgPath = Paths.get(System.getProperty("user.home") + File.separator + ".cutlass" + File.separator);
     private static final Charset charset = Charset.forName("UTF8");
     private final JFileChooser fileChooser = new JFileChooser(); // Keep a single fileChooser object, keeps memory of last directory opened/saved.
@@ -46,12 +47,14 @@ public class DiskIO implements AbstractIO<DiskIdentifier> {
 
     @Override
     public List<String> getConfigurationFile(String identifier) throws AbstractIOException {
+        identifier = identifier.concat(ext);
         return getUserFile(new DiskIdentifier(cfgPath.resolve(identifier)));
     }
 
     @Override
     public void setConfigurationFile(String identifier, List<? extends CharSequence> contents) throws AbstractIOException {
         // Create folder if it does not exist.
+        identifier = identifier.concat(ext);
         checkCfgFolder();
         setUserFile(new DiskIdentifier(cfgPath.resolve(identifier)), contents);
     }
@@ -59,6 +62,7 @@ public class DiskIO implements AbstractIO<DiskIdentifier> {
     @Override
     public void setConfigurationFile(String identifier, CharSequence contents) throws AbstractIOException {
         // Create folder if it does not exist.
+        identifier = identifier.concat(ext);
         checkCfgFolder();
         setUserFile(new DiskIdentifier(cfgPath.resolve(identifier)), contents);
     }
