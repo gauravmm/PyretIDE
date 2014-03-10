@@ -1,7 +1,7 @@
 Cutlass
 ========
 
-CS0320 Term Project, Brown University, Fall 2014
+CS0320 Term Project, Brown University, Spring 2014
 
 Dilip Arumugam, Gaurav Manek, Miles Holland, Zachary Zagorski
 
