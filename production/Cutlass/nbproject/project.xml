@@ -13,6 +13,7 @@
         </data>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
             <word>subclassed</word>
+            <word>tooltip</word>
         </spellchecker-wordlist>
     </configuration>
 </project>

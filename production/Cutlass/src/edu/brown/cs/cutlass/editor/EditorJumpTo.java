@@ -2,7 +2,7 @@
  * Cutlass - Pyret IDE
  * For CSCI 0320 Spring 2014, Term Project
  */
-package edu.brown.cs.cutlass.editor.quicknav;
+package edu.brown.cs.cutlass.editor;
 
 /**
  * A utility class that allows any receiving object to tell the editor to jump
@@ -11,12 +11,12 @@ package edu.brown.cs.cutlass.editor.quicknav;
  *
  * @author Gaurav Manek
  */
-public class QuickNavigationJumpTo {
+public class EditorJumpTo {
 
-    private final QuickNavigationJumpClient client;
+    private final EditorJumpToClient client;
     private final long offset; // We can always switch to another form of identification, such as a function name, etc.
 
-    public QuickNavigationJumpTo(QuickNavigationJumpClient client, long offset) {
+    public EditorJumpTo(EditorJumpToClient client, long offset) {
         this.client = client;
         this.offset = offset;
     }

@@ -4,7 +4,7 @@
  */
 package edu.brown.cs.cutlass.editor;
 
-import edu.brown.cs.cutlass.editor.quicknav.QuickNavigation;
+import edu.brown.cs.cutlass.editor.callgraph.CallGraphEntry;
 import edu.brown.cs.cutlass.sys.pyret.AbstractPyretAccess;
 
 /**
@@ -20,7 +20,7 @@ public interface EditorClient {
      * @param quickNav The QuickNavigation object representing the new state of
      * the quick navigation data.
      */
-    public void handleQuickNavigationChange(QuickNavigation quickNav);
+    public void handleQuickNavigationChange(CallGraphEntry quickNav);
 
     /**
      * Request an accessor object that allows interaction with an instance of
