@@ -10,6 +10,8 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -24,8 +26,8 @@ import static org.junit.Assert.*;
 public class DiskIOTest {
     
     static DiskIO testIO;
-    static String inputIdentifier;
-    static List<String> inputContent;
+    static String configID, fileID;
+    static List<String> configContent, arrFileContent, newContent1, newContent2;
     static DiskIdentifier testDID;
     
     public DiskIOTest() {
@@ -34,12 +36,25 @@ public class DiskIOTest {
     @BeforeClass
     public static void setUpClass() {
         testIO = new DiskIO();
-        inputIdentifier = System.getProperty("user.home") + File.separator + "Desktop" + File.separator + "cutLassTest.arr";
-        inputContent = new ArrayList<>();
-        inputContent.add("line 1");
-        inputContent.add("line 2");
-        inputContent.add("line 3");
-        testDID = new DiskIdentifier(inputIdentifier);
+        configID = System.getProperty("user.home") + File.separator + "Desktop" + File.separator + "cutLassTest.cfg";
+        fileID = System.getProperty("user.home") + File.separator + "Desktop" + File.separator + "cutLassTest.arr";
+        configContent = new ArrayList<>();
+        configContent.add("line 1");
+        configContent.add("line 2");
+        configContent.add("line 3");
+        arrFileContent = new ArrayList<>();
+        arrFileContent.add("line a");
+        arrFileContent.add("line b");
+        arrFileContent.add("line c");
+        newContent1 = new ArrayList<>();
+        newContent1.add("line 1");
+        newContent1.add("line y");
+        newContent1.add("line z");
+        newContent2 = new ArrayList<>();
+        newContent2.add("line a");
+        newContent2.add("line 500");
+        newContent2.add("line 600");
+        testDID = new DiskIdentifier(fileID);
     }
     
     @AfterClass
@@ -59,9 +74,13 @@ public class DiskIOTest {
      */
     @Test
     public void testGetConfigurationFile() {
-        System.out.println("getConfigurationFile");
-        List<String> result = testIO.getConfigurationFile(inputIdentifier);
-        assertEquals(result.get(0), "line 1");
+        try {
+            System.out.println("getConfigurationFile");
+            List<String> result = testIO.getConfigurationFile(configID);
+            assertEquals(result.get(0), "line 1");
+        } catch (AbstractIOException ex) {
+            fail("testGetConfigurationFile failed?");
+        }
     }
 
     /**
@@ -70,8 +89,14 @@ public class DiskIOTest {
     @Test
     public void testSetConfigurationFile_String_List() {
         System.out.println("setConfigurationFile");
-        testIO.setConfigurationFile(inputIdentifier, inputContent);
-        assertEquals(false, true);
+        try {
+            testIO.setConfigurationFile(configID, newContent1);
+            assertEquals(testIO.getConfigurationFile(configID).get(1), "line y");
+            testIO.setConfigurationFile(configID, configContent);
+            assertEquals(testIO.getConfigurationFile(configID).get(1), "line 2");
+        } catch (AbstractIOException ex) {
+            fail("testSetConfigurationFile_String_List failed?");
+        }
     }
 
     /**
@@ -79,9 +104,15 @@ public class DiskIOTest {
      */
     @Test
     public void testSetConfigurationFile_String_CharSequence() {
-        System.out.println("setConfigurationFile");
-        testIO.setConfigurationFile(inputIdentifier, inputContent);
-        assertEquals(false, true);
+        try {
+            System.out.println("setConfigurationFile");
+            testIO.setConfigurationFile(configID, newContent2);
+            assertEquals(testIO.getConfigurationFile(configID).get(0), "line a");
+            testIO.setConfigurationFile(configID, configContent);
+            assertEquals(testIO.getConfigurationFile(configID).get(1), "line 2");
+        } catch (AbstractIOException ex) {
+            fail("testSetConfigurationFile_String_CharSequence failed?");
+        }
     }
 
     /**
@@ -89,9 +120,13 @@ public class DiskIOTest {
      */
     @Test
     public void testGetUserFile() {
-        System.out.println("getUserFile");
-        List<String> result = testIO.getUserFile(testDID);
-        assertEquals(result.get(0), "line 1");
+        try {
+            System.out.println("getUserFile");
+            List<String> result = testIO.getUserFile(testDID);
+            assertEquals(result.get(0), "line a");
+        } catch (AbstractIOException ex) {
+           fail("testGetUserFile failed?");
+        }
     }
 
     /**
@@ -99,9 +134,15 @@ public class DiskIOTest {
      */
     @Test
     public void testSetUserFile_DiskIdentifier_CharSequence() {
-        System.out.println("setUserFile");
-        testIO.setUserFile(testDID, inputContent);
-        assertEquals(false, true);
+        try {
+            System.out.println("setUserFile");
+            testIO.setUserFile(testDID, newContent1);
+            assertEquals(testIO.getUserFile(testDID).get(1), "line y");
+            testIO.setUserFile(testDID, arrFileContent);
+            assertEquals(testIO.getUserFile(testDID).get(1), "line b");
+        } catch (AbstractIOException ex) {
+            fail("testSetUserFile_DiskIdentifier_CharSequence failed?");
+        }
     }
 
     /**
@@ -109,9 +150,15 @@ public class DiskIOTest {
      */
     @Test
     public void testSetUserFile_DiskIdentifier_List() {
-        System.out.println("setUserFile");
-        testIO.setUserFile(testDID, inputContent);
-        assertEquals(false, true);
+        try {
+            System.out.println("setUserFile");
+            testIO.setUserFile(testDID, newContent1);
+            assertEquals(testIO.getUserFile(testDID).get(1), "line y");
+            testIO.setUserFile(testDID, arrFileContent);
+            assertEquals(testIO.getUserFile(testDID).get(1), "line b");
+        } catch (AbstractIOException ex) {
+            fail("testSetUserFile_DiskIdentifier_List failed?");
+        }
     }
 
     /**
@@ -119,9 +166,14 @@ public class DiskIOTest {
      */
     @Test
     public void testRequestUserFileDestination() {
-        System.out.println("requestUserFileDestination");
-        Option<DiskIdentifier> result = testIO.requestUserFileDestination();
-        assertEquals(result.hasData(), false);
+        try {
+            System.out.println("requestUserFileDestination");
+            Option<DiskIdentifier> result = testIO.requestUserFileDestination();
+            assertEquals(result.hasData(), true);
+            assertEquals(result.getData().toString(), configID);
+        } catch (AbstractIOException ex) {
+            fail("testRequestUserFileDestination failed?");
+        }
     }
 
     /**
@@ -129,20 +181,14 @@ public class DiskIOTest {
      */
     @Test
     public void testRequestUserFileSource() {
-        System.out.println("requestUserFileSource");
-        Option<DiskIdentifier> result = testIO.requestUserFileSource();
-        assertEquals(false, true);
+        try {
+            System.out.println("requestUserFileSource");
+            Option<DiskIdentifier> result = testIO.requestUserFileSource();
+            assertEquals(result.hasData(), true);
+            assertEquals(result.toString(), fileID);
+        } catch (AbstractIOException ex) {
+            fail("testRequestUserFileSource failed?");
+        }
     }
 
-    /**
-     * Test of getIdentifierParser method, of class DiskIO.
-     */
-    @Test
-    public void testGetIdentifierParser() {
-        System.out.println("getIdentifierParser");
-        AbstractIdentifierParser<DiskIdentifier> expResult = null;
-        AbstractIdentifierParser<DiskIdentifier> result = testIO.getIdentifierParser();
-        assertEquals(expResult, result);
-    }
-    
 }
