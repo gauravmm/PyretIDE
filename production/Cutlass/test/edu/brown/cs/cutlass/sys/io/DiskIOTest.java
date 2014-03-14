@@ -58,7 +58,7 @@ public class DiskIOTest {
      * Test of getConfigurationFile method, of class DiskIO.
      */
     @Test
-    public void testGetConfigurationFile() {
+    public void testGetConfigurationFile() throws AbstractIOException {
         System.out.println("getConfigurationFile");
         List<String> result = testIO.getConfigurationFile(inputIdentifier);
         assertEquals(result.get(0), "line 1");
@@ -68,7 +68,7 @@ public class DiskIOTest {
      * Test of setConfigurationFile method, of class DiskIO.
      */
     @Test
-    public void testSetConfigurationFile_String_List() {
+    public void testSetConfigurationFile_String_List() throws AbstractIOException {
         System.out.println("setConfigurationFile");
         testIO.setConfigurationFile(inputIdentifier, inputContent);
         assertEquals(false, true);
@@ -78,7 +78,7 @@ public class DiskIOTest {
      * Test of setConfigurationFile method, of class DiskIO.
      */
     @Test
-    public void testSetConfigurationFile_String_CharSequence() {
+    public void testSetConfigurationFile_String_CharSequence() throws AbstractIOException {
         System.out.println("setConfigurationFile");
         testIO.setConfigurationFile(inputIdentifier, inputContent);
         assertEquals(false, true);
@@ -88,7 +88,7 @@ public class DiskIOTest {
      * Test of getUserFile method, of class DiskIO.
      */
     @Test
-    public void testGetUserFile() {
+    public void testGetUserFile() throws AbstractIOException {
         System.out.println("getUserFile");
         List<String> result = testIO.getUserFile(testDID);
         assertEquals(result.get(0), "line 1");
@@ -98,7 +98,7 @@ public class DiskIOTest {
      * Test of setUserFile method, of class DiskIO.
      */
     @Test
-    public void testSetUserFile_DiskIdentifier_CharSequence() {
+    public void testSetUserFile_DiskIdentifier_CharSequence() throws AbstractIOException {
         System.out.println("setUserFile");
         testIO.setUserFile(testDID, inputContent);
         assertEquals(false, true);
@@ -108,7 +108,7 @@ public class DiskIOTest {
      * Test of setUserFile method, of class DiskIO.
      */
     @Test
-    public void testSetUserFile_DiskIdentifier_List() {
+    public void testSetUserFile_DiskIdentifier_List() throws AbstractIOException {
         System.out.println("setUserFile");
         testIO.setUserFile(testDID, inputContent);
         assertEquals(false, true);
@@ -118,7 +118,7 @@ public class DiskIOTest {
      * Test of requestUserFileDestination method, of class DiskIO.
      */
     @Test
-    public void testRequestUserFileDestination() {
+    public void testRequestUserFileDestination() throws AbstractIOException {
         System.out.println("requestUserFileDestination");
         Option<DiskIdentifier> result = testIO.requestUserFileDestination();
         assertEquals(result.hasData(), false);
@@ -128,7 +128,7 @@ public class DiskIOTest {
      * Test of requestUserFileSource method, of class DiskIO.
      */
     @Test
-    public void testRequestUserFileSource() {
+    public void testRequestUserFileSource() throws AbstractIOException {
         System.out.println("requestUserFileSource");
         Option<DiskIdentifier> result = testIO.requestUserFileSource();
         assertEquals(false, true);
