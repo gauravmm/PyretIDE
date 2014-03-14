@@ -2,13 +2,13 @@
  * Cutlass - Pyret IDE
  * For CSCI 0320 Spring 2014, Term Project
  */
-package edu.brown.cs.cutlass.editor.quicknav;
+package edu.brown.cs.cutlass.editor;
 
 /**
  *
  * @author Gaurav Manek
  */
-public interface QuickNavigationJumpClient {
+public interface EditorJumpToClient {
 
     /**
      * Request the client move the cursor position to a particular location.

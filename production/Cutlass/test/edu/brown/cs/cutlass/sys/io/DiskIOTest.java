@@ -87,7 +87,7 @@ public class DiskIOTest {
      * Test of setConfigurationFile method, of class DiskIO.
      */
     @Test
-    public void testSetConfigurationFile_String_List() {
+    public void testSetConfigurationFile_String_List() throws AbstractIOException {
         System.out.println("setConfigurationFile");
         try {
             testIO.setConfigurationFile(configID, newContent1);
@@ -129,6 +129,7 @@ public class DiskIOTest {
         }
     }
 
+
     /**
      * Test of setUserFile method, of class DiskIO.
      */
@@ -144,6 +145,7 @@ public class DiskIOTest {
             fail("testSetUserFile_DiskIdentifier_CharSequence failed?");
         }
     }
+
 
     /**
      * Test of setUserFile method, of class DiskIO.

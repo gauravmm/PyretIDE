@@ -4,14 +4,12 @@
  */
 package edu.brown.cs.cutlass.editor;
 
-import edu.brown.cs.cutlass.editor.quicknav.QuickNavigationJumpClient;
-
 /**
  * Interface exposing the interactions offered by the editor
  *
  * @author Gaurav Manek
  */
-public interface Editor extends AutoCloseable, QuickNavigationJumpClient {
+public interface Editor extends AutoCloseable, EditorJumpToClient {
 
     //
     // Pyret Interaction:
