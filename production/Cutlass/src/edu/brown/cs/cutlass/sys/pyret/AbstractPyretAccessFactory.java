@@ -12,5 +12,5 @@ import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
  * @author Gaurav Manek
  */
 public interface AbstractPyretAccessFactory<T extends AbstractIdentifier> {
-    
+    public AbstractPyretAccess<T> getPyretAccess();
 }

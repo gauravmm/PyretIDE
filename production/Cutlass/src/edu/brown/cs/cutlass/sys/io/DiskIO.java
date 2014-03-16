@@ -4,6 +4,9 @@
  */
 package edu.brown.cs.cutlass.sys.io;
 
+import edu.brown.cs.cutlass.sys.pyret.AbstractPyretAccess;
+import edu.brown.cs.cutlass.sys.pyret.AbstractPyretAccessFactory;
+import edu.brown.cs.cutlass.sys.pyret.DiskPyretAccess;
 import edu.brown.cs.cutlass.util.Option;
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +24,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author Gaurav Manek, Miles Holland
  */
-public class DiskIO implements AbstractIO<DiskIdentifier> {
+public class DiskIO implements AbstractIO<DiskIdentifier>, AbstractPyretAccessFactory<DiskIdentifier> {
 
     private static final String ext = ".cfg";
     private static final Path cfgPath = Paths.get(System.getProperty("user.home") + File.separator + ".cutlass" + File.separator);
@@ -132,5 +135,10 @@ public class DiskIO implements AbstractIO<DiskIdentifier> {
     @Override
     public AbstractIdentifierParser<DiskIdentifier> getIdentifierParser() {
         return new DiskIdentifierParser();
+    }
+
+    @Override
+    public AbstractPyretAccess<DiskIdentifier> getPyretAccess() {
+        return new DiskPyretAccess();
     }
 }
