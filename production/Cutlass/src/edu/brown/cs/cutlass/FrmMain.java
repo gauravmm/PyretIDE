@@ -1,6 +1,7 @@
 package edu.brown.cs.cutlass;
 
 import edu.brown.cs.cutlass.config.ConfigEngine;
+import edu.brown.cs.cutlass.sys.io.AbstractIO;
 import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
@@ -22,10 +23,11 @@ import javax.swing.JOptionPane;
  *
  * @author Gaurav Manek
  */
-class FrmMain extends javax.swing.JFrame {
+class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
 
     private final Launcher launcher;
     private final ConfigEngine config;
+    private final AbstractIO io;
 
     /**
      * Creates new main form.
@@ -35,11 +37,12 @@ class FrmMain extends javax.swing.JFrame {
      * @param optLaunchState The state to restore the program to, if one is
      * available, is stored here.
      */
-    FrmMain(Launcher launcher, ConfigEngine configEngine, Option<LaunchState> optLaunchState) {
+    FrmMain(Launcher launcher, ConfigEngine configEngine, Option<LaunchState> optLaunchState, AbstractIO<T> io) {
         initComponents();
 
         this.launcher = launcher;
         this.config = configEngine;
+        this.io = io;
 
         //<editor-fold defaultstate="collapsed" desc="Load Toolbar Icons">
         // Load this dimension from configEngine:
@@ -118,6 +121,12 @@ class FrmMain extends javax.swing.JFrame {
         jSeparator5 = new javax.swing.JToolBar.Separator();
         jMenuBar1 = new javax.swing.JMenuBar();
         mnuFile = new javax.swing.JMenu();
+        mnuFileNew = new javax.swing.JMenuItem();
+        jSeparator6 = new javax.swing.JPopupMenu.Separator();
+        mnuFileOpen = new javax.swing.JMenuItem();
+        jSeparator7 = new javax.swing.JPopupMenu.Separator();
+        mnuFileSave = new javax.swing.JMenuItem();
+        mnuFileSaveAs = new javax.swing.JMenuItem();
         mnuEdit = new javax.swing.JMenu();
         mnuHelp = new javax.swing.JMenu();
         mnuHelpAbout = new javax.swing.JMenuItem();
@@ -260,14 +269,66 @@ class FrmMain extends javax.swing.JFrame {
         getContentPane().add(jToolBar1, java.awt.BorderLayout.NORTH);
 
         mnuFile.setText("File");
+
+        mnuFileNew.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        mnuFileNew.setMnemonic('N');
+        mnuFileNew.setText("New File");
+        mnuFileNew.setToolTipText("Create a new file");
+        mnuFileNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuFileNewActionPerformed(evt);
+            }
+        });
+        mnuFile.add(mnuFileNew);
+        mnuFile.add(jSeparator6);
+
+        mnuFileOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        mnuFileOpen.setMnemonic('O');
+        mnuFileOpen.setText("Open File");
+        mnuFileOpen.setToolTipText("Open an existing file");
+        mnuFileOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuFileOpenActionPerformed(evt);
+            }
+        });
+        mnuFile.add(mnuFileOpen);
+        mnuFile.add(jSeparator7);
+
+        mnuFileSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        mnuFileSave.setMnemonic('S');
+        mnuFileSave.setText("Save");
+        mnuFileSave.setToolTipText("Save the current file");
+        mnuFileSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuFileSaveActionPerformed(evt);
+            }
+        });
+        mnuFile.add(mnuFileSave);
+
+        mnuFileSaveAs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        mnuFileSaveAs.setMnemonic('v');
+        mnuFileSaveAs.setText("Save As...");
+        mnuFileSaveAs.setToolTipText("Save the current file under a provided name");
+        mnuFileSaveAs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuFileSaveAsActionPerformed(evt);
+            }
+        });
+        mnuFile.add(mnuFileSaveAs);
+
         jMenuBar1.add(mnuFile);
 
         mnuEdit.setText("Edit");
         jMenuBar1.add(mnuEdit);
 
+        mnuHelp.setMnemonic('H');
         mnuHelp.setText("Help");
+        mnuHelp.setToolTipText("");
 
+        mnuHelpAbout.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.ALT_MASK));
+        mnuHelpAbout.setMnemonic('A');
         mnuHelpAbout.setText("About");
+        mnuHelpAbout.setToolTipText("More information about Cutlass");
         mnuHelpAbout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuHelpAboutActionPerformed(evt);
@@ -332,6 +393,25 @@ class FrmMain extends javax.swing.JFrame {
         launcher.quit(LaunchState.toState(new ArrayList<AbstractIdentifier>(), 0));
     }//GEN-LAST:event_formWindowClosed
 
+    private void mnuFileNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileNewActionPerformed
+        // TODO add your handling code here:
+        //Open a new empty tab
+    }//GEN-LAST:event_mnuFileNewActionPerformed
+
+    private void mnuFileSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileSaveAsActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_mnuFileSaveAsActionPerformed
+
+    private void mnuFileSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileSaveActionPerformed
+        // TODO add your handling code here:
+        //If previously saved, just save, otherwise, save as
+    }//GEN-LAST:event_mnuFileSaveActionPerformed
+
+    private void mnuFileOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileOpenActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mnuFileOpenActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JList jList1;
@@ -343,9 +423,15 @@ class FrmMain extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar.Separator jSeparator5;
+    private javax.swing.JPopupMenu.Separator jSeparator6;
+    private javax.swing.JPopupMenu.Separator jSeparator7;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JMenu mnuEdit;
     private javax.swing.JMenu mnuFile;
+    private javax.swing.JMenuItem mnuFileNew;
+    private javax.swing.JMenuItem mnuFileOpen;
+    private javax.swing.JMenuItem mnuFileSave;
+    private javax.swing.JMenuItem mnuFileSaveAs;
     private javax.swing.JMenu mnuHelp;
     private javax.swing.JMenuItem mnuHelpAbout;
     private javax.swing.JSplitPane spltPrimary;
