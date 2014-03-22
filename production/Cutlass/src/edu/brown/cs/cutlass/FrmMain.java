@@ -404,7 +404,8 @@ class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
     private void mnuFileSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileSaveAsActionPerformed
         try {
             // TODO add your handling code here:
-            CharSequence seq = "Java is awesome! Pyret is cooler";//get the contents of their editor
+            //get the contents of their editor and store as seq - either CharSequence or List<CharSequence>
+            String seq = ""; //placeholder to allow the code to compile
             Option<T> destination = io.requestUserFileDestination();
             if (destination.hasData()){
                 io.setUserFile(destination.getData(), seq);
