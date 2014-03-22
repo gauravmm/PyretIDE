@@ -138,7 +138,7 @@ public class Launcher {
         assert launchState != null;
 
         // Hand off control to FrmMain
-        (new FrmMain(this, config, launchState)).setVisible(true);
+        (new FrmMain(this, config, launchState, io)).setVisible(true);
     }
 
     private static String generateCLHelp() {

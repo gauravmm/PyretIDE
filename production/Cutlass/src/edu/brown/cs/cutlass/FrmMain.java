@@ -2,6 +2,7 @@ package edu.brown.cs.cutlass;
 
 import edu.brown.cs.cutlass.config.ConfigEngine;
 import edu.brown.cs.cutlass.sys.io.AbstractIO;
+import edu.brown.cs.cutlass.sys.io.AbstractIOException;
 import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
@@ -10,6 +11,8 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -399,8 +402,16 @@ class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuFileNewActionPerformed
 
     private void mnuFileSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileSaveAsActionPerformed
-        // TODO add your handling code here:
-        
+        try {
+            // TODO add your handling code here:
+            CharSequence seq = "Java is awesome! Pyret is cooler";//get the contents of their editor
+            Option<T> destination = io.requestUserFileDestination();
+            if (destination.hasData()){
+                io.setUserFile(destination.getData(), seq);
+            }
+        } catch (AbstractIOException ex) {
+            Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_mnuFileSaveAsActionPerformed
 
     private void mnuFileSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileSaveActionPerformed
@@ -409,7 +420,16 @@ class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuFileSaveActionPerformed
 
     private void mnuFileOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileOpenActionPerformed
-        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            Option<T> destination = io.requestUserFileSource();
+            if (destination.hasData()){
+                List<CharSequence> chars = io.getUserFile(destination.getData());
+                //Set editor text to chars
+            }
+        } catch (AbstractIOException ex) {
+            Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_mnuFileOpenActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
