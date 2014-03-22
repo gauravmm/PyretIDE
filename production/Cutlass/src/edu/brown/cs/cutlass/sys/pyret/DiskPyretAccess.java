@@ -32,5 +32,15 @@ public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
     public void close() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    protected PyretTerminationValue doInBackground() throws Exception {
+        /*
+        Use publish(new PyretOutputValue()) to send intermediate data to the listener, and
+        this function must return a PyretTerminationValue.
+        Feel free to modify the data types as necessary.
+        */
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

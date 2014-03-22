@@ -7,14 +7,40 @@ package edu.brown.cs.cutlass.sys.pyret;
 import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.SwingWorker;
 
 /**
  *
  * @author Gaurav Manek
  */
-public abstract class AbstractPyretAccess<T extends AbstractIdentifier> implements AutoCloseable {
+public abstract class AbstractPyretAccess<T extends AbstractIdentifier> extends SwingWorker<PyretTerminationValue, PyretOutputValue> implements AutoCloseable {
+
+    @Override
+    protected void done() {
+        try {
+            this.firePyretAccessListener(get());
+        } catch (InterruptedException ex) {
+            // The code was interrupted. Return nothing.
+        } catch (ExecutionException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    protected void process(List<PyretOutputValue> chunks) {
+        for (PyretOutputValue c : chunks) {
+            this.firePyretAccessListener(c);
+        }
+    }
+
+    @Override
+    protected abstract PyretTerminationValue doInBackground() throws Exception;
 
     public enum Stream {
+
         STDOUT, STDERR;
     }
 
@@ -31,9 +57,15 @@ public abstract class AbstractPyretAccess<T extends AbstractIdentifier> implemen
         listeners.remove(l);
     }
 
-    protected void firePyretAccessListener(AbstractPyretAccess.Stream stream, String out) {
+    protected void firePyretAccessListener(PyretOutputValue returnValue) {
         for (PyretAccessListener l : listeners) {
-            l.handlePyretAccessOut(stream, out);
+            l.handlePyretAccessOutput(returnValue);
+        }
+    }
+
+    protected void firePyretAccessListener(PyretTerminationValue returnValue) {
+        for (PyretAccessListener l : listeners) {
+            l.handlePyretAccessEnds(returnValue);
         }
     }
 
