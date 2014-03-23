@@ -18,6 +18,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -26,7 +27,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class DiskIO implements AbstractIO<DiskIdentifier>, AbstractPyretAccessFactory<DiskIdentifier> {
 
-    private static final String ext = ".cfg";
+    private static final String extConfig = ".cfg";
+    private static final String extFile = ".arr";
     private static final Path cfgPath = Paths.get(System.getProperty("user.home") + File.separator + ".cutlass" + File.separator);
     private static final Charset charset = Charset.forName("UTF8");
     private final JFileChooser fileChooser = new JFileChooser(); // Keep a single fileChooser object, keeps memory of last directory opened/saved.
@@ -50,14 +52,14 @@ public class DiskIO implements AbstractIO<DiskIdentifier>, AbstractPyretAccessFa
 
     @Override
     public List<String> getConfigurationFile(String identifier) throws AbstractIOException {
-        identifier = identifier.concat(ext);
+        identifier = identifier.concat(extConfig);
         return getUserFile(new DiskIdentifier(cfgPath.resolve(identifier)));
     }
 
     @Override
     public void setConfigurationFile(String identifier, List<? extends CharSequence> contents) throws AbstractIOException {
         // Create folder if it does not exist.
-        identifier = identifier.concat(ext);
+        identifier = identifier.concat(extConfig);
         checkCfgFolder();
         setUserFile(new DiskIdentifier(cfgPath.resolve(identifier)), contents);
     }
@@ -65,7 +67,7 @@ public class DiskIO implements AbstractIO<DiskIdentifier>, AbstractPyretAccessFa
     @Override
     public void setConfigurationFile(String identifier, CharSequence contents) throws AbstractIOException {
         // Create folder if it does not exist.
-        identifier = identifier.concat(ext);
+        identifier = identifier.concat(extConfig);
         checkCfgFolder();
         setUserFile(new DiskIdentifier(cfgPath.resolve(identifier)), contents);
     }
@@ -99,15 +101,54 @@ public class DiskIO implements AbstractIO<DiskIdentifier>, AbstractPyretAccessFa
 
     @Override
     public Option<DiskIdentifier> requestUserFileDestination() throws AbstractIOException {
-        // You need to return a DiskIdentifier object. Given a java.nio.Path p, use "new DiskIdentifier(p)" to convert it
-        // into a DiskIdentifier.
-        // See: http://docs.oracle.com/javase/tutorial/uiswing/components/filechooser.html#show
-        return requestUserFile(false);
+        while (true) {
+            Option<DiskIdentifier> rv = requestUserFileSave();
+            if (!rv.hasData()) {
+                return rv;
+            } else {
+                // Add the .arr to the path:
+                Path p = rv.getData().getId();
+                Path fileName = p.getFileName();
+                if(fileName == null){
+                    // An empty path was selected. Try again:
+                    continue;
+                }
+                if(!fileName.toString().endsWith(extFile)){
+                    p = p.resolveSibling(fileName.toString().concat(extFile));
+                }
+                
+                // Check if the file exists:
+                File f = p.toFile();
+                if (f.exists()) {
+                    if (f.isDirectory()) {
+                        JOptionPane.showMessageDialog(null, "A directory with the same name already exists.\nChoose another save location.", "Cutlass", JOptionPane.WARNING_MESSAGE);
+                    } else if (f.isFile()) {
+                        int n = JOptionPane.showConfirmDialog(null, "A file with this name already exists.\nAre you sure you want to overwrite it?", "Cutlass", JOptionPane.YES_NO_OPTION);
+                        if(n == JOptionPane.YES_OPTION){
+                            // If the user is okay with replacing files, then go!
+                            return rv;
+                        }
+                    }
+                } else {
+                    // If a path has been selected and does not already exist, return it.
+                    return rv;
+                }
+            }
+        }
     }
 
     @Override
     public Option<DiskIdentifier> requestUserFileSource() throws AbstractIOException {
-        return requestUserFile(true);
+        int dialogRv = fileChooser.showOpenDialog(fileChooser);
+        if (JFileChooser.APPROVE_OPTION == dialogRv) {
+            try {
+                return new Option<>(new DiskIdentifier(fileChooser.getSelectedFile().getCanonicalPath()));
+            } catch (IOException ex) {
+                throw new AbstractIOException(ex);
+            }
+        } else {
+            return new Option<>();
+        }
     }
 
     /**
@@ -119,8 +160,8 @@ public class DiskIO implements AbstractIO<DiskIdentifier>, AbstractPyretAccessFa
      * @throws AbstractIOException If any exception occurs when requesting the
      * file.
      */
-    private Option<DiskIdentifier> requestUserFile(boolean requestLoad) throws AbstractIOException {
-        int dialogRv = requestLoad ? fileChooser.showOpenDialog(fileChooser) : fileChooser.showSaveDialog(fileChooser);
+    private Option<DiskIdentifier> requestUserFileSave() throws AbstractIOException {
+        int dialogRv = fileChooser.showSaveDialog(fileChooser);
         if (JFileChooser.APPROVE_OPTION == dialogRv) {
             try {
                 return new Option<>(new DiskIdentifier(fileChooser.getSelectedFile().getCanonicalPath()));
