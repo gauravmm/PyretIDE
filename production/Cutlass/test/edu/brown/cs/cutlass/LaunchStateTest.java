@@ -5,8 +5,8 @@
 
 package edu.brown.cs.cutlass;
 
-import edu.brown.cs.cutlass.sys.io.DiskIdentifier;
-import edu.brown.cs.cutlass.sys.io.DiskIdentifierParser;
+import edu.brown.cs.cutlass.sys.io.disk.DiskIdentifier;
+import edu.brown.cs.cutlass.sys.io.disk.DiskIdentifierParser;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;

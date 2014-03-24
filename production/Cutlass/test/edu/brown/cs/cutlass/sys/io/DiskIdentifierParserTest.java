@@ -5,6 +5,8 @@
 
 package edu.brown.cs.cutlass.sys.io;
 
+import edu.brown.cs.cutlass.sys.io.disk.DiskIdentifier;
+import edu.brown.cs.cutlass.sys.io.disk.DiskIdentifierParser;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

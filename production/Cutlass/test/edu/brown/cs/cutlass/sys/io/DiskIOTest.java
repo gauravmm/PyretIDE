@@ -5,6 +5,8 @@
 
 package edu.brown.cs.cutlass.sys.io;
 
+import edu.brown.cs.cutlass.sys.io.disk.DiskIdentifier;
+import edu.brown.cs.cutlass.sys.io.disk.DiskIO;
 import edu.brown.cs.cutlass.util.Option;
 import java.io.File;
 import java.nio.file.Paths;

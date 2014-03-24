@@ -5,7 +5,7 @@
 
 package edu.brown.cs.cutlass.sys.pyret;
 
-import edu.brown.cs.cutlass.sys.io.DiskIdentifier;
+import edu.brown.cs.cutlass.sys.io.disk.DiskIdentifier;
 
 /**
  *

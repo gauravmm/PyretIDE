@@ -5,6 +5,7 @@
 
 package edu.brown.cs.cutlass.sys.io;
 
+import edu.brown.cs.cutlass.sys.io.disk.DiskIdentifier;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import org.junit.After;

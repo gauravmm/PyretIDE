@@ -8,7 +8,7 @@ package edu.brown.cs.cutlass;
 import edu.brown.cs.cutlass.config.ConfigEngine;
 import edu.brown.cs.cutlass.sys.io.AbstractIO;
 import edu.brown.cs.cutlass.sys.io.AbstractIOException;
-import edu.brown.cs.cutlass.sys.io.DiskIO;
+import edu.brown.cs.cutlass.sys.io.disk.DiskIO;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.clargs.CLArg;

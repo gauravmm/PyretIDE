@@ -2,9 +2,9 @@
  * Cutlass - Pyret IDE
  * For CSCI 0320 Spring 2014, Term Project
  */
-package edu.brown.cs.cutlass.sys.io;
+package edu.brown.cs.cutlass.sys.io.disk;
 
-import java.nio.file.Files;
+import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 

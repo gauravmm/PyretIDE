@@ -5,13 +5,13 @@
 package edu.brown.cs.cutlass.sys.io;
 
 /**
- * Represents a unique resource identifier for AbstractIO. T is the underlying
- * type of the representation, typically String or Path.
+ * Represents a unique resource identifier for AbstractIO.
  *
  * @author Gaurav Manek
  */
 public interface AbstractIdentifier {
 
+    @Override
     public String toString();
     
 }
