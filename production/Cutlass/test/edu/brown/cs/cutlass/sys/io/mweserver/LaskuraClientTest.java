@@ -5,8 +5,9 @@
 
 package edu.brown.cs.cutlass.sys.io.mweserver;
 
+import edu.brown.cs.cutlass.sys.io.laskura.LaskuraClient;
 import edu.brown.cs.cutlass.sys.io.AbstractIOException;
-import edu.brown.cs.cutlass.sys.io.mweserver.LaskuraClient.LaskuraCommand;
+import edu.brown.cs.cutlass.sys.io.laskura.ui.PnlLaskuraLogin;
 import java.net.MalformedURLException;
 import java.net.URL;
 import org.junit.After;
@@ -45,10 +46,10 @@ public class LaskuraClientTest {
      */
     @Test
     public void testRequest() throws MalformedURLException, AbstractIOException {
-        LaskuraClient c = new LaskuraClient(new URL("http://127.0.0.1/laskura/"));
-        //System.err.println(c.login("a", "b"));
+        URL u = new URL("http://127.0.0.1/laskura/");
+        LaskuraClient c = new LaskuraClient(u);
         
-        //toSend.addProperty("action", c.getCommandString());
+        System.err.println(PnlLaskuraLogin.getLogin(u));
     }
     
 }

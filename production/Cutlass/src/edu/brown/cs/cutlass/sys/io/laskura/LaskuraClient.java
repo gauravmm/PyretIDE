@@ -2,7 +2,7 @@
  * Cutlass - Pyret IDE
  * For CSCI 0320 Spring 2014, Term Project
  */
-package edu.brown.cs.cutlass.sys.io.mweserver;
+package edu.brown.cs.cutlass.sys.io.laskura;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

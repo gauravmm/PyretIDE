@@ -2,19 +2,20 @@
  * Cutlass - Pyret IDE
  * For CSCI 0320 Spring 2014, Term Project
  */
-package edu.brown.cs.cutlass.sys.io.mweserver;
+package edu.brown.cs.cutlass.sys.io.laskura;
 
 import edu.brown.cs.cutlass.sys.io.AbstractIO;
 import edu.brown.cs.cutlass.sys.io.AbstractIOException;
 import edu.brown.cs.cutlass.sys.io.AbstractIdentifierParser;
+import edu.brown.cs.cutlass.sys.io.laskura.ui.PnlLaskuraLogin;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
+import edu.brown.cs.cutlass.util.Pair;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -35,16 +36,20 @@ public class LaskuraIO implements AbstractIO<LaskuraIdentifier> {
         }
     }
 
-    public LaskuraIO(URL server) {
+    private LaskuraIO(URL server) throws AbstractIOException {
         this.client = new LaskuraClient(server);
-        
-        // Show login dialog.
-        /*try {
-            sessionId = new Option<>(client.login(username, password));
-        } catch (IOException ex) {
-            Lumberjack.log(Lumberjack.Level.WARN, ex);
-            throw new AbstractIOException("Could not login to server: " + ex.getMessage());
-        }*/
+        Option<Pair<String, String>> login = PnlLaskuraLogin.getLogin(server);
+        if (login.hasData()) {
+            Pair<String, String> logindata = login.getData();
+            try {
+                sessionId = new Option<>(client.login(logindata.getX(), logindata.getY()));
+            } catch (IOException ex) {
+                Lumberjack.log(Lumberjack.Level.WARN, ex);
+                throw new AbstractIOException("Could not login to server: " + ex.getMessage());
+            }
+        } else {
+            throw new IllegalArgumentException("Login cancelled by user!");
+        }
     }
 
     @Override
@@ -115,12 +120,59 @@ public class LaskuraIO implements AbstractIO<LaskuraIdentifier> {
 
     @Override
     public Option<LaskuraIdentifier> requestUserFileDestination() throws AbstractIOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (sessionId.hasData()) {
+            String selFile = (String) JOptionPane.showInputDialog(null, "Name your new file:",
+                    "Save File on " + client.getServerAddr().toString(),
+                    JOptionPane.QUESTION_MESSAGE);
+            if (selFile == null) {
+                return new Option<>();
+            } else {
+                try {
+                    List<String> filenames = client.list(sessionId.getData());
+                    if(filenames.contains(selFile)){
+                        int n = JOptionPane.showConfirmDialog(null, "A file with this name already exists.\nAre you sure you want to overwrite it?", "Cutlass", JOptionPane.YES_NO_OPTION);
+                        if(n == JOptionPane.YES_OPTION){
+                            // If the user is okay with replacing files, then go!
+                            return new Option<>(new LaskuraIdentifier(selFile));
+                        } else {
+                            return new Option<>();
+                        }
+                    } else {
+                        client.create_new(sessionId.getData(), selFile);
+                        return new Option<>(new LaskuraIdentifier(selFile));
+                    }
+                } catch (IOException ex) {
+                    Lumberjack.log(Lumberjack.Level.WARN, ex);
+                    throw new AbstractIOException(ex);
+                }
+                
+            }
+        } else {
+            throw new AbstractIOException("A sessionId does not exist.");
+        }
     }
 
     @Override
     public Option<LaskuraIdentifier> requestUserFileSource() throws AbstractIOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (sessionId.hasData()) {
+            try {
+                List<String> filenames = client.list(sessionId.getData());
+                String selFile = (String) JOptionPane.showInputDialog(null, "Select a file to open:",
+                        "Open File on " + client.getServerAddr().toString(),
+                        JOptionPane.QUESTION_MESSAGE,
+                        null, filenames.toArray(), filenames.get(0));
+                if (selFile == null) {
+                    return new Option<>();
+                } else {
+                    return new Option<>(new LaskuraIdentifier(selFile));
+                }
+            } catch (IOException ex) {
+                Lumberjack.log(Lumberjack.Level.WARN, ex);
+                throw new AbstractIOException(ex);
+            }
+        } else {
+            throw new AbstractIOException("A sessionId does not exist.");
+        }
     }
 
     @Override

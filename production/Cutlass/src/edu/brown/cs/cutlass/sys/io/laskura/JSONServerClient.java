@@ -2,14 +2,12 @@
  * Cutlass - Pyret IDE
  * For CSCI 0320 Spring 2014, Term Project
  */
-package edu.brown.cs.cutlass.sys.io.mweserver;
+package edu.brown.cs.cutlass.sys.io.laskura;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import edu.brown.cs.cutlass.sys.io.AbstractIOException;
-import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Pair;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -18,7 +16,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -71,4 +68,8 @@ public class JSONServerClient {
         }
     }
 
+    public URL getServerAddr() {
+        return serveraddr;
+    }
+    
 }
