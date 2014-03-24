@@ -31,4 +31,12 @@ public class LaskuraIdentifier implements AbstractIdentifier {
     public String toString() {
         return user_id + "~" + name;
     }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public String getName() {
+        return name;
+    }
 }
