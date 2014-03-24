@@ -163,8 +163,9 @@ function user_auth($session){
 	$rv = array();
 	$login = $db->query("SELECT * FROM session WHERE session_id=?", array($session));
 	if($login){
+		$row = $login->fetchArray();
 		$rv["success"] = true;
-		$rv["user_id"] = $login->fetchArray()["user_id"];
+		$rv["user_id"] = $row["user_id"];
 		$rv["session_id"] = $session;
 	} else {
 		$rv["success"] = false;
