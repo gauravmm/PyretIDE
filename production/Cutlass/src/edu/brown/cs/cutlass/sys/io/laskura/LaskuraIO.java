@@ -13,6 +13,7 @@ import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -75,6 +76,7 @@ public class LaskuraIO implements AbstractIO<LaskuraIdentifier> {
     public void setConfigurationFile(String identifier, CharSequence contents) throws AbstractIOException {
         if (sessionId.hasData()) {
             try {
+                client.create_new(sessionId.getData(), "~" + identifier);
                 client.write(sessionId.getData(), "~" + identifier, contents.toString());
             } catch (IOException ex) {
                 Lumberjack.log(Lumberjack.Level.WARN, ex);
@@ -127,11 +129,19 @@ public class LaskuraIO implements AbstractIO<LaskuraIdentifier> {
             if (selFile == null) {
                 return new Option<>();
             } else {
+                selFile = selFile.trim();
+                while (selFile.startsWith("~")) {
+                    selFile = selFile.substring(1);
+                }
+                if (selFile.isEmpty()) {
+                    return new Option<>();
+                }
+
                 try {
                     List<String> filenames = client.list(sessionId.getData());
-                    if(filenames.contains(selFile)){
+                    if (filenames.contains(selFile)) {
                         int n = JOptionPane.showConfirmDialog(null, "A file with this name already exists.\nAre you sure you want to overwrite it?", "Cutlass", JOptionPane.YES_NO_OPTION);
-                        if(n == JOptionPane.YES_OPTION){
+                        if (n == JOptionPane.YES_OPTION) {
                             // If the user is okay with replacing files, then go!
                             return new Option<>(new LaskuraIdentifier(selFile));
                         } else {
@@ -145,7 +155,7 @@ public class LaskuraIO implements AbstractIO<LaskuraIdentifier> {
                     Lumberjack.log(Lumberjack.Level.WARN, ex);
                     throw new AbstractIOException(ex);
                 }
-                
+
             }
         } else {
             throw new AbstractIOException("A sessionId does not exist.");
@@ -156,11 +166,17 @@ public class LaskuraIO implements AbstractIO<LaskuraIdentifier> {
     public Option<LaskuraIdentifier> requestUserFileSource() throws AbstractIOException {
         if (sessionId.hasData()) {
             try {
-                List<String> filenames = client.list(sessionId.getData());
+                List<String> filenames_in = client.list(sessionId.getData());
+                List<String> filenames_filtered = new ArrayList<>();
+                for (String in : filenames_in) {
+                    if (!in.startsWith("~")) {
+                        filenames_filtered.add(in);
+                    }
+                }
                 String selFile = (String) JOptionPane.showInputDialog(null, "Select a file to open:",
                         "Open File on " + client.getServerAddr().toString(),
                         JOptionPane.QUESTION_MESSAGE,
-                        null, filenames.toArray(), filenames.get(0));
+                        null, filenames_filtered.toArray(), filenames_filtered.get(0));
                 if (selFile == null) {
                     return new Option<>();
                 } else {

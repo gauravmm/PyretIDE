@@ -39,8 +39,7 @@ public class JSONServerClient {
             }
         }
         String response;
-        response = post("json=\"" + toSend.toString() + "\"");
-
+        response = post("json=" + toSend.toString());
         return jsonParser.parse(response);
     }
 

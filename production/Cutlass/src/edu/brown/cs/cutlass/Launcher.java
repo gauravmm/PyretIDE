@@ -9,14 +9,20 @@ import edu.brown.cs.cutlass.config.ConfigEngine;
 import edu.brown.cs.cutlass.sys.io.AbstractIO;
 import edu.brown.cs.cutlass.sys.io.AbstractIOException;
 import edu.brown.cs.cutlass.sys.io.disk.DiskIO;
+import edu.brown.cs.cutlass.sys.io.laskura.LaskuraIO;
+import edu.brown.cs.cutlass.sys.io.laskura.ui.PnlLaskuraLogin;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
+import edu.brown.cs.cutlass.util.Pair;
 import edu.brown.cs.cutlass.util.clargs.CLArg;
 import edu.brown.cs.cutlass.util.clargs.CLArgs;
 import edu.brown.cs.cutlass.util.clargs.IncorrectCommandlineArgumentException;
 import java.awt.Dimension;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /**
@@ -57,13 +63,15 @@ public class Launcher {
 
     // Commandline Arguments:
     private static final CLArg argHelp = new CLArg("help", new String[]{"-h", "--help"});
+    private static final CLArg argServerIO = new CLArg("serverio", new String[]{"--server", "--laskura"}, 1);
+
     // Logger:
     private static final CLArg argLogAll = new CLArg("verbose", new String[]{"-v", "--verbose"});
     private static final CLArg argLogWarn = new CLArg("warning", new String[]{"-w", "--warnings"});
     private static final CLArg argLogError = new CLArg("error", new String[]{"-e", "--error"});
     // Loading process:
     private static final CLArg argDontLoadPreviousState = new CLArg("freshstart", new String[]{"-f", "--fresh", "--reset"});
-    private static final List<CLArg> expectedArgs = Arrays.asList(new CLArg[]{argHelp, argLogAll, argLogWarn, argLogError, argDontLoadPreviousState});
+    private static final List<CLArg> expectedArgs = Arrays.asList(new CLArg[]{argHelp, argLogAll, argLogWarn, argLogError, argDontLoadPreviousState, argServerIO});
 
     // IO:
     private AbstractIO io;
@@ -103,7 +111,39 @@ public class Launcher {
         }
 
         // Prepare IO:
-        io = new DiskIO();
+        if (argParsed.hasArg(argServerIO) && argParsed.getArg(argServerIO).hasData()) {
+            Lumberjack.log(Lumberjack.Level.INFO, "Starting ServerIO...");
+            List<String> arg = argParsed.getArg(argServerIO).getData();
+            if (arg.isEmpty()) {
+                Lumberjack.log(Lumberjack.Level.ERROR, "ServerIO Server not specified in CLI arguments.");
+                System.exit(ExitCode.CLARGS.getCode());
+            }
+            try {
+                URL server = new URL(argParsed.getArg(argServerIO).getData().get(0));
+                Option<Pair<String, String>> login = PnlLaskuraLogin.getLogin(server);
+
+                if (!login.hasData()) {
+                    Lumberjack.log(Lumberjack.Level.INFO, "Login cancelled.");
+                    System.exit(ExitCode.OK.getCode());
+                }
+                try {
+                    io = new LaskuraIO(server, login.getData().getX(), login.getData().getY());
+                } catch (AbstractIOException ex) {
+                    Lumberjack.log(Lumberjack.Level.WARN, "Login failed.");
+                    JOptionPane.showMessageDialog(null, "Login failed!\nThe server returned the following error:\n" + ex.getMessage(), "Cutlass", JOptionPane.ERROR_MESSAGE);
+                    System.exit(ExitCode.OK.getCode());
+                }
+                Lumberjack.log(Lumberjack.Level.INFO, "Started ServerIO.");
+            } catch (MalformedURLException ex) {
+                Lumberjack.log(Lumberjack.Level.WARN, "Malformed URL.");
+                JOptionPane.showMessageDialog(null, "The server URL is malformed.", "Cutlass", JOptionPane.ERROR_MESSAGE);
+                System.exit(ExitCode.OK.getCode());
+            }
+        } else {
+            Lumberjack.log(Lumberjack.Level.INFO, "Starting DiskIO...");
+            io = new DiskIO();
+            Lumberjack.log(Lumberjack.Level.INFO, "Started DiskIO.");
+        }
 
         // Load configuration engine:
         ConfigEngine tmpConfig = null;
@@ -150,11 +190,14 @@ public class Launcher {
                 + "\n"
                 + "OPTIONS\n"
                 + "  -h --help      Display this help and exit.\n"
+                + "\n"
                 + "  -n --silent    Silent mode, do not output anything on the commandline.\n"
                 + "  -v --verbose   Verbose mode, output all logged information.\n"
                 + "  -w --warnings  Verbose mode, output all logged warnings and errors.\n"
                 + "  -e --error     Verbose mode, output all errors.\n"
+                + "\n"
                 + "  -f --fresh     Discard saved state and start a brand new session.\n"
+                + "  --laskura URL  Connect to a Laskura server at URL instead of using the local disk.\n"
                 + "\n"
                 + "FILES\n"
                 + "   Paths of files to load on startup.\n"

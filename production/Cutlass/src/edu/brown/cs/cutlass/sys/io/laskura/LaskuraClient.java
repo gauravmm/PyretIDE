@@ -63,17 +63,22 @@ public class LaskuraClient extends JSONServerClient {
         Iterator<JsonElement> itr = resp.getAsJsonObject().getAsJsonArray("files").iterator();
         List<String> rv = new LinkedList<>();
         while (itr.hasNext()) {
-            rv.add(itr.next().getAsString());
+            rv.add(itr.next().getAsJsonObject().getAsJsonPrimitive("filename").getAsString());
         }
         return Collections.unmodifiableList(rv);
     }
 
     public String read(String sessionid, String filename) throws IOException {
-        JsonElement resp = this.request(Arrays.asList(
+        JsonObject resp = this.request(Arrays.asList(
                 new Pair<>("action", LaskuraCommand.READ.getCommandString()),
                 new Pair<>("sessionid", sessionid),
-                new Pair<>("filename", filename)));
-        return resp.getAsJsonObject().getAsJsonPrimitive("data").getAsString();
+                new Pair<>("filename", filename))).getAsJsonObject();
+        System.err.println(resp.toString());
+        if (resp.getAsJsonPrimitive("success").getAsBoolean()) {
+            return resp.getAsJsonObject().getAsJsonPrimitive("data").getAsString();
+        } else {
+            throw new IOException("Cannot read file!");
+        }
     }
 
     public boolean write(String sessionid, String filename, String data) throws IOException {

@@ -1,0 +1,30 @@
+Laskura
+=======
+
+A Minimum Working Example of the ServerIO capabilities of Cutlass.
+Gaurav Manek
+
+
+Login Information
+-----------------
+captain:edward
+dummy:test
+
+
+Protocol Information
+--------------------
+
+**LOGIN**	username	password =>	sessionid
+**LOGOUT**	sessionid
+**LIST**	sessionid	=>	List<Filename>
+**READ**	sessionid	filename	=>	data
+**WRITE**	sessionid	filename	data
+**CREATE_IF_NOT_EXISTS**	sessionid	filename
+**SAVE_AND_EXECUTE** sessionid filename
+
+
+INSTALL
+-------
+
+1. Add database configuration information in index.php
+2. Import setup/start.sql to the database.
