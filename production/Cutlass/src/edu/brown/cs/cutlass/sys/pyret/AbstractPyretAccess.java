@@ -8,8 +8,6 @@ import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 
 /**
@@ -44,7 +42,7 @@ public abstract class AbstractPyretAccess<T extends AbstractIdentifier> extends 
         STDOUT, STDERR;
     }
 
-    private List<PyretAccessListener> listeners = new ArrayList<>();
+    private final List<PyretAccessListener> listeners = new ArrayList<>();
 
     public void addPyretAccessListener(PyretAccessListener l) {
         if (l == null) {
@@ -69,8 +67,6 @@ public abstract class AbstractPyretAccess<T extends AbstractIdentifier> extends 
         }
     }
 
-    public abstract void run(T identifier);
-
     /**
      * Get all the output from the given stream.
      *
@@ -82,5 +78,6 @@ public abstract class AbstractPyretAccess<T extends AbstractIdentifier> extends 
      * Close the PyretAccessObject. This should send a signal to kill the
      * process and clean up temporary data.
      */
+    @Override
     public abstract void close();
 }
