@@ -4,24 +4,64 @@
  */
 package edu.brown.cs.cutlass.sys.pyret;
 
+import java.nio.file.Files;
+
 import edu.brown.cs.cutlass.sys.io.disk.DiskIdentifier;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  *
  * @author Dilip Arumugam
  */
 public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
+    private static final List<String> raco = new ArrayList<>(Arrays.asList("raco","pyret"));
+    private static final ProcessBuilder run_build = new ProcessBuilder(raco);
+    private static DiskIdentifier identifier;
+    private static String temp_file;
+    private static Process run_proc;
+    
+    private static final List<PyretOutputValue> out_vals = new ArrayList<>();
+    private static final List<PyretOutputValue> err_vals = new ArrayList<>();
+	
+    public DiskPyretAccess(DiskIdentifier id){
+        identifier = id;
+    }
 
     @Override
-    public void getAllOutput(Stream stream) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void getAllOutput(Stream stream){
+        if(stream.equals(AbstractPyretAccess.Stream.STDOUT)){
+            process(out_vals);
+        }
+        if(stream.equals(AbstractPyretAccess.Stream.STDERR)){
+            process(err_vals);
+        }
+        else{
+            
+        }
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void close() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        try{
+            //kill the process
+            run_proc.destroy();
+            //delete the temporary file
+            Files.delete(Paths.get(run_build.directory().getPath() + temp_file));
+        } 
+        catch(IOException e){
 
+        }
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.    }
+    }
+    
     @Override
     protected PyretTerminationValue doInBackground() throws Exception {
         /*
@@ -30,10 +70,51 @@ public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
          Feel free to modify the data types as necessary.
          */
         /*  Remember to call:
-         *  this.firePyretAccessListener(AbstractPyretAccess.Stream.STDOUT, "String Here");
+         *  new PyretOutputValue(AbstractPyretAccess.Stream.STDOUT, "String Here");
          *  when any response is recieved from the code.
          */
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+     try{
+         File user_file = new File(identifier.getId().toString());
+         run_build.directory(user_file.getParentFile());
+         String usr_file_name = user_file.getName();
+         Date date = new Date();
+         temp_file = usr_file_name.substring(0, usr_file_name.length() - 4) + "_" + date.toString() + ".arr";
 
+         Files.copy(identifier.getId(), Paths.get(user_file.getParent(), temp_file));
+         raco.add(temp_file);
+         run_proc = run_build.start();
+         run_proc.waitFor();
+
+         InputStream output = run_proc.getInputStream();
+         int out_size = output.available();
+         byte[] out = new byte[out_size];
+         output.read(out);
+         String out_string = new String(out, "UTF-8");
+
+         if(out_string.contains("Avast, there be bugs!")){
+             PyretOutputValue pev = new PyretOutputValue(AbstractPyretAccess.Stream.STDERR, out_string);
+             publish(pev);
+             err_vals.add(pev);
+             return new PyretTerminationValue(0);
+         } 
+         if(out_string.contains("Looks shipshape")){
+             PyretOutputValue pov = new PyretOutputValue(AbstractPyretAccess.Stream.STDOUT, out_string);
+             publish(pov);
+             out_vals.add(pov);
+             return new PyretTerminationValue(0);
+         }
+         else{
+             if(out_string.contains("errno=")){
+                 int index = out_string.lastIndexOf("errno=");
+                 int errCode = Integer.parseInt(out_string.substring(index+6,index+7));
+                 return new PyretTerminationValue(errCode);
+             }
+         }
+         return new PyretTerminationValue(0);
+     } 
+     catch(IOException|InterruptedException e){
+         return new PyretTerminationValue(1);
+     }
+     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -8,7 +8,7 @@
  *
  * Created on Mar 5, 2014, 2:21:02 PM
  */
-package javaapplication1;
+package TestUI;
 
 import java.awt.Color;
 import java.io.IOException;
