@@ -107,6 +107,7 @@ class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         jList1 = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
         tabEditors = new javax.swing.JTabbedPane();
+        jSeparator8 = new javax.swing.JSeparator();
         jToolBar1 = new javax.swing.JToolBar();
         tbSave = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JToolBar.Separator();
@@ -130,7 +131,22 @@ class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         jSeparator7 = new javax.swing.JPopupMenu.Separator();
         mnuFileSave = new javax.swing.JMenuItem();
         mnuFileSaveAs = new javax.swing.JMenuItem();
+        mnuSaveAll = new javax.swing.JMenuItem();
+        jSeparator9 = new javax.swing.JPopupMenu.Separator();
+        mnuCloseCurrentTab = new javax.swing.JMenuItem();
+        mnuCloseAllTabs = new javax.swing.JMenuItem();
+        jSeparator10 = new javax.swing.JPopupMenu.Separator();
+        mnuExit = new javax.swing.JMenuItem();
         mnuEdit = new javax.swing.JMenu();
+        mnuUndo = new javax.swing.JMenuItem();
+        mnuRedo = new javax.swing.JMenuItem();
+        jSeparator11 = new javax.swing.JPopupMenu.Separator();
+        mnuCut = new javax.swing.JMenuItem();
+        mnuCopy = new javax.swing.JMenuItem();
+        mnuPaste = new javax.swing.JMenuItem();
+        mnuDelete = new javax.swing.JMenuItem();
+        jSeparator12 = new javax.swing.JPopupMenu.Separator();
+        mnuSelectAll = new javax.swing.JMenuItem();
         mnuHelp = new javax.swing.JMenu();
         mnuHelpAbout = new javax.swing.JMenuItem();
 
@@ -184,6 +200,8 @@ class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         spltPrimary.setRightComponent(jPanel2);
 
         tabEditors.setMinimumSize(new java.awt.Dimension(450, 100));
+        tabEditors.addTab("tab1", jSeparator8);
+
         spltPrimary.setLeftComponent(tabEditors);
 
         getContentPane().add(spltPrimary, java.awt.BorderLayout.CENTER);
@@ -319,9 +337,74 @@ class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         });
         mnuFile.add(mnuFileSaveAs);
 
+        mnuSaveAll.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        mnuSaveAll.setMnemonic('l');
+        mnuSaveAll.setText("Save All");
+        mnuSaveAll.setToolTipText("Save the contents of all open tabs");
+        mnuFile.add(mnuSaveAll);
+        mnuFile.add(jSeparator9);
+
+        mnuCloseCurrentTab.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        mnuCloseCurrentTab.setMnemonic('C');
+        mnuCloseCurrentTab.setText("Close Current Tab");
+        mnuCloseCurrentTab.setToolTipText("Close the current tab");
+        mnuCloseCurrentTab.setDisplayedMnemonicIndex(6);
+        mnuFile.add(mnuCloseCurrentTab);
+
+        mnuCloseAllTabs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        mnuCloseAllTabs.setMnemonic('A');
+        mnuCloseAllTabs.setText("Close All Tabs");
+        mnuCloseAllTabs.setToolTipText("Close all open tabs");
+        mnuFile.add(mnuCloseAllTabs);
+        mnuFile.add(jSeparator10);
+
+        mnuExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
+        mnuExit.setMnemonic('x');
+        mnuExit.setText("Exit");
+        mnuExit.setToolTipText("Exit Cutlass");
+        mnuFile.add(mnuExit);
+
         jMenuBar1.add(mnuFile);
 
         mnuEdit.setText("Edit");
+
+        mnuUndo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
+        mnuUndo.setMnemonic('U');
+        mnuUndo.setText("Undo");
+        mnuEdit.add(mnuUndo);
+
+        mnuRedo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Y, java.awt.event.InputEvent.CTRL_MASK));
+        mnuRedo.setMnemonic('R');
+        mnuRedo.setText("Redo");
+        mnuEdit.add(mnuRedo);
+        mnuEdit.add(jSeparator11);
+
+        mnuCut.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
+        mnuCut.setMnemonic('t');
+        mnuCut.setText("Cut");
+        mnuEdit.add(mnuCut);
+
+        mnuCopy.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
+        mnuCopy.setMnemonic('y');
+        mnuCopy.setText("Copy");
+        mnuEdit.add(mnuCopy);
+
+        mnuPaste.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_MASK));
+        mnuPaste.setMnemonic('p');
+        mnuPaste.setText("Paste");
+        mnuEdit.add(mnuPaste);
+
+        mnuDelete.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
+        mnuDelete.setMnemonic('D');
+        mnuDelete.setText("Delete");
+        mnuEdit.add(mnuDelete);
+        mnuEdit.add(jSeparator12);
+
+        mnuSelectAll.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
+        mnuSelectAll.setMnemonic('S');
+        mnuSelectAll.setText("Select All");
+        mnuEdit.add(mnuSelectAll);
+
         jMenuBar1.add(mnuEdit);
 
         mnuHelp.setMnemonic('H');
@@ -440,14 +523,25 @@ class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator10;
+    private javax.swing.JPopupMenu.Separator jSeparator11;
+    private javax.swing.JPopupMenu.Separator jSeparator12;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
+    private javax.swing.JSeparator jSeparator8;
+    private javax.swing.JPopupMenu.Separator jSeparator9;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JMenuItem mnuCloseAllTabs;
+    private javax.swing.JMenuItem mnuCloseCurrentTab;
+    private javax.swing.JMenuItem mnuCopy;
+    private javax.swing.JMenuItem mnuCut;
+    private javax.swing.JMenuItem mnuDelete;
     private javax.swing.JMenu mnuEdit;
+    private javax.swing.JMenuItem mnuExit;
     private javax.swing.JMenu mnuFile;
     private javax.swing.JMenuItem mnuFileNew;
     private javax.swing.JMenuItem mnuFileOpen;
@@ -455,6 +549,11 @@ class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnuFileSaveAs;
     private javax.swing.JMenu mnuHelp;
     private javax.swing.JMenuItem mnuHelpAbout;
+    private javax.swing.JMenuItem mnuPaste;
+    private javax.swing.JMenuItem mnuRedo;
+    private javax.swing.JMenuItem mnuSaveAll;
+    private javax.swing.JMenuItem mnuSelectAll;
+    private javax.swing.JMenuItem mnuUndo;
     private javax.swing.JSplitPane spltPrimary;
     private javax.swing.JTabbedPane tabEditors;
     private javax.swing.JLabel tbAutoIndent;
