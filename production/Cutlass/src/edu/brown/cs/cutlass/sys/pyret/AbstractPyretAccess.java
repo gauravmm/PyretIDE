@@ -72,7 +72,7 @@ public abstract class AbstractPyretAccess<T extends AbstractIdentifier> extends 
      *
      * @param stream The stream to get all the output from.
      */
-    public abstract void getAllOutput(AbstractPyretAccess.Stream stream);
+    public abstract List<PyretOutputValue> getAllOutput(AbstractPyretAccess.Stream stream);
 
     /**
      * Close the PyretAccessObject. This should send a signal to kill the

@@ -35,15 +35,15 @@ public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
     }
 
     @Override
-    public void getAllOutput(Stream stream){
+    public List<PyretOutputValue> getAllOutput(Stream stream){
         if(stream.equals(AbstractPyretAccess.Stream.STDOUT)){
-            process(out_vals);
+            return out_vals;
         }
         if(stream.equals(AbstractPyretAccess.Stream.STDERR)){
-            process(err_vals);
+            return err_vals;
         }
         else{
-            
+            return new ArrayList<PyretOutputValue>();
         }
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
