@@ -1,6 +1,7 @@
 package edu.brown.cs.cutlass;
 
 import edu.brown.cs.cutlass.config.ConfigEngine;
+import edu.brown.cs.cutlass.sys.SystemAbstraction;
 import edu.brown.cs.cutlass.sys.io.AbstractIO;
 import edu.brown.cs.cutlass.sys.io.AbstractIOException;
 import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
@@ -40,12 +41,12 @@ class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
      * @param optLaunchState The state to restore the program to, if one is
      * available, is stored here.
      */
-    FrmMain(Launcher launcher, ConfigEngine configEngine, Option<LaunchState> optLaunchState, AbstractIO<T> io) {
+    FrmMain(Launcher launcher, ConfigEngine configEngine, Option<LaunchState> optLaunchState, SystemAbstraction<T> sys) {
         initComponents();
 
         this.launcher = launcher;
         this.config = configEngine;
-        this.io = io;
+        this.io = sys.getIO();
 
         //<editor-fold defaultstate="collapsed" desc="Load Toolbar Icons">
         // Load this dimension from configEngine:

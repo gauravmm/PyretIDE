@@ -6,6 +6,9 @@
 package edu.brown.cs.cutlass;
 
 import edu.brown.cs.cutlass.config.ConfigEngine;
+import edu.brown.cs.cutlass.sys.DefaultSystemAbstraction;
+import edu.brown.cs.cutlass.sys.LaskuraSystemAbstraction;
+import edu.brown.cs.cutlass.sys.SystemAbstraction;
 import edu.brown.cs.cutlass.sys.io.AbstractIO;
 import edu.brown.cs.cutlass.sys.io.AbstractIOException;
 import edu.brown.cs.cutlass.sys.io.disk.DiskIO;
@@ -110,6 +113,7 @@ public class Launcher {
             Lumberjack.setDisplayLog(true);
         }
 
+        SystemAbstraction sys = null;
         // Prepare IO:
         if (argParsed.hasArg(argServerIO) && argParsed.getArg(argServerIO).hasData()) {
             Lumberjack.log(Lumberjack.Level.INFO, "Starting ServerIO...");
@@ -127,7 +131,8 @@ public class Launcher {
                     System.exit(ExitCode.OK.getCode());
                 }
                 try {
-                    io = new LaskuraIO(server, login.getData().getX(), login.getData().getY());
+                    sys = new LaskuraSystemAbstraction(new LaskuraIO(server, login.getData().getX(), login.getData().getY()));
+                    io = sys.getIO();
                 } catch (AbstractIOException ex) {
                     Lumberjack.log(Lumberjack.Level.WARN, "Login failed.");
                     JOptionPane.showMessageDialog(null, "Login failed!\nThe server returned the following error:\n" + ex.getMessage(), "Cutlass", JOptionPane.ERROR_MESSAGE);
@@ -141,7 +146,8 @@ public class Launcher {
             }
         } else {
             Lumberjack.log(Lumberjack.Level.INFO, "Starting DiskIO...");
-            io = new DiskIO();
+            sys = new DefaultSystemAbstraction();
+            io = sys.getIO();
             Lumberjack.log(Lumberjack.Level.INFO, "Started DiskIO.");
         }
 
@@ -175,10 +181,12 @@ public class Launcher {
                 launchState = new Option<>();
             }
         }
+        
         assert launchState != null;
+        assert sys != null;
 
         // Hand off control to FrmMain
-        (new FrmMain(this, config, launchState, io)).setVisible(true);
+        (new FrmMain(this, config, launchState, sys)).setVisible(true);
     }
 
     private static String generateCLHelp() {
