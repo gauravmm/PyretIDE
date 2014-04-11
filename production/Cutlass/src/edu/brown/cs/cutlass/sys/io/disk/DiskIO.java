@@ -28,7 +28,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author Gaurav Manek, Miles Holland
  */
-public class DiskIO implements AbstractIO<DiskIdentifier>, AbstractPyretAccessFactory<DiskIdentifier> {
+public class DiskIO implements AbstractIO<DiskIdentifier> {
 
     private static final String extConfig = ".cfg";
     private static final String extFile = ".arr";
@@ -179,10 +179,5 @@ public class DiskIO implements AbstractIO<DiskIdentifier>, AbstractPyretAccessFa
     @Override
     public AbstractIdentifierParser<DiskIdentifier> getIdentifierParser() {
         return new DiskIdentifierParser();
-    }
-
-    @Override
-    public AbstractPyretAccess<DiskIdentifier> getPyretAccess(DiskIdentifier id) {
-        return new DiskPyretAccess(id);
     }
 }
