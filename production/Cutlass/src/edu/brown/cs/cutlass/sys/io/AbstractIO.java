@@ -19,6 +19,7 @@ import java.util.List;
  * T is the underlying representation of the AbstractIdentifier used.
  *
  * @author Gaurav Manek
+ * @param <T> The type of AbstractIdentifier to handle IO for.
  */
 public interface AbstractIO<T extends AbstractIdentifier> {
 

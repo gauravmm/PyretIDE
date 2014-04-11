@@ -13,6 +13,7 @@ import javax.swing.SwingWorker;
 /**
  *
  * @author Gaurav Manek
+ * @param <T> The type of AbstractIdentifer to allow access to.
  */
 public abstract class AbstractPyretAccess<T extends AbstractIdentifier> extends SwingWorker<PyretTerminationValue, PyretOutputValue> implements AutoCloseable {
 
@@ -38,7 +39,6 @@ public abstract class AbstractPyretAccess<T extends AbstractIdentifier> extends 
     protected abstract PyretTerminationValue doInBackground() throws Exception;
 
     public enum Stream {
-
         STDOUT, STDERR;
     }
 
@@ -71,6 +71,7 @@ public abstract class AbstractPyretAccess<T extends AbstractIdentifier> extends 
      * Get all the output from the given stream.
      *
      * @param stream The stream to get all the output from.
+     * @return Get a list of all output corresponding to a single stream.
      */
     public abstract List<PyretOutputValue> getAllOutput(AbstractPyretAccess.Stream stream);
 

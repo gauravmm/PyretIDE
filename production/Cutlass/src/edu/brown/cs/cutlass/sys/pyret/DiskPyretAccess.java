@@ -43,9 +43,8 @@ public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
             return err_vals;
         }
         else{
-            return new ArrayList<PyretOutputValue>();
+            return new ArrayList<>();
         }
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -59,7 +58,6 @@ public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
         catch(IOException e){
 
         }
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.    }
     }
     
     @Override
@@ -115,6 +113,5 @@ public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
      catch(IOException|InterruptedException e){
          return new PyretTerminationValue(1);
      }
-     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -182,7 +182,7 @@ public class DiskIO implements AbstractIO<DiskIdentifier>, AbstractPyretAccessFa
     }
 
     @Override
-    public AbstractPyretAccess<DiskIdentifier> getPyretAccess() {
-        return new DiskPyretAccess();
+    public AbstractPyretAccess<DiskIdentifier> getPyretAccess(DiskIdentifier id) {
+        return new DiskPyretAccess(id);
     }
 }
