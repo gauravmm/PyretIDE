@@ -13,6 +13,3 @@
 *.pyc
 
 # Netbeans Auto #
-/production/Cutlass/nbproject/private/
-/production/Cutlass/build/
-/production/Cutlass/dist/
