@@ -131,4 +131,18 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
     public void handleJumpTo(long offset) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    public CharSequence getSelectedText(){
+        return jTextArea1.getSelectedText();
+    }
+    
+    public CharSequence getText(){
+        return jTextArea1.getText();
+    }
+    
+    public void paste(String toPaste){
+        int position = jTextArea1.getCaretPosition();
+        String current = jTextArea1.getText();
+        jTextArea1.setText(current.substring(0, position) + toPaste + current.substring(position));
+    }
 }

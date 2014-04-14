@@ -6,6 +6,7 @@ import edu.brown.cs.cutlass.sys.SystemAbstraction;
 import edu.brown.cs.cutlass.sys.io.AbstractIO;
 import edu.brown.cs.cutlass.sys.io.AbstractIOException;
 import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
+import edu.brown.cs.cutlass.sys.ux.AbstractClipboard;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
 import java.awt.Component;
@@ -50,6 +51,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
     private final Launcher launcher;
     private final ConfigEngine config;
     private final AbstractIO io;
+    private final SystemAbstraction systemAbstraction;
 
     /**
      * Creates new main form.
@@ -65,6 +67,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         this.launcher = launcher;
         this.config = configEngine;
         this.io = sys.getIO();
+        this.systemAbstraction = sys;
 
         //<editor-fold defaultstate="collapsed" desc="Load Toolbar Icons">
         // Load this dimension from configEngine:
@@ -670,11 +673,18 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
 
     private void mnuCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCopyActionPerformed
         // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        AbstractClipboard clippy = systemAbstraction.getClipboard();
+        PnlEditor onTop = (PnlEditor)tabEditors.getSelectedComponent();
+        CharSequence seq = onTop.getSelectedText();
+        clippy.put(seq);
     }//GEN-LAST:event_mnuCopyActionPerformed
 
     private void mnuPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPasteActionPerformed
         // TODO add your handling code here:
+        AbstractClipboard clippy = systemAbstraction.getClipboard();
+        PnlEditor onTop = (PnlEditor)tabEditors.getSelectedComponent();
+        String toPaste = clippy.get();
+        onTop.paste(toPaste);
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_mnuPasteActionPerformed
 
