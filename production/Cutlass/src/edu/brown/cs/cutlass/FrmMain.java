@@ -45,7 +45,7 @@ import javax.swing.KeyStroke;
  *
  * @author Gaurav Manek
  */
-class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
+public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
 
     private final Launcher launcher;
     private final ConfigEngine config;

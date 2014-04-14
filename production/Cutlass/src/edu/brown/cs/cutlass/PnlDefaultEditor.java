@@ -13,9 +13,10 @@ package edu.brown.cs.cutlass;
 public class PnlDefaultEditor extends javax.swing.JPanel {
 
     private final FrmMain owner;
+    
     /**
      * Creates new form pnlDefaultEditor
-     * @param owner
+     * @param owner a callback to the FrmMain containing this Default Editor
      */
     public PnlDefaultEditor(FrmMain owner) {
         this.owner = owner;
