@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
@@ -44,6 +43,7 @@ import javax.swing.KeyStroke;
 /**
  *
  * @author Gaurav Manek
+ * @param <T>
  */
 public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
 
@@ -127,7 +127,6 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         jList1 = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
         tabEditors = new javax.swing.JTabbedPane();
-        jSeparator8 = new javax.swing.JSeparator();
         jToolBar1 = new javax.swing.JToolBar();
         tbSave = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JToolBar.Separator();
@@ -164,7 +163,11 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         mnuCut = new javax.swing.JMenuItem();
         mnuCopy = new javax.swing.JMenuItem();
         mnuPaste = new javax.swing.JMenuItem();
-        mnuDelete = new javax.swing.JMenuItem();
+        jSeparator8 = new javax.swing.JPopupMenu.Separator();
+        mnuDeleteSelected = new javax.swing.JMenuItem();
+        mnuDeleteLine = new javax.swing.JMenuItem();
+        jSeparator13 = new javax.swing.JPopupMenu.Separator();
+        mnuBlockComment = new javax.swing.JMenuItem();
         jSeparator12 = new javax.swing.JPopupMenu.Separator();
         mnuSelectAll = new javax.swing.JMenuItem();
         mnuHelp = new javax.swing.JMenu();
@@ -220,8 +223,6 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         spltPrimary.setRightComponent(jPanel2);
 
         tabEditors.setMinimumSize(new java.awt.Dimension(450, 100));
-        tabEditors.addTab("tab1", jSeparator8);
-
         spltPrimary.setLeftComponent(tabEditors);
 
         getContentPane().add(spltPrimary, java.awt.BorderLayout.CENTER);
@@ -361,20 +362,35 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         mnuSaveAll.setMnemonic('l');
         mnuSaveAll.setText("Save All");
         mnuSaveAll.setToolTipText("Save the contents of all open tabs");
+        mnuSaveAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuSaveAllActionPerformed(evt);
+            }
+        });
         mnuFile.add(mnuSaveAll);
         mnuFile.add(jSeparator9);
 
-        mnuCloseCurrentTab.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        mnuCloseCurrentTab.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.CTRL_MASK));
         mnuCloseCurrentTab.setMnemonic('C');
         mnuCloseCurrentTab.setText("Close Current Tab");
         mnuCloseCurrentTab.setToolTipText("Close the current tab");
         mnuCloseCurrentTab.setDisplayedMnemonicIndex(6);
+        mnuCloseCurrentTab.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuCloseCurrentTabActionPerformed(evt);
+            }
+        });
         mnuFile.add(mnuCloseCurrentTab);
 
-        mnuCloseAllTabs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        mnuCloseAllTabs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         mnuCloseAllTabs.setMnemonic('A');
         mnuCloseAllTabs.setText("Close All Tabs");
         mnuCloseAllTabs.setToolTipText("Close all open tabs");
+        mnuCloseAllTabs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuCloseAllTabsActionPerformed(evt);
+            }
+        });
         mnuFile.add(mnuCloseAllTabs);
         mnuFile.add(jSeparator10);
 
@@ -396,38 +412,97 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         mnuUndo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
         mnuUndo.setMnemonic('U');
         mnuUndo.setText("Undo");
+        mnuUndo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuUndoActionPerformed(evt);
+            }
+        });
         mnuEdit.add(mnuUndo);
 
         mnuRedo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Y, java.awt.event.InputEvent.CTRL_MASK));
         mnuRedo.setMnemonic('R');
         mnuRedo.setText("Redo");
+        mnuRedo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuRedoActionPerformed(evt);
+            }
+        });
         mnuEdit.add(mnuRedo);
         mnuEdit.add(jSeparator11);
 
         mnuCut.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
         mnuCut.setMnemonic('t');
         mnuCut.setText("Cut");
+        mnuCut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuCutActionPerformed(evt);
+            }
+        });
         mnuEdit.add(mnuCut);
 
         mnuCopy.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
         mnuCopy.setMnemonic('y');
         mnuCopy.setText("Copy");
+        mnuCopy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuCopyActionPerformed(evt);
+            }
+        });
         mnuEdit.add(mnuCopy);
 
         mnuPaste.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_MASK));
         mnuPaste.setMnemonic('p');
         mnuPaste.setText("Paste");
+        mnuPaste.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuPasteActionPerformed(evt);
+            }
+        });
         mnuEdit.add(mnuPaste);
+        mnuEdit.add(jSeparator8);
 
-        mnuDelete.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
-        mnuDelete.setMnemonic('D');
-        mnuDelete.setText("Delete");
-        mnuEdit.add(mnuDelete);
+        mnuDeleteSelected.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
+        mnuDeleteSelected.setMnemonic('D');
+        mnuDeleteSelected.setText("Delete Selected Text");
+        mnuDeleteSelected.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuDeleteSelectedActionPerformed(evt);
+            }
+        });
+        mnuEdit.add(mnuDeleteSelected);
+
+        mnuDeleteLine.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
+        mnuDeleteLine.setMnemonic('L');
+        mnuDeleteLine.setText("Delete Line");
+        mnuDeleteLine.setToolTipText("Deletes the entire line at the cursor's current position");
+        mnuDeleteLine.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuDeleteLineActionPerformed(evt);
+            }
+        });
+        mnuEdit.add(mnuDeleteLine);
+        mnuEdit.add(jSeparator13);
+
+        mnuBlockComment.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_7, java.awt.event.InputEvent.CTRL_MASK));
+        mnuBlockComment.setMnemonic('B');
+        mnuBlockComment.setText("Block Comment Selected");
+        mnuBlockComment.setToolTipText("Comment out anything on selected line, or current line if no text selected");
+        mnuBlockComment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuBlockCommentActionPerformed(evt);
+            }
+        });
+        mnuEdit.add(mnuBlockComment);
         mnuEdit.add(jSeparator12);
 
         mnuSelectAll.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
         mnuSelectAll.setMnemonic('S');
         mnuSelectAll.setText("Select All");
+        mnuSelectAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuSelectAllActionPerformed(evt);
+            }
+        });
         mnuEdit.add(mnuSelectAll);
 
         jMenuBar1.add(mnuEdit);
@@ -544,8 +619,64 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
 
     private void mnuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuExitActionPerformed
         //The null value is a placeholder which seems to work - if at some point another value is needed, feel free to change.
+        //Prompt to save unsaved changes??
         this.formWindowClosed(null);
     }//GEN-LAST:event_mnuExitActionPerformed
+
+    private void mnuSaveAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSaveAllActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mnuSaveAllActionPerformed
+
+    private void mnuCloseCurrentTabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCloseCurrentTabActionPerformed
+        // TODO add your handling code here:
+        int selected = tabEditors.getSelectedIndex();
+        //Insert handling for "Do you want to save your changes to ______?"
+        //mnuFileSaveActionPerformed(null);
+        tabEditors.remove(selected);
+    }//GEN-LAST:event_mnuCloseCurrentTabActionPerformed
+
+    private void mnuCloseAllTabsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCloseAllTabsActionPerformed
+        int tabs = tabEditors.getTabCount();
+        for (int i = tabs - 1; i >= 0; i--){
+            tabEditors.remove(i);
+        }
+    }//GEN-LAST:event_mnuCloseAllTabsActionPerformed
+
+    private void mnuUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuUndoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mnuUndoActionPerformed
+
+    private void mnuRedoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuRedoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mnuRedoActionPerformed
+
+    private void mnuCutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCutActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mnuCutActionPerformed
+
+    private void mnuCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCopyActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mnuCopyActionPerformed
+
+    private void mnuPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPasteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mnuPasteActionPerformed
+
+    private void mnuDeleteSelectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuDeleteSelectedActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mnuDeleteSelectedActionPerformed
+
+    private void mnuSelectAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSelectAllActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mnuSelectAllActionPerformed
+
+    private void mnuBlockCommentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuBlockCommentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mnuBlockCommentActionPerformed
+
+    private void mnuDeleteLineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuDeleteLineActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mnuDeleteLineActionPerformed
 
     
     public void newTab(){
@@ -615,6 +746,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
     btnClose.addActionListener(listener);
     
     MouseListener buttonMouseListener = new MouseAdapter() {
+        @Override
         public void mouseEntered(MouseEvent e) {
             Component component = e.getComponent();
             if (component instanceof AbstractButton) {
@@ -623,6 +755,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
             }
         }
  
+        @Override
         public void mouseExited(MouseEvent e) {
             Component component = e.getComponent();
             if (component instanceof AbstractButton) {
@@ -671,20 +804,23 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator10;
     private javax.swing.JPopupMenu.Separator jSeparator11;
     private javax.swing.JPopupMenu.Separator jSeparator12;
+    private javax.swing.JPopupMenu.Separator jSeparator13;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
-    private javax.swing.JSeparator jSeparator8;
+    private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JPopupMenu.Separator jSeparator9;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JMenuItem mnuBlockComment;
     private javax.swing.JMenuItem mnuCloseAllTabs;
     private javax.swing.JMenuItem mnuCloseCurrentTab;
     private javax.swing.JMenuItem mnuCopy;
     private javax.swing.JMenuItem mnuCut;
-    private javax.swing.JMenuItem mnuDelete;
+    private javax.swing.JMenuItem mnuDeleteLine;
+    private javax.swing.JMenuItem mnuDeleteSelected;
     private javax.swing.JMenu mnuEdit;
     private javax.swing.JMenuItem mnuExit;
     private javax.swing.JMenu mnuFile;
