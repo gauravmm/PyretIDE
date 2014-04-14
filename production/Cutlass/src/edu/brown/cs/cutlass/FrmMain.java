@@ -107,7 +107,7 @@ class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
             // Load data from the launchState
         } else {
             // Load default
-            addClosableTab(tabEditors, new PnlDefaultEditor(), "Default");
+            addClosableTab(tabEditors, new PnlDefaultEditor(this), "Default");
             //tabEditors.addTab("Default", new PnlDefaultEditor());
         }
     }
@@ -547,6 +547,14 @@ class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         this.formWindowClosed(null);
     }//GEN-LAST:event_mnuExitActionPerformed
 
+    
+    public void newTab(){
+        this.mnuFileNewActionPerformed(null);
+    }
+    
+    public void closeTab(JComponent c){
+        this.tabEditors.remove(c);
+    }
     /**
    * Adds a component to a JTabbedPane with a little "close tab" button on the
    * right side of the tab.

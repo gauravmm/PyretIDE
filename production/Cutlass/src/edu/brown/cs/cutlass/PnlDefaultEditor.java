@@ -12,10 +12,13 @@ package edu.brown.cs.cutlass;
  */
 public class PnlDefaultEditor extends javax.swing.JPanel {
 
+    private final FrmMain owner;
     /**
      * Creates new form pnlDefaultEditor
+     * @param owner
      */
-    public PnlDefaultEditor() {
+    public PnlDefaultEditor(FrmMain owner) {
+        this.owner = owner;
         initComponents();
     }
 
@@ -29,6 +32,12 @@ public class PnlDefaultEditor extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+        });
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("<html><center><b>No File Open</b><br />Double-click to create a new file.</center></html>");
@@ -50,6 +59,14 @@ public class PnlDefaultEditor extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+        // TODO add your handling code here:
+        if (evt.getClickCount() >= 2){
+            owner.newTab();
+            owner.closeTab(this);
+        }
+    }//GEN-LAST:event_formMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
