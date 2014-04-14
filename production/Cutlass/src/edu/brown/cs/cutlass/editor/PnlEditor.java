@@ -15,6 +15,7 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
     
     /**
      * Creates new form EditorPanel
+     * @param client
      */
     public PnlEditor(EditorClient client) {
         initComponents();

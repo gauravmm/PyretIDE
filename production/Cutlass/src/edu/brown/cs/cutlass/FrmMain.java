@@ -531,38 +531,48 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
 
     private void tbSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbSaveMouseClicked
         // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }//GEN-LAST:event_tbSaveMouseClicked
 
     private void tbRunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbRunMouseClicked
         // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_tbRunMouseClicked
 
     private void tbBookmarkStopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbBookmarkStopMouseClicked
         // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_tbBookmarkStopMouseClicked
 
     private void tbUndoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbUndoMouseClicked
         // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_tbUndoMouseClicked
 
     private void tbRedoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbRedoMouseClicked
         // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_tbRedoMouseClicked
 
     private void tbAutoIndentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbAutoIndentMouseClicked
         // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_tbAutoIndentMouseClicked
 
     private void tbBookmarkBackMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbBookmarkBackMouseClicked
         // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_tbBookmarkBackMouseClicked
 
     private void tbBookmarkSetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbBookmarkSetMouseClicked
         // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_tbBookmarkSetMouseClicked
 
     private void tbBookmarkNextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbBookmarkNextMouseClicked
         // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_tbBookmarkNextMouseClicked
     
     private void mnuHelpAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpAboutActionPerformed
@@ -580,7 +590,6 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosed
 
     private void mnuFileNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileNewActionPerformed
-        // TODO add your handling code here:
         //Open a new empty tab
         addClosableTab(tabEditors, new PnlEditor(null), "New Tab");
     }//GEN-LAST:event_mnuFileNewActionPerformed
@@ -602,6 +611,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
     private void mnuFileSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileSaveActionPerformed
         // TODO add your handling code here:
         //If previously saved, just save, otherwise, save as
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_mnuFileSaveActionPerformed
 
     private void mnuFileOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileOpenActionPerformed
@@ -625,6 +635,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
 
     private void mnuSaveAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSaveAllActionPerformed
         // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_mnuSaveAllActionPerformed
 
     private void mnuCloseCurrentTabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCloseCurrentTabActionPerformed
@@ -644,38 +655,47 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
 
     private void mnuUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuUndoActionPerformed
         // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_mnuUndoActionPerformed
 
     private void mnuRedoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuRedoActionPerformed
         // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_mnuRedoActionPerformed
 
     private void mnuCutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCutActionPerformed
         // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_mnuCutActionPerformed
 
     private void mnuCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCopyActionPerformed
         // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_mnuCopyActionPerformed
 
     private void mnuPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPasteActionPerformed
         // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_mnuPasteActionPerformed
 
     private void mnuDeleteSelectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuDeleteSelectedActionPerformed
         // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_mnuDeleteSelectedActionPerformed
 
     private void mnuSelectAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSelectAllActionPerformed
         // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_mnuSelectAllActionPerformed
 
     private void mnuBlockCommentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuBlockCommentActionPerformed
         // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_mnuBlockCommentActionPerformed
 
     private void mnuDeleteLineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuDeleteLineActionPerformed
         // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_mnuDeleteLineActionPerformed
 
     
