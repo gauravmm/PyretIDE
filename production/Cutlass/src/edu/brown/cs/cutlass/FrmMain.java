@@ -1,22 +1,40 @@
 package edu.brown.cs.cutlass;
 
 import edu.brown.cs.cutlass.config.ConfigEngine;
+import edu.brown.cs.cutlass.editor.PnlEditor;
 import edu.brown.cs.cutlass.sys.SystemAbstraction;
 import edu.brown.cs.cutlass.sys.io.AbstractIO;
 import edu.brown.cs.cutlass.sys.io.AbstractIOException;
 import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.InputMap;
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.KeyStroke;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -89,7 +107,8 @@ class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
             // Load data from the launchState
         } else {
             // Load default
-            tabEditors.addTab("Default", new PnlDefaultEditor());
+            addClosableTab(tabEditors, new PnlDefaultEditor(), "Default");
+            //tabEditors.addTab("Default", new PnlDefaultEditor());
         }
     }
 
@@ -363,6 +382,11 @@ class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         mnuExit.setMnemonic('x');
         mnuExit.setText("Exit");
         mnuExit.setToolTipText("Exit Cutlass");
+        mnuExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuExitActionPerformed(evt);
+            }
+        });
         mnuFile.add(mnuExit);
 
         jMenuBar1.add(mnuFile);
@@ -483,6 +507,7 @@ class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
     private void mnuFileNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileNewActionPerformed
         // TODO add your handling code here:
         //Open a new empty tab
+        addClosableTab(tabEditors, new PnlEditor(null), "New Tab");
     }//GEN-LAST:event_mnuFileNewActionPerformed
 
     private void mnuFileSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileSaveAsActionPerformed
@@ -517,6 +542,117 @@ class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_mnuFileOpenActionPerformed
 
+    private void mnuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuExitActionPerformed
+        //The null value is a placeholder which seems to work - if at some point another value is needed, feel free to change.
+        this.formWindowClosed(null);
+    }//GEN-LAST:event_mnuExitActionPerformed
+
+    /**
+   * Adds a component to a JTabbedPane with a little "close tab" button on the
+   * right side of the tab.
+   *
+   * @param tabbedPane the JTabbedPane
+   * @param c any JComponent
+   * @param title the title for the tab
+   */
+  public static void addClosableTab(final JTabbedPane tabbedPane, final JComponent c, final String title) {
+    // Add the tab to the pane without any label
+    tabbedPane.addTab(null, c);
+    int pos = tabbedPane.indexOfComponent(c);
+
+    // Create a FlowLayout that will spaaaaaace things 5px apart
+    FlowLayout f = new FlowLayout(FlowLayout.CENTER, 5, 0);
+
+    // Make a small JPanel with the layout and make it non-opaque
+    JPanel pnlTab = new JPanel(f);
+    pnlTab.setOpaque(false);
+
+    // Add a JLabel with title and the left-side tab icon
+    JLabel lblTitle = new JLabel(title);
+
+    // Create a JButton for the close tab button
+    JButton btnClose = new JButton();
+    btnClose.setOpaque(false);
+    btnClose.setText("X");
+    btnClose.setPreferredSize(new Dimension(15, 18));
+
+    // Set border null so the button doesn't make the tab too big
+    btnClose.setBorder(BorderFactory.createEtchedBorder());
+    btnClose.setBorderPainted(false);
+    btnClose.setContentAreaFilled(false);
+
+    // Make sure the button can't get focus, otherwise it looks funny
+    btnClose.setFocusable(false);
+
+    // Put the panel together
+    pnlTab.add(lblTitle);
+    pnlTab.add(btnClose);
+
+    // Add a thin border to keep the image below the top edge of the tab
+    // when the tab is selected
+    pnlTab.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
+
+    // Now assign the component for the tab
+    tabbedPane.setTabComponentAt(pos, pnlTab);
+
+    // Add the listener that removes the tab
+    ActionListener listener = new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        // The component parameter must be declared "final" so that it can be
+        // referenced in the anonymous listener class like this.
+        tabbedPane.remove(c);
+      }
+    };
+    btnClose.addActionListener(listener);
+    
+    MouseListener buttonMouseListener = new MouseAdapter() {
+        public void mouseEntered(MouseEvent e) {
+            Component component = e.getComponent();
+            if (component instanceof AbstractButton) {
+                AbstractButton button = (AbstractButton) component;
+                button.setBorderPainted(true);
+            }
+        }
+ 
+        public void mouseExited(MouseEvent e) {
+            Component component = e.getComponent();
+            if (component instanceof AbstractButton) {
+                AbstractButton button = (AbstractButton) component;
+                button.setBorderPainted(false);
+            }
+        }
+    };
+    btnClose.addMouseListener(buttonMouseListener);
+
+    // Optionally bring the new tab to the front
+    tabbedPane.setSelectedComponent(c);
+    c.requestFocusInWindow();
+
+    //-------------------------------------------------------------
+    // Bonus: Adding a <Ctrl-W> keystroke binding to close the tab
+    //-------------------------------------------------------------
+    AbstractAction closeTabAction = new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        tabbedPane.remove(c);
+      }
+    };
+
+    // Create a keystroke
+    KeyStroke controlW = KeyStroke.getKeyStroke("control W");
+
+    // Get the appropriate input map using the JComponent constants.
+    // This one works well when the component is a container. 
+    InputMap inputMap = c.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+    // Add the key binding for the keystroke to the action name
+    inputMap.put(controlW, "closeTab");
+
+    // Now add a single binding for the action name to the anonymous action
+    c.getActionMap().put("closeTab", closeTabAction);
+  }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JList jList1;
