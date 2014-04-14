@@ -144,5 +144,19 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
         int position = jTextArea1.getCaretPosition();
         String current = jTextArea1.getText();
         jTextArea1.setText(current.substring(0, position) + toPaste + current.substring(position));
+        jTextArea1.setCaretPosition(position + toPaste.length());
+    }
+    
+    public void selectAll(){
+        jTextArea1.setSelectionStart(0);
+        jTextArea1.setSelectionEnd(jTextArea1.getText().length());
+    }
+    
+    public void deleteSelection(){
+        String selected = jTextArea1.getSelectedText();
+        int position = jTextArea1.getCaretPosition();
+        String current = jTextArea1.getText();
+        jTextArea1.setText(current.substring(0, position - selected.length()) + current.substring(position));
+        jTextArea1.setCaretPosition(position - selected.length());
     }
 }

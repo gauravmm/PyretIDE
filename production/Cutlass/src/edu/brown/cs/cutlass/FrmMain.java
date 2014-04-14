@@ -668,7 +668,11 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
 
     private void mnuCutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCutActionPerformed
         // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        AbstractClipboard clippy = systemAbstraction.getClipboard();
+        PnlEditor onTop = (PnlEditor)tabEditors.getSelectedComponent();
+        CharSequence seq = onTop.getSelectedText();
+        clippy.put(seq);
+        onTop.deleteSelection();
     }//GEN-LAST:event_mnuCutActionPerformed
 
     private void mnuCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCopyActionPerformed
@@ -685,17 +689,16 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         PnlEditor onTop = (PnlEditor)tabEditors.getSelectedComponent();
         String toPaste = clippy.get();
         onTop.paste(toPaste);
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_mnuPasteActionPerformed
 
     private void mnuDeleteSelectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuDeleteSelectedActionPerformed
         // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ((PnlEditor) tabEditors.getSelectedComponent()).deleteSelection();
     }//GEN-LAST:event_mnuDeleteSelectedActionPerformed
 
     private void mnuSelectAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSelectAllActionPerformed
         // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ((PnlEditor) tabEditors.getSelectedComponent()).selectAll();
     }//GEN-LAST:event_mnuSelectAllActionPerformed
 
     private void mnuBlockCommentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuBlockCommentActionPerformed
