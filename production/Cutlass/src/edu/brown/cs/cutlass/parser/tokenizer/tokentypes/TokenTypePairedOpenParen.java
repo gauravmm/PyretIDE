@@ -23,7 +23,7 @@ public class TokenTypePairedOpenParen extends TokenTypePairedOpen {
     private static final TokenTypePairedOpenParen instance = new TokenTypePairedOpenParen();
     
     private TokenTypePairedOpenParen(){
-        super(Pattern.compile("^(("));
+        super(Pattern.compile("^\\("));
     }
     
     @Override

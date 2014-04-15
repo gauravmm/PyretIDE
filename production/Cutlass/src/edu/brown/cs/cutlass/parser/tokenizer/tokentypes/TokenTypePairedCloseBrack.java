@@ -24,7 +24,7 @@ public class TokenTypePairedCloseBrack extends TokenTypePairedClose {
     private static final TokenTypePairedCloseBrack instance = new TokenTypePairedCloseBrack();
     
     private TokenTypePairedCloseBrack(){
-        super(Pattern.compile("^]]"));
+        super(Pattern.compile("^\\]"));
     }
     
     @Override

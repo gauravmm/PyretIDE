@@ -24,7 +24,7 @@ public class TokenTypePairedCloseParen extends TokenTypePairedClose {
     private static final TokenTypePairedCloseParen instance = new TokenTypePairedCloseParen();
     
     private TokenTypePairedCloseParen(){
-        super(Pattern.compile("^))"));
+        super(Pattern.compile("^\\)"));
     }
     
     @Override
