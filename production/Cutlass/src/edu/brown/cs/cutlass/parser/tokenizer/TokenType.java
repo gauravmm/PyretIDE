@@ -17,8 +17,8 @@ public abstract class TokenType implements AttributeSet {
 
     /*
      Whitespace (but not newlines)
-     Keywords,
-     Keywords with colons
+     Keywords, --
+     Keywords with colons --
     colon :
     open and close {}[]()
      Punctuation
