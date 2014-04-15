@@ -23,7 +23,7 @@ public class TokenTypePairedOpenBrack extends TokenTypePairedOpen {
     private static final TokenTypePairedOpenBrack instance = new TokenTypePairedOpenBrack();
     
     private TokenTypePairedOpenBrack(){
-        super(Pattern.compile("^[["));
+        super(Pattern.compile("^\\["));
     }
     
     @Override
