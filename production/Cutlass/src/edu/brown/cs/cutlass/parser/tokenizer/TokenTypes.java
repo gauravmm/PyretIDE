@@ -16,7 +16,21 @@ public final class TokenTypes {
 
     private static final List<TokenType> types = Arrays.asList(
             TokenTypePairedOpenBrace.getInstance(),
-            TokenTypePairedCloseBrace.getInstance()
+            TokenTypePairedCloseBrace.getInstance(),
+            TokenTypeComment.getInstance(),
+            TokenTypeDefault.getInstance(),
+            TokenTypeDoublePunct.getInstance(),
+            TokenTypeIndent.getInstance(),
+            TokenTypeKeyword.getInstance(),
+            TokenTypeKeywordColon.getInstance(),
+            TokenTypePairedCloseBrack.getInstance(),
+            TokenTypePairedCloseParen.getInstance(),
+            TokenTypePairedOpenBrack.getInstance(),
+            TokenTypePairedOpenParen.getInstance(),
+            TokenTypeSinglePunct.getInstance(),
+            TokenTypeStringDouble.getInstance(),
+            TokenTypeStringSingle.getInstance(),
+            TokenTypeWhitespace.getInstance()
     );
 
     public static List<TokenType> getTypes() {
