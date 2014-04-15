@@ -116,6 +116,7 @@ public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
                  int errCode = Integer.parseInt(out_string.substring(index+6,index+7));
                  return new PyretTerminationValue(errCode);
              }
+             return new PyretTerminationValue(1);
          }
      } 
      catch(IOException|InterruptedException e){
