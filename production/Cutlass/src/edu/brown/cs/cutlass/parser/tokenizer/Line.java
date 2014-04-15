@@ -19,10 +19,11 @@ public class Line implements Element {
     
     final int offset;
     final int length;
+    final int number;
     final int expectedIndentation;
     final List<Token> contents;
 
-    public Line(int expectedIndentation, List<Token> contents) {
+    public Line(int n, int expectedIndentation, List<Token> contents) {
         this.expectedIndentation = expectedIndentation;
         this.contents = contents;
         if(contents.isEmpty()){
@@ -31,13 +32,15 @@ public class Line implements Element {
         
         this.offset = contents.get(0).getOffset();
         this.length = contents.get(contents.size() - 1).getEndOffset() - this.offset;
+        this.number = n;
     }
 
-    public Line(int offset, int expectedIndentation) {
+    public Line(int n, int offset, int expectedIndentation) {
         this.offset = offset;
         this.expectedIndentation = expectedIndentation;
         this.contents = Collections.emptyList();
         this.length = 0;
+        this.number = n;
     }
     
 

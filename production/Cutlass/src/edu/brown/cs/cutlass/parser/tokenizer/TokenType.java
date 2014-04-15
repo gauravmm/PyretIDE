@@ -4,6 +4,7 @@
  */
 package edu.brown.cs.cutlass.parser.tokenizer;
 
+import edu.brown.cs.cutlass.util.Option;
 import java.util.Enumeration;
 import java.util.regex.Pattern;
 import javax.swing.text.AttributeSet;
@@ -13,10 +14,13 @@ import javax.swing.text.AttributeSet;
  * @author Gaurav Manek
  */
 public abstract class TokenType implements AttributeSet {
+
     /*
      Whitespace (but not newlines)
      Keywords,
      Keywords with colons
+    colon :
+    open and close {}[]()
      Punctuation
      Initial Operators
      Whitespace
@@ -25,8 +29,30 @@ public abstract class TokenType implements AttributeSet {
      Default
      Null/Illegal token type
      */
+    public TokenType(Pattern pattern) {
+        if (!pattern.pattern().startsWith("^")) {
+            throw new IllegalArgumentException("All patterns must be anchored to the start of string.");
+        }
+        
+        this.pattern = pattern;
+    }
 
-    public Pattern pattern;
+    // NOTE: pattern must not 
+    private final Pattern pattern;
+
+    public Pattern getPattern() {
+        return pattern;
+    }
+
+    /**
+     * Construct a token from the given matching string.
+     *
+     * @param value The string that matches the pattern.
+     * @param offset The offset at which the token starts
+     * @param length The length of the token.
+     * @return A Token containing the given contents.
+     */
+    public abstract Token constructToken(String value, int offset, int length);
 
     /**
      *
@@ -34,6 +60,10 @@ public abstract class TokenType implements AttributeSet {
      * for later processing. false otherwise;
      */
     public abstract boolean toAggregate();
+    
+    public Option<TokenType> expectedFollowingToken(){
+        return new Option<>();
+    }
 
     @Override
     public int getAttributeCount() {
