@@ -23,12 +23,12 @@ public class TokenTypePairedOpenBrace extends TokenTypePairedOpen {
     private static final TokenTypePairedOpenBrace instance = new TokenTypePairedOpenBrace();
     
     private TokenTypePairedOpenBrace(){
-        super(Pattern.compile("^{{"));
+        super(Pattern.compile("^\\{"));
     }
     
     @Override
     public Token constructToken(String value, int offset, int length) {
-        return new TokenPairedOpening(value, offset, length, this.getInstance());
+        return new TokenPairedOpening(value, offset, length, TokenTypePairedOpenBrace.getInstance());
     }
 
     @Override
