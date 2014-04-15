@@ -22,7 +22,12 @@ public class TokenTypeComment extends TokenType {
     private static final TokenTypeComment instance = new TokenTypeComment();
     
     private TokenTypeComment(){
-        super(Pattern.compile("^\\#"));
+        super(Pattern.compile("^\\#.*$"));
+    }
+
+    @Override
+    public boolean ignoreForExpectedToken() {
+        return true;
     }
     
     @Override

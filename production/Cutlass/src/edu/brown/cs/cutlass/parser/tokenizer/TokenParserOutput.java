@@ -20,4 +20,12 @@ public class TokenParserOutput {
         this.tokenLines = tokenLines;
         this.tokenCollected = tokenCollected;
     }
+
+    public List<Line> getTokenLines() {
+        return tokenLines;
+    }
+
+    public Map<TokenType, Map<String, List<Token>>> getTokenCollected() {
+        return tokenCollected;
+    }
 }

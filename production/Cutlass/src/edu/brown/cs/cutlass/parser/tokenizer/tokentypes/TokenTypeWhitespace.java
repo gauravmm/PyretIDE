@@ -22,7 +22,12 @@ public class TokenTypeWhitespace extends TokenType {
     private static final TokenTypeWhitespace instance = new TokenTypeWhitespace();
     
     private TokenTypeWhitespace(){
-        super(Pattern.compile("\"\\\\(?:[ \\t\\n]\\\\|#.*?\\n\\\\)\""));
+        super(Pattern.compile("\\s+"));
+    }
+    
+    @Override
+    public boolean ignoreForExpectedToken() {
+        return true;
     }
     
     @Override

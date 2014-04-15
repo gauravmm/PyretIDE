@@ -21,28 +21,20 @@ public class Line implements Element {
     final int length;
     final int number;
     final int expectedIndentation;
+    public final static String LINE_TERMINATOR = "\n";
     final List<Token> contents;
 
-    public Line(int n, int expectedIndentation, List<Token> contents) {
+    public Line(int n, int offset, int length, int expectedIndentation, List<Token> contents) {
         this.expectedIndentation = expectedIndentation;
-        this.contents = contents;
+        this.contents = Collections.unmodifiableList(contents);
         if(contents.isEmpty()){
             throw new IllegalStateException();
         }
         
-        this.offset = contents.get(0).getOffset();
-        this.length = contents.get(contents.size() - 1).getEndOffset() - this.offset;
-        this.number = n;
-    }
-
-    public Line(int n, int offset, int expectedIndentation) {
         this.offset = offset;
-        this.expectedIndentation = expectedIndentation;
-        this.contents = Collections.emptyList();
-        this.length = 0;
+        this.length = length;
         this.number = n;
     }
-    
 
     @Override
     public Document getDocument() {

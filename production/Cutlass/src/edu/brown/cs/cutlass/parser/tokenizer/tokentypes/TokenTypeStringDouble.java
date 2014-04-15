@@ -22,7 +22,7 @@ public class TokenTypeStringDouble extends TokenType {
     private static final TokenTypeStringDouble instance = new TokenTypeStringDouble();
     
     private TokenTypeStringDouble(){
-        super(Pattern.compile("^/[^\"\\\\]//\"/"));
+        super(Pattern.compile("^\"[^\"]*\""));
     }
     
     @Override

@@ -22,7 +22,7 @@ public class TokenTypeStringSingle extends TokenType {
     private static final TokenTypeStringSingle instance = new TokenTypeStringSingle();
     
     private TokenTypeStringSingle(){
-        super(Pattern.compile("^/[^'\\\\]//'/"));
+        super(Pattern.compile("^'[^']*'"));
     }
     
     @Override

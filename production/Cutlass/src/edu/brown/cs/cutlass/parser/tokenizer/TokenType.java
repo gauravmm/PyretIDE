@@ -5,7 +5,9 @@
 package edu.brown.cs.cutlass.parser.tokenizer;
 
 import edu.brown.cs.cutlass.util.Option;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.regex.Pattern;
 import javax.swing.text.AttributeSet;
 
@@ -61,8 +63,12 @@ public abstract class TokenType implements AttributeSet {
      */
     public abstract boolean toAggregate();
     
-    public Option<TokenType> expectedFollowingToken(){
-        return new Option<>();
+    public List<TokenType> expectedFollowingTokens(){
+        return Collections.emptyList();
+    }
+    
+    public boolean ignoreForExpectedToken(){
+        return false;
     }
 
     @Override
