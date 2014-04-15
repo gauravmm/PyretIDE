@@ -13,22 +13,21 @@ import java.util.regex.Pattern;
  *
  * @author dilip
  */
-public class TokenTypeDefault extends TokenType {
+public class TokenTypeStringSingle extends TokenType {
 
-    public static TokenTypeDefault getInstance(){
+    public static TokenTypeStringSingle getInstance(){
         return instance;
     }
     
-    private static final TokenTypeDefault instance = new TokenTypeDefault();
+    private static final TokenTypeStringSingle instance = new TokenTypeStringSingle();
     
-    private TokenTypeDefault(){
-        //Placeholder regex until we decide on one that works
-        super(Pattern.compile("^:=:"));
+    private TokenTypeStringSingle(){
+        super(Pattern.compile("^/[^'\\\\]//'/"));
     }
     
     @Override
     public Token constructToken(String value, int offset, int length) {
-        return new Token(value, offset, length, TokenTypeDefault.getInstance());
+        return new Token(value, offset, length, TokenTypeStringSingle.getInstance());
     }
 
     @Override

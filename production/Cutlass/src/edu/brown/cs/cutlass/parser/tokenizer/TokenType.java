@@ -24,9 +24,9 @@ public abstract class TokenType implements AttributeSet {
      Punctuation --
      Initial Operators --
      Whitespace --
-     Strings (with ' and " quotes) 
+     Strings (with ' and " quotes) --
      Comments --
-     Default
+     Default -- check regex
      Null/Illegal token type
      */
     public TokenType(Pattern pattern) {
