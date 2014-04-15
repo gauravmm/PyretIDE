@@ -16,16 +16,16 @@ import javax.swing.text.AttributeSet;
 public abstract class TokenType implements AttributeSet {
 
     /*
-     Whitespace (but not newlines)
+     Whitespace (but not newlines) --
      Keywords, --
      Keywords with colons --
-    colon :
-    open and close {}[]()
-     Punctuation
-     Initial Operators
-     Whitespace
-     Strings (with ' and " quotes)
-     Comments
+    colon : --
+    open and close {}[]() --
+     Punctuation --
+     Initial Operators --
+     Whitespace --
+     Strings (with ' and " quotes) 
+     Comments --
      Default
      Null/Illegal token type
      */
