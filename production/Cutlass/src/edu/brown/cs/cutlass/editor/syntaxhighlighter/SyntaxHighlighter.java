@@ -21,7 +21,7 @@ import javax.swing.text.StyledDocument;
  * @author dilip
  */
 public class SyntaxHighlighter {
-    private final StyledDocument sdoc;
+    private StyledDocument sdoc;
     
     public SyntaxHighlighter(StyledDocument d){
         this.sdoc = addAllStyles(d);
@@ -45,6 +45,10 @@ public class SyntaxHighlighter {
         } catch (BadLocationException ex) {
             Logger.getLogger(SyntaxHighlighter.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void updateDocument(StyledDocument newdoc){
+        this.sdoc = newdoc;
     }
 
     private StyledDocument addAllStyles(StyledDocument d) {
