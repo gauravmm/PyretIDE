@@ -52,7 +52,7 @@ public class Token {
     
     
     // Type:
-    public TokenStyle getStyle() {
+    public TokenStyle getTokenStyle() {
         return style;
     }
 

@@ -14,17 +14,23 @@ import javax.swing.text.StyledDocument;
 public abstract class TokenStyle {
 
     private final String styleName;
+    private Style style = null;
 
     public TokenStyle() {
         this.styleName = this.getClass().getCanonicalName();
     }
 
     public final void applyTo(StyledDocument sD) {
-        setStyle(sD.addStyle(styleName, null));
+        style = sD.addStyle(styleName, null);
+        setStyle(style);
     }
     
     public final String getName(){
         return styleName;
+    }
+    
+    public final Style getStyle(){
+        return style;
     }
 
     protected abstract void setStyle(Style s);
