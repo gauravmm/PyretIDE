@@ -4,15 +4,14 @@
  */
 package edu.brown.cs.cutlass.parser.tokenizer;
 
-import javax.swing.text.AttributeSet;
-import javax.swing.text.Document;
-import javax.swing.text.Element;
+import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
+import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyles;
 
 /**
  *
  * @author Gaurav Manek
  */
-public class Token implements Element {
+public class Token {
 
     private final String value;
     private final int length;
@@ -21,6 +20,7 @@ public class Token implements Element {
     
     public Token next = null;
     public Token previous = null;
+    private TokenStyle style = TokenStyles.getDefaultStyle();
     
     public Token(String value, int length, int offset, TokenType type) {
         this.value = value;
@@ -45,54 +45,29 @@ public class Token implements Element {
         return type;
     }
 
-    @Override
-    public Document getDocument() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    public TokenStyle getStyle() {
+        return style;
+    }
+    
+    public void setStyle(TokenStyle style) {
+        this.style = style;
     }
 
-    @Override
-    public Element getParentElement() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Token getNextToken() {
+        return next;
     }
 
-    @Override
-    public String getName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setNextToken(Token next) {
+        this.next = next;
     }
 
-    @Override
-    public AttributeSet getAttributes() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Token getPreviousToken() {
+        return previous;
     }
 
-    @Override
-    public int getStartOffset() {
-        return offset;
-    }
-
-    @Override
-    public int getEndOffset() {
-        return offset + length;
-    }
-
-    @Override
-    public int getElementIndex(int offset) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int getElementCount() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Element getElement(int index) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean isLeaf() {
-        return true;
+    public void setPreviousToken(Token previous) {
+        this.previous = previous;
     }
 
     @Override

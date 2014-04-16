@@ -16,7 +16,7 @@ import javax.swing.text.Element;
  *
  * @author Gaurav Manek
  */
-public class Line implements Element {
+public class Line {
     public final static String LINE_TERMINATOR = "\n";
     public final static String LINE_INDENT = "  ";
     
@@ -36,56 +36,6 @@ public class Line implements Element {
         this.offset = offset;
         this.length = length;
         this.number = n;
-    }
-
-    @Override
-    public Document getDocument() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Element getParentElement() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String getName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public AttributeSet getAttributes() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int getStartOffset() {
-        return offset;
-    }
-
-    @Override
-    public int getEndOffset() {
-        return offset + length;
-    }
-
-    @Override
-    public int getElementIndex(int offset) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int getElementCount() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Element getElement(int index) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean isLeaf() {
-        return false;
     }
 
     @Override

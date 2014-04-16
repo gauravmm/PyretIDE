@@ -15,7 +15,8 @@ import java.util.List;
 public final class TokenStyles {
     
     private static List<TokenStyle> list = Arrays.asList(
-            TokenStyleDefault.getInstance()
+            TokenStyleDefault.getInstance(),
+            TokenStyleComment.getInstance()
     );
     
     public static TokenStyle getDefaultStyle(){
