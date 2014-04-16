@@ -94,6 +94,6 @@ public class Token implements Element {
 
     @Override
     public String toString() {
-        return "(" + type.getClass() + " " + value + ')';
+        return "(" + type.getClass().getSimpleName() + " " + offset + " " + value + ')';
     }
 }

@@ -27,8 +27,8 @@ public class Line implements Element {
     public Line(int n, int offset, int length, int expectedIndentation, List<Token> contents) {
         this.expectedIndentation = expectedIndentation;
         this.contents = Collections.unmodifiableList(contents);
-        if(contents.isEmpty()){
-            throw new IllegalStateException();
+        if(contents == null){
+            throw new IllegalStateException("Null contents passed.");
         }
         
         this.offset = offset;

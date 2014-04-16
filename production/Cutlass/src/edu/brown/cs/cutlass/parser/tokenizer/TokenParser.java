@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -37,8 +38,7 @@ public final class TokenParser {
         Stack<TokenType> expectedFutureToken = new Stack<>();
 
         List<TokenType> types = TokenTypes.getTypes();
-        ArrayList<Line> outLine = new ArrayList<>();
-        outLine.ensureCapacity(input.size());
+        LinkedList<Line> outLine = new LinkedList<>();
 
         // Prepare aggregator
         Map<TokenType, Map<String, List<Token>>> aggregator = new HashMap<>();
@@ -124,14 +124,16 @@ public final class TokenParser {
                     TokenPairedClosing tc = (TokenPairedClosing) token;
 
                     // If the type matches correctly:
-                    if (ttc.isMatchingTokenType(pairOpenStart.peek().getType())) {
+                    if (pairOpenStart.empty()) {
+                        throw new TokenParsingException("Well-formedness: The following token does not have a starting node: " + tc);
+                    } else if (ttc.isMatchingTokenType(pairOpenStart.peek().getType())) {
                         // This token matches the closing token.
                         // Give them references to each other and remove it from the list.
                         TokenPairedOpening startingToken = pairOpenStart.pop();
                         startingToken.other = tc;
                         tc.other = startingToken;
                     } else {
-                        throw new TokenParsingException("Well-formedness: The following tokens do not match:" + pairOpenStart.peek() + " " + tc);
+                        throw new TokenParsingException("Well-formedness: The following tokens do not match: " + pairOpenStart.peek() + " " + tc);
                     }
                 }
 
@@ -142,6 +144,7 @@ public final class TokenParser {
             // Line is over
             offset += Line.LINE_TERMINATOR.length();
             outLine.add(new Line(lineNumber++, lineOffset, offset - lineOffset, pairOpenStart.size(), lineContents));
+            System.err.println(outLine.getLast());
         }
 
         // Check that everything has been closed:

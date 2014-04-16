@@ -24,12 +24,14 @@ public final class TokenTypes {
             TokenTypeComment.getInstance(),
             TokenTypeKeywordDoc.getInstance(),
             TokenTypeDoublePunct.getInstance(),
-            TokenTypePairedOpenColon.getInstance(), // MUST appear after DoublePunct
-            TokenTypePairedCloseColon.getInstance(), // SHOULD appear before Keyword
+            TokenTypePairedOpenCloseColon.getInstance(),
+            TokenTypePairedOpenColon.getInstance(), 
+            TokenTypePairedCloseColon.getInstance(), 
             TokenTypeKeyword.getInstance(),
             TokenTypeKeywordColon.getInstance(),
             TokenTypeSinglePunct.getInstance(),
             TokenTypeString.getInstance(),
+            TokenTypeNumber.getInstance(),
             TokenTypeWhitespace.getInstance(),
             TokenTypeDefault.getInstance()
     );

@@ -38,8 +38,6 @@ public class TokenTypeKeywordColon extends TokenType {
         rv.add(TokenTypePairedOpenColon.getInstance());
         return rv;
     }
-    
-    
 
     @Override
     public boolean toAggregate() {
