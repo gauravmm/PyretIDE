@@ -14,6 +14,7 @@ import java.util.List;
  */
 public final class TokenTypes {
 
+    // NOTE: The order is important.
     private static final List<TokenType> types = Arrays.asList(
             TokenTypePairedOpenBrace.getInstance(),
             TokenTypePairedCloseBrace.getInstance(),

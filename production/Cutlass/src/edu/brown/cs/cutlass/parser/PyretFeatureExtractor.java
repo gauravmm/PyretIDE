@@ -4,11 +4,13 @@
  */
 package edu.brown.cs.cutlass.parser;
 
+import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
+
 /**
  * Understand Pyret source code and provide the IDE with metadata of program.
  *
  * @author Gaurav Manek
  */
-public interface PyretParser {
-    public PyretMetadata parse(String s);
+public interface PyretFeatureExtractor {
+    public PyretMetadata extract(TokenParserOutput tpo);
 }
