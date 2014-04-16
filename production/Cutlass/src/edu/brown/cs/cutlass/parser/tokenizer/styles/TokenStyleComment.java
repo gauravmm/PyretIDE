@@ -17,7 +17,7 @@ public class TokenStyleComment extends TokenStyleColor {
     }
     
     private TokenStyleComment() {
-        super(Color.BLUE);
+        super(Color.CYAN);
     }
     
 }
