@@ -15,31 +15,29 @@ import java.util.regex.Pattern;
  *
  * @author dilip
  */
-public class TokenTypeKeywordColon extends TokenType {
+public class TokenTypeKeywordDoc extends TokenType {
 
-    public static TokenTypeKeywordColon getInstance(){
+    public static TokenTypeKeywordDoc getInstance(){
         return instance;
     }
     
-    private static final TokenTypeKeywordColon instance = new TokenTypeKeywordColon();
+    private static final TokenTypeKeywordDoc instance = new TokenTypeKeywordDoc();
     
-    private TokenTypeKeywordColon(){
-        super(Pattern.compile("^((doc)|(try)|(ask)|(otherwise)|(then)|(with)|(sharing)|(where)|(check)|(graph)|(block))"));
+    private TokenTypeKeywordDoc(){
+        super(Pattern.compile("^doc(\\s)*:"));
     }
     
     @Override
     public Token constructToken(String value, int offset, int length) {
-        return new Token(value, offset, length, TokenTypeKeywordColon.getInstance());
+        return new Token(value, offset, length, TokenTypeKeywordDoc.getInstance());
     }
 
     @Override
     public List<TokenType> expectedFollowingTokens() {
         LinkedList<TokenType> rv = new LinkedList<>();
-        rv.add(TokenTypePairedOpenColon.getInstance());
+        rv.add(TokenTypeString.getInstance());
         return rv;
     }
-    
-    
 
     @Override
     public boolean toAggregate() {

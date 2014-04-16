@@ -22,8 +22,7 @@ public class TokenTypeDefault extends TokenType {
     private static final TokenTypeDefault instance = new TokenTypeDefault();
     
     private TokenTypeDefault(){
-        //Placeholder regex until we decide on one that works
-        super(Pattern.compile("^:=:"));
+        super(Pattern.compile("^[^\\s]+"));
     }
     
     @Override

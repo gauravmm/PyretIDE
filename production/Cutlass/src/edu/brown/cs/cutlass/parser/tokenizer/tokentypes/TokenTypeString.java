@@ -13,21 +13,21 @@ import java.util.regex.Pattern;
  *
  * @author dilip
  */
-public class TokenTypeStringDouble extends TokenType {
+public class TokenTypeString extends TokenType {
 
-    public static TokenTypeStringDouble getInstance(){
+    public static TokenTypeString getInstance(){
         return instance;
     }
     
-    private static final TokenTypeStringDouble instance = new TokenTypeStringDouble();
+    private static final TokenTypeString instance = new TokenTypeString();
     
-    private TokenTypeStringDouble(){
-        super(Pattern.compile("^\"[^\"]*\""));
+    private TokenTypeString(){
+        super(Pattern.compile("^((\"[^\"]*\")|('[^']*'))"));
     }
     
     @Override
     public Token constructToken(String value, int offset, int length) {
-        return new Token(value, offset, length, TokenTypeStringDouble.getInstance());
+        return new Token(value, offset, length, TokenTypeString.getInstance());
     }
 
     @Override

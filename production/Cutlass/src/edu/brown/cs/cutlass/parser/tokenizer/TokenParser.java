@@ -86,7 +86,7 @@ public final class TokenParser {
                 }
 
                 if (matchedType == null || token == null) {
-                    throw new IllegalStateException("Nothing matched!");
+                    throw new IllegalStateException("Nothing matched! \"" + inLine + "\"");
                 }
 
                 assert matchedType != null;

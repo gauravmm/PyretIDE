@@ -6,28 +6,28 @@
 package edu.brown.cs.cutlass.parser.tokenizer.tokentypes;
 
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
-import edu.brown.cs.cutlass.parser.tokenizer.TokenType;
+import edu.brown.cs.cutlass.parser.tokenizer.TokenTypePairedOpen;
 import java.util.regex.Pattern;
 
 /**
  *
  * @author dilip
  */
-public class TokenTypeStringSingle extends TokenType {
+public class TokenTypePairedOpenColon extends TokenTypePairedOpen {
 
-    public static TokenTypeStringSingle getInstance(){
+    public static TokenTypePairedOpenColon getInstance(){
         return instance;
     }
     
-    private static final TokenTypeStringSingle instance = new TokenTypeStringSingle();
+    private static final TokenTypePairedOpenColon instance = new TokenTypePairedOpenColon();
     
-    private TokenTypeStringSingle(){
-        super(Pattern.compile("^'[^']*'"));
+    private TokenTypePairedOpenColon(){
+        super(Pattern.compile("^\\:[^\\:]"));
     }
     
     @Override
     public Token constructToken(String value, int offset, int length) {
-        return new Token(value, offset, length, TokenTypeStringSingle.getInstance());
+        return new Token(value, offset, length, TokenTypePairedOpenColon.getInstance());
     }
 
     @Override

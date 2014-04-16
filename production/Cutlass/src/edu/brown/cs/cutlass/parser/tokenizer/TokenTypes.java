@@ -22,15 +22,16 @@ public final class TokenTypes {
             TokenTypePairedOpenBrack.getInstance(),
             TokenTypePairedOpenParen.getInstance(),
             TokenTypeComment.getInstance(),
-            TokenTypeDefault.getInstance(),
+            TokenTypeKeywordDoc.getInstance(),
             TokenTypeDoublePunct.getInstance(),
-            TokenTypeSingleColon.getInstance(), // MUST appear after DoublePunct
+            TokenTypePairedOpenColon.getInstance(), // MUST appear after DoublePunct
+            TokenTypePairedCloseColon.getInstance(), // SHOULD appear before Keyword
             TokenTypeKeyword.getInstance(),
             TokenTypeKeywordColon.getInstance(),
             TokenTypeSinglePunct.getInstance(),
-            TokenTypeStringDouble.getInstance(),
-            TokenTypeStringSingle.getInstance(),
-            TokenTypeWhitespace.getInstance()
+            TokenTypeString.getInstance(),
+            TokenTypeWhitespace.getInstance(),
+            TokenTypeDefault.getInstance()
     );
 
     public static List<TokenType> getTypes() {
