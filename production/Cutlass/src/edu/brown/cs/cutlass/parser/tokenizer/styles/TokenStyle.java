@@ -14,7 +14,6 @@ import javax.swing.text.StyledDocument;
 public abstract class TokenStyle {
 
     private final String styleName;
-    private final Color styleColor;
 
     public TokenStyle() {
         this.styleName = this.getClass().getCanonicalName();
@@ -22,7 +21,6 @@ public abstract class TokenStyle {
 
     public final void applyTo(StyledDocument sD) {
         setStyle(sD.addStyle(styleName, null));
-        StyleConstants.setForeground(....,styleColor)
     }
     
     public final String getName(){
