@@ -43,6 +43,10 @@ public class Line {
         return String.format("%d\t%d\t%s%s", number, expectedIndentation, contents.toString(), LINE_TERMINATOR);
     }
     
+    public List<Token> getContents(){
+        return contents;
+    }
+    
     public String toIndentedString() {
         StringBuilder sb = new StringBuilder();
         int eI = expectedIndentation;
