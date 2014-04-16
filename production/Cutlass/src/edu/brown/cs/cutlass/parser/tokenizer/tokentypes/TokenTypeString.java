@@ -26,17 +26,10 @@ public class TokenTypeString extends TokenType {
     
     private TokenTypeString() {
         super(Pattern.compile("^(" + getRegex("\"") + "|" + getRegex("'") + ")"));
-        System.out.println(this.getPattern().pattern());
     }
 
     @Override
     public Token constructToken(String value, int offset, int length) {
         return new Token(value, offset, length, TokenTypeString.getInstance());
     }
-
-    @Override
-    public boolean toAggregate() {
-        return false;
-    }
-
 }

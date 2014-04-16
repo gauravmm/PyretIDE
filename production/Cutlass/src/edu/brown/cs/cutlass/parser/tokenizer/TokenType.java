@@ -21,8 +21,8 @@ public abstract class TokenType implements AttributeSet {
      Whitespace (but not newlines) --
      Keywords, --
      Keywords with colons --
-    colon : --
-    open and close {}[]() --
+     colon : --
+     open and close {}[]() --
      Punctuation --
      Initial Operators --
      Whitespace --
@@ -35,7 +35,7 @@ public abstract class TokenType implements AttributeSet {
         if (!pattern.pattern().startsWith("^")) {
             throw new IllegalArgumentException("All patterns must be anchored to the start of string.");
         }
-        
+
         this.pattern = pattern;
     }
 
@@ -61,13 +61,15 @@ public abstract class TokenType implements AttributeSet {
      * @return true, if tokens of this type should be collected by the parser
      * for later processing. false otherwise;
      */
-    public abstract boolean toAggregate();
-    
-    public List<TokenType> expectedFollowingTokens(){
+    public boolean toAggregate() {
+        return false;
+    }
+
+    public List<TokenType> expectedFollowingTokens() {
         return Collections.emptyList();
     }
-    
-    public boolean ignoreForExpectedToken(){
+
+    public boolean ignoreForExpectedToken() {
         return false;
     }
 
@@ -121,7 +123,5 @@ public abstract class TokenType implements AttributeSet {
     public boolean equals(Object obj) {
         throw new UnsupportedOperationException("Use pointer equality (==) to check for equality.");
     }
-    
-    
 
 }

@@ -38,10 +38,5 @@ public class TokenTypeKeywordDoc extends TokenType {
         rv.add(TokenTypeString.getInstance());
         return rv;
     }
-
-    @Override
-    public boolean toAggregate() {
-        return false;
-    }
     
 }

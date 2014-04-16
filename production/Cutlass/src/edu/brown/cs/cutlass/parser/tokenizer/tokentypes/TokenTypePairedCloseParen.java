@@ -32,11 +32,6 @@ public class TokenTypePairedCloseParen extends TokenTypePairedClose {
         return new TokenPairedClosing(value, offset, length, TokenTypePairedCloseParen.getInstance());
     }
 
-    @Override
-    public boolean toAggregate() {
-        return false;
-    }
-
 
     @Override
     public boolean isMatchingTokenType(TokenTypePairedOpen t) throws IllegalArgumentException {

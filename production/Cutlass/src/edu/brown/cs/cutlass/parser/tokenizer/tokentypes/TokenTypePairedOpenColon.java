@@ -34,9 +34,4 @@ public class TokenTypePairedOpenColon extends TokenTypePairedOpen {
         return new TokenPairedOpening(value, offset, length, TokenTypePairedOpenColon.getInstance());
     }
     
-    @Override
-    public boolean toAggregate() {
-        return false;
-    }
-    
 }

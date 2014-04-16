@@ -29,10 +29,5 @@ public class TokenTypeSinglePunct extends TokenType {
     public Token constructToken(String value, int offset, int length) {
         return new Token(value, offset, length, TokenTypeSinglePunct.getInstance());
     }
-
-    @Override
-    public boolean toAggregate() {
-        return false;
-    }
     
 }

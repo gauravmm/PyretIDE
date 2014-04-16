@@ -30,9 +30,4 @@ public class TokenTypeKeyword extends TokenType {
         return new Token(value, offset, length, TokenTypeKeyword.getInstance());
     }
 
-    @Override
-    public boolean toAggregate() {
-        return false;
-    }
-    
 }

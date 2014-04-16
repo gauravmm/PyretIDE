@@ -30,9 +30,4 @@ public class TokenTypeDefault extends TokenType {
         return new Token(value, offset, length, TokenTypeDefault.getInstance());
     }
 
-    @Override
-    public boolean toAggregate() {
-        return false;
-    }
-    
 }

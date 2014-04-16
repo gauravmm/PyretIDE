@@ -30,10 +30,5 @@ public class TokenTypePairedOpenParen extends TokenTypePairedOpen {
     public Token constructToken(String value, int offset, int length) {
         return new TokenPairedOpening(value, offset, length, TokenTypePairedOpenParen.getInstance());
     }
-
-    @Override
-    public boolean toAggregate() {
-        return false;
-    }
     
 }

@@ -35,9 +35,4 @@ public class TokenTypeComment extends TokenType {
         return new Token(value, offset, length, TokenTypeComment.getInstance());
     }
 
-    @Override
-    public boolean toAggregate() {
-        return false;
-    }
-    
 }

@@ -30,9 +30,4 @@ public class TokenTypeDoublePunct extends TokenType {
         return new Token(value, offset, length, TokenTypeDoublePunct.getInstance());
     }
 
-    @Override
-    public boolean toAggregate() {
-        return false;
-    }
-    
 }

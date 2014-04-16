@@ -35,11 +35,6 @@ public class TokenTypePairedOpenCloseColon extends TokenTypePairedClose {
     }
 
     @Override
-    public boolean toAggregate() {
-        return false;
-    }
-
-    @Override
     public List<TokenType> expectedFollowingTokens() {
         LinkedList<TokenType> rv = new LinkedList<>();
         rv.add(TokenTypePairedOpenColon.getInstance());

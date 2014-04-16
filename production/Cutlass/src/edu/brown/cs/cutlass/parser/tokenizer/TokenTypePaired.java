@@ -4,9 +4,7 @@
  */
 package edu.brown.cs.cutlass.parser.tokenizer;
 
-import java.util.Enumeration;
 import java.util.regex.Pattern;
-import javax.swing.text.AttributeSet;
 
 /**
  *

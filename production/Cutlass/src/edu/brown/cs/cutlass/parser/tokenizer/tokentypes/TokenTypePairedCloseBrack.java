@@ -32,11 +32,6 @@ public class TokenTypePairedCloseBrack extends TokenTypePairedClose {
     }
 
     @Override
-    public boolean toAggregate() {
-        return false;
-    }
-
-    @Override
     public boolean isMatchingTokenType(TokenTypePairedOpen t) throws IllegalArgumentException {
         return t instanceof TokenTypePairedOpenBrack;
     }

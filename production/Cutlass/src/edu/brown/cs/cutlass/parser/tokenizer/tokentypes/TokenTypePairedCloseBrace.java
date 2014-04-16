@@ -30,12 +30,7 @@ public class TokenTypePairedCloseBrace extends TokenTypePairedClose {
     public Token constructToken(String value, int offset, int length) {
         return new TokenPairedClosing(value, offset, length, TokenTypePairedCloseBrace.getInstance());
     }
-
-    @Override
-    public boolean toAggregate() {
-        return false;
-    }
-
+    
     @Override
     public boolean isMatchingTokenType(TokenTypePairedOpen t) throws IllegalArgumentException {
         return t instanceof TokenTypePairedOpenBrace;

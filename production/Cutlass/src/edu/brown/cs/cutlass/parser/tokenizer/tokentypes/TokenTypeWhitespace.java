@@ -34,10 +34,5 @@ public class TokenTypeWhitespace extends TokenType {
     public Token constructToken(String value, int offset, int length) {
         return new Token(value, offset, length, TokenTypeWhitespace.getInstance());
     }
-
-    @Override
-    public boolean toAggregate() {
-        return false;
-    }
     
 }
