@@ -4,6 +4,7 @@
  */
 package edu.brown.cs.cutlass.parser.tokenizer;
 
+import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
 import edu.brown.cs.cutlass.util.Option;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -122,6 +123,13 @@ public abstract class TokenType implements AttributeSet {
     @Deprecated
     public boolean equals(Object obj) {
         throw new UnsupportedOperationException("Use pointer equality (==) to check for equality.");
+    }
+
+    public TokenStyle getStyle() {
+        return null; // Default Style
+    }
+
+    public void applyStyle(Token t) {
     }
 
 }

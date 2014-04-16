@@ -160,9 +160,9 @@ public final class TokenParser {
                 lineIndent = Math.min(pairOpenStart.size(), lineIndent);
 
                 // Add to line, complete linked list reference.
-                token.previous = prev;
+                token.setPreviousToken(prev);
                 if (prev != null) {
-                    prev.next = token;
+                    prev.setNextToken(token);
                 }
                 lineContents.add(token);
                 prev = token;
@@ -171,7 +171,6 @@ public final class TokenParser {
             // Line is over
             offset += Line.LINE_TERMINATOR.length();
             outLine.add(new Line(lineNumber++, lineOffset, offset - lineOffset, lineIndent, lineContents));
-            //System.err.print(outLine.getLast());
         }
 
         // Check that everything has been closed:
@@ -184,7 +183,7 @@ public final class TokenParser {
             ex.append("The following tokens are expected: ");
             while (!expectedFutureToken.empty()) {
                 ex.append(expectedFutureToken.pop().getClass().getName());
-                if(!expectedFutureToken.empty()){
+                if (!expectedFutureToken.empty()) {
                     ex.append(", ");
                 }
             }
