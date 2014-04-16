@@ -16,10 +16,12 @@ import java.util.Map;
 public class TokenParserOutput {
     private final List<Line> tokenLines;
     private final Map<TokenType, Map<String, List<Token>>> tokenCollected;
+    private final List<ParsingError> parsingErrors;
 
-    TokenParserOutput(List<Line> tokenLines, Map<TokenType, Map<String, List<Token>>> tokenCollected) {
+    TokenParserOutput(LinkedList<Line> tokenLines, Map<TokenType, Map<String, List<Token>>> aggregator, List<ParsingError> parsingErrors) {
         this.tokenLines = tokenLines;
-        this.tokenCollected = tokenCollected;
+        this.tokenCollected = aggregator;
+        this.parsingErrors = parsingErrors;
     }
 
     public List<Line> getTokenLines() {
@@ -28,6 +30,10 @@ public class TokenParserOutput {
 
     public Map<TokenType, Map<String, List<Token>>> getTokenCollected() {
         return tokenCollected;
+    }
+
+    public List<ParsingError> getParsingErrors() {
+        return parsingErrors;
     }
     
     public List<String> reindent(){

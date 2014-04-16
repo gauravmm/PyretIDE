@@ -13,21 +13,21 @@ import java.util.regex.Pattern;
  *
  * @author dilip
  */
-public class TokenTypeDefault extends TokenType {
+public class TokenTypeKeywordAggregate extends TokenType {
 
-    public static TokenTypeDefault getInstance(){
+    public static TokenTypeKeywordAggregate getInstance(){
         return instance;
     }
     
-    private static final TokenTypeDefault instance = new TokenTypeDefault();
+    private static final TokenTypeKeywordAggregate instance = new TokenTypeKeywordAggregate();
     
-    private TokenTypeDefault(){
-        super(Pattern.compile("^([a-zA-Z][a-zA-Z0-9\\-]*)"));
+    private TokenTypeKeywordAggregate(){
+        super(Pattern.compile("^((fun)|(data))"));
     }
     
     @Override
     public Token constructToken(String value, int offset, int length) {
-        return new Token(value, offset, length, TokenTypeDefault.getInstance());
+        return new Token(value, offset, length, TokenTypeKeywordAggregate.getInstance());
     }
 
     @Override

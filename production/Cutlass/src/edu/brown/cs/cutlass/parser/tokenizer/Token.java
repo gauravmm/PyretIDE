@@ -18,7 +18,10 @@ public class Token implements Element {
     private final int length;
     private final int offset;
     private final TokenType type;
-
+    
+    public Token next = null;
+    public Token previous = null;
+    
     public Token(String value, int length, int offset, TokenType type) {
         this.value = value;
         this.length = length;

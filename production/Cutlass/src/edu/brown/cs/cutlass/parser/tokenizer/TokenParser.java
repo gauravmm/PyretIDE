@@ -33,6 +33,7 @@ public final class TokenParser {
     public static TokenParserOutput parseTokens(List<String> input) {
         Stack<TokenPairedOpening> pairOpenStart = new Stack<>();
         Stack<TokenType> expectedFutureToken = new Stack<>();
+        List<ParsingError> parsingErrors = new LinkedList<>();
 
         List<TokenType> types = TokenTypes.getTypes();
         LinkedList<Line> outLine = new LinkedList<>();
@@ -49,6 +50,7 @@ public final class TokenParser {
 
         int offset = 0;
         int lineNumber = 0;
+        Token prev = null;
 
         // For each line in the input:
         while (itr.hasNext()) {
@@ -97,7 +99,7 @@ public final class TokenParser {
                     if (expectedFutureToken.peek() == tt) {
                         expectedFutureToken.pop();
                     } else {
-                        throw new TokenParsingException("Well-formedness: The token does not match the expected following token.");
+                        parsingErrors.add(new ParsingError(token, "A different token is expected here, are you forgetting something?"));
                     }
                 }
 
@@ -123,7 +125,7 @@ public final class TokenParser {
 
                     // If the type matches correctly:
                     if (pairOpenStart.empty()) {
-                        throw new TokenParsingException("Well-formedness: The following token does not have a starting node: " + tc);
+                        parsingErrors.add(new ParsingError(token, "There is nothing to close here."));
                     } else if (ttc.isMatchingTokenType(pairOpenStart.peek().getType())) {
                         // This token matches the closing token.
                         // Give them references to each other and remove it from the list.
@@ -131,15 +133,39 @@ public final class TokenParser {
                         startingToken.other = tc;
                         tc.other = startingToken;
                     } else {
-                        throw new TokenParsingException("Well-formedness: The following tokens do not match: " + pairOpenStart.peek() + " " + tc);
+                        parsingErrors.add(new ParsingError(token, "This doesn't close anything."));
                     }
                 }
-                
+
+                // Aggregator
+                if (tt.toAggregate()) {
+                    Map<String, List<Token>> get = aggregator.get(tt);
+                    // Check that the aggregator has been defined.
+                    if (get == null) {
+                        throw new IllegalStateException("Aggregator for " + tt.getClass().getSimpleName() + " not initialized!");
+                    } else {
+                        // Check if the key is defined.
+                        List<Token> tokstr = get.get(token.getValue());
+                        if (tokstr == null) {
+                            // Define the key if not already done so.
+                            tokstr = new LinkedList<>();
+                            get.put(token.getValue(), tokstr);
+                        }
+                        // Add to the list.
+                        tokstr.add(token);
+                    }
+                }
+
                 // Set the line-indent to be the leftmost size
                 lineIndent = Math.min(pairOpenStart.size(), lineIndent);
 
-                // Add to line
+                // Add to line, complete linked list reference.
+                token.previous = prev;
+                if (prev != null) {
+                    prev.next = token;
+                }
                 lineContents.add(token);
+                prev = token;
             }
 
             // Line is over
@@ -149,12 +175,22 @@ public final class TokenParser {
         }
 
         // Check that everything has been closed:
-        if (!pairOpenStart.empty()) {
-            throw new TokenParsingException("Well-formedness: The following tokens are not closed:" + pairOpenStart.toString());
-        } else if (!expectedFutureToken.empty()) {
-            throw new TokenParsingException("Well-formedness: The following tokens are expected:" + expectedFutureToken.toString());
-        } else {
-            return new TokenParserOutput(outLine, aggregator);
+        while (!pairOpenStart.empty()) {
+            parsingErrors.add(new ParsingError(pairOpenStart.pop(), "This is not closed."));
         }
+
+        if (!expectedFutureToken.empty()) {
+            StringBuilder ex = new StringBuilder();
+            ex.append("The following tokens are expected: ");
+            while (!expectedFutureToken.empty()) {
+                ex.append(expectedFutureToken.pop().getClass().getName());
+                if(!expectedFutureToken.empty()){
+                    ex.append(", ");
+                }
+            }
+            parsingErrors.add(new ParsingError(prev, ex.toString()));
+        }
+
+        return new TokenParserOutput(outLine, aggregator, parsingErrors);
     }
 }

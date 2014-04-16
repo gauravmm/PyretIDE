@@ -27,6 +27,7 @@ public final class TokenTypes {
             TokenTypePairedOpenCloseColon.getInstance(),
             TokenTypePairedOpenColon.getInstance(), 
             TokenTypePairedCloseColon.getInstance(), 
+            TokenTypeKeywordAggregate.getInstance(),
             TokenTypeKeyword.getInstance(),
             TokenTypeKeywordColon.getInstance(),
             TokenTypeSinglePunct.getInstance(),
