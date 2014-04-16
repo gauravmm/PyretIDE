@@ -95,7 +95,7 @@ public final class TokenParser {
                 // Check if previous expectation is correct:
                 TokenType tt = token.getType();
                 if (!tt.ignoreForExpectedToken() && !expectedFutureToken.empty()) {
-                    if (expectedFutureToken.peek().equals(tt)) {
+                    if (expectedFutureToken.peek() == tt) {
                         expectedFutureToken.pop();
                     } else {
                         throw new TokenParsingException("Well-formedness: The token does not match the expected following token.");
@@ -114,9 +114,13 @@ public final class TokenParser {
 
                 // Pair matching
                 if (tt instanceof TokenTypePairedOpen) {
-                    
+                    pairOpenStart.add((TokenPairedOpening) token);
                 } else if (tt instanceof TokenTypePairedClose) {
-
+                    if (!(token instanceof TokenPairedClosing)) {
+                        throw new TokenParsingException("Illegal state in parser.");
+                    }
+                    
+                    
                 }
 
                 // Add to line
@@ -135,26 +139,6 @@ public final class TokenParser {
             throw new TokenParsingException("Well-formedness: The following tokens are expected:" + expectedFutureToken.toString());
         } else {
             return new TokenParserOutput(outLine, aggregator);
-        }
-    }
-
-    private static final Pattern attr = Pattern.compile("([a-zA-Z0-9]*)\\s*=\\s*(['\"])([^'\"]*)\\2");
-    private static final int ATTR_GROUP_ALL = 0;
-    private static final int ATTR_GROUP_NAME = 1;
-    private static final int ATTR_GROUP_QUOTE = 2;
-    private static final int ATTR_GROUP_VALUE = 3;
-
-    private static void addAttrs(XMLRaw xmlRaw, String inp) {
-        if (inp == null || inp.isEmpty()) {
-            return;
-        }
-
-        Matcher m = attr.matcher(inp);
-
-        int idx = 0;
-        while (m.find(idx)) {
-            xmlRaw.setAttr(m.group(ATTR_GROUP_NAME), XMLAttributeEscaper.unescape(m.group(ATTR_GROUP_VALUE)));
-            idx = m.end();
         }
     }
 }

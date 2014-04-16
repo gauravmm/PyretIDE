@@ -7,6 +7,9 @@ package edu.brown.cs.cutlass.parser.tokenizer.tokentypes;
 
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenType;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -29,6 +32,15 @@ public class TokenTypeKeywordColon extends TokenType {
     public Token constructToken(String value, int offset, int length) {
         return new Token(value, offset, length, TokenTypeKeywordColon.getInstance());
     }
+
+    @Override
+    public List<TokenType> expectedFollowingTokens() {
+        LinkedList<TokenType> rv = new LinkedList<>();
+        rv.add(TokenTypeSingleColon.getInstance());
+        return rv;
+    }
+    
+    
 
     @Override
     public boolean toAggregate() {

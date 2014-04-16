@@ -24,6 +24,7 @@ public final class TokenTypes {
             TokenTypeComment.getInstance(),
             TokenTypeDefault.getInstance(),
             TokenTypeDoublePunct.getInstance(),
+            TokenTypeSingleColon.getInstance(), // MUST appear after DoublePunct
             TokenTypeKeyword.getInstance(),
             TokenTypeKeywordColon.getInstance(),
             TokenTypeSinglePunct.getInstance(),
@@ -37,6 +38,6 @@ public final class TokenTypes {
     }
 
     public static TokenType getWhitespaceTokenType() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return TokenTypeWhitespace.getInstance();
     }
 }

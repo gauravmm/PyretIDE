@@ -116,4 +116,12 @@ public abstract class TokenType implements AttributeSet {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    @Deprecated
+    public boolean equals(Object obj) {
+        throw new UnsupportedOperationException("Use pointer equality (==) to check for equality.");
+    }
+    
+    
+
 }
