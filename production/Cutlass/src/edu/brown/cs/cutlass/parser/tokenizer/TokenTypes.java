@@ -40,7 +40,7 @@ public final class TokenTypes {
         return types;
     }
 
-    public static TokenType getWhitespaceTokenType() {
-        return TokenTypeWhitespace.getInstance();
+    public static boolean isWhitespaceTokenType(TokenType tt) {
+        return tt == TokenTypeWhitespace.getInstance();
     }
 }

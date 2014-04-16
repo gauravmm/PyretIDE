@@ -5,6 +5,7 @@
 
 package edu.brown.cs.cutlass.parser.tokenizer;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,5 +28,13 @@ public class TokenParserOutput {
 
     public Map<TokenType, Map<String, List<Token>>> getTokenCollected() {
         return tokenCollected;
+    }
+    
+    public List<String> reindent(){
+        List<String> rv = new LinkedList<>();
+        for(Line l : tokenLines){
+            rv.add(l.toIndentedString());
+        }
+        return rv;
     }
 }

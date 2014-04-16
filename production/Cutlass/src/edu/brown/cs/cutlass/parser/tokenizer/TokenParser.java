@@ -15,15 +15,12 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Stack;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  *
  * @author Gaurav Manek
  */
 public final class TokenParser {
-
-    private static final Pattern tag = Pattern.compile("<(/?)([a-zA-Z0-9]*)(\\b[^>]*)?>");
 
     public static TokenParserOutput parseTokens(String s) {
         return parseTokens(s.split("(\r)?\n"));
@@ -58,6 +55,7 @@ public final class TokenParser {
             String inLine = itr.next();
 
             int lineOffset = offset;
+            int lineIndent = pairOpenStart.size();
             ArrayList<Token> lineContents = new ArrayList<>();
 
             // Repeat until the line has been entirely tokenized:
@@ -136,6 +134,9 @@ public final class TokenParser {
                         throw new TokenParsingException("Well-formedness: The following tokens do not match: " + pairOpenStart.peek() + " " + tc);
                     }
                 }
+                
+                // Set the line-indent to be the leftmost size
+                lineIndent = Math.min(pairOpenStart.size(), lineIndent);
 
                 // Add to line
                 lineContents.add(token);
@@ -143,8 +144,8 @@ public final class TokenParser {
 
             // Line is over
             offset += Line.LINE_TERMINATOR.length();
-            outLine.add(new Line(lineNumber++, lineOffset, offset - lineOffset, pairOpenStart.size(), lineContents));
-            System.err.println(outLine.getLast());
+            outLine.add(new Line(lineNumber++, lineOffset, offset - lineOffset, lineIndent, lineContents));
+            //System.err.print(outLine.getLast());
         }
 
         // Check that everything has been closed:
