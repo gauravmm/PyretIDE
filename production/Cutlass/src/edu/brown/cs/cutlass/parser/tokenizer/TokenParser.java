@@ -71,21 +71,22 @@ public final class TokenParser {
                     // If this pattern matches:
                     if (m.find()) {
                         if (m.start() != 0) {
-                            throw new TokenParsingException("The token parsed does not start at position 0." + tt.getClass().getName() + " \"" + inLine + "\"");
+                            throw new IllegalStateException("The token parsed does not start at position 0." + tt.getClass().getName() + " \"" + inLine + "\"");
                         } else if (m.end() == 0) {
-                            throw new TokenParsingException("The token parsed has length 0. " + tt.getClass().getName() + " \"" + inLine + "\"");
+                            throw new IllegalStateException("The token parsed has length 0. " + tt.getClass().getName() + " \"" + inLine + "\"");
                         }
                         int size = m.end() - m.start();
                         matchedType = tt;
                         token = tt.constructToken(m.group(), offset, size);
                         offset += size;
+                        inLine = inLine.substring(size);
 
                         break;
                     }
                 }
 
                 if (matchedType == null || token == null) {
-                    throw new TokenParsingException("Nothing matched!");
+                    throw new IllegalStateException("Nothing matched!");
                 }
 
                 assert matchedType != null;
@@ -117,10 +118,21 @@ public final class TokenParser {
                     pairOpenStart.add((TokenPairedOpening) token);
                 } else if (tt instanceof TokenTypePairedClose) {
                     if (!(token instanceof TokenPairedClosing)) {
-                        throw new TokenParsingException("Illegal state in parser.");
+                        throw new IllegalStateException("Illegal state in parser.");
                     }
-                    
-                    
+                    TokenTypePairedClose ttc = (TokenTypePairedClose) tt;
+                    TokenPairedClosing tc = (TokenPairedClosing) token;
+
+                    // If the type matches correctly:
+                    if (ttc.isMatchingTokenType(pairOpenStart.peek().getType())) {
+                        // This token matches the closing token.
+                        // Give them references to each other and remove it from the list.
+                        TokenPairedOpening startingToken = pairOpenStart.pop();
+                        startingToken.other = tc;
+                        tc.other = startingToken;
+                    } else {
+                        throw new TokenParsingException("Well-formedness: The following tokens do not match:" + pairOpenStart.peek() + " " + tc);
+                    }
                 }
 
                 // Add to line
@@ -129,7 +141,7 @@ public final class TokenParser {
 
             // Line is over
             offset += Line.LINE_TERMINATOR.length();
-            outLine.add(new Line(lineNumber++, lineOffset, offset, pairOpenStart.size(), lineContents));
+            outLine.add(new Line(lineNumber++, lineOffset, offset - lineOffset, pairOpenStart.size(), lineContents));
         }
 
         // Check that everything has been closed:

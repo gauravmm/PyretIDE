@@ -22,7 +22,7 @@ public class TokenTypeWhitespace extends TokenType {
     private static final TokenTypeWhitespace instance = new TokenTypeWhitespace();
     
     private TokenTypeWhitespace(){
-        super(Pattern.compile("\\s+"));
+        super(Pattern.compile("^\\s+"));
     }
     
     @Override

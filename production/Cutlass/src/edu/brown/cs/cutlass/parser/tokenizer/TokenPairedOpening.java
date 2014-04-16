@@ -13,5 +13,10 @@ public class TokenPairedOpening extends TokenPaired {
     public TokenPairedOpening(String value, int length, int offset, TokenTypePairedOpen type) {
         super(value, length, offset, type);
     }
+
+    @Override
+    public TokenTypePairedOpen getType() {
+        return (TokenTypePairedOpen) super.getType();
+    }
     
 }

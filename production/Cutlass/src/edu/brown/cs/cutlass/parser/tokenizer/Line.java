@@ -85,5 +85,9 @@ public class Line implements Element {
     public boolean isLeaf() {
         return false;
     }
-    
+
+    @Override
+    public String toString() {
+        return String.format("%d\t%d\t%s%n", number, expectedIndentation, contents.toString());
+    }
 }

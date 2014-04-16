@@ -17,11 +17,12 @@ public abstract class TokenTypePairedClose extends TokenTypePaired {
     }
 
     /**
-     * Get the TokenTypePairedOpen that corresponds to the starting token for
-     * this.
+     * Check if the given TokenTypePairedOpen corresponds to the starting token
+     * for this.
      *
+     * @param t The type to check if matches.
      * @return The TokenPaired that corresponds to the starting token.
      */
-    public abstract TokenTypePairedOpen getMatchingTokenType() throws IllegalArgumentException;
+    public abstract boolean isMatchingTokenType(TokenTypePairedOpen t) throws IllegalArgumentException;
 
 }

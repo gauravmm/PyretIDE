@@ -2,7 +2,6 @@
  * Cutlass - Pyret IDE
  * For CSCI 0320 Spring 2014, Term Project
  */
-
 package edu.brown.cs.cutlass.parser.tokenizer.tokentypes;
 
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
@@ -17,16 +16,16 @@ import java.util.regex.Pattern;
  */
 public class TokenTypePairedCloseBrack extends TokenTypePairedClose {
 
-    public static TokenTypePairedCloseBrack getInstance(){
+    public static TokenTypePairedCloseBrack getInstance() {
         return instance;
     }
-    
+
     private static final TokenTypePairedCloseBrack instance = new TokenTypePairedCloseBrack();
-    
-    private TokenTypePairedCloseBrack(){
+
+    private TokenTypePairedCloseBrack() {
         super(Pattern.compile("^\\]"));
     }
-    
+
     @Override
     public Token constructToken(String value, int offset, int length) {
         return new TokenPairedClosing(value, offset, length, TokenTypePairedCloseBrack.getInstance());
@@ -38,8 +37,8 @@ public class TokenTypePairedCloseBrack extends TokenTypePairedClose {
     }
 
     @Override
-    public TokenTypePairedOpen getMatchingTokenType() throws IllegalArgumentException {
-        return TokenTypePairedOpenBrace.getInstance();
+    public boolean isMatchingTokenType(TokenTypePairedOpen t) throws IllegalArgumentException {
+        return t instanceof TokenTypePairedOpenBrack;
     }
-    
+
 }

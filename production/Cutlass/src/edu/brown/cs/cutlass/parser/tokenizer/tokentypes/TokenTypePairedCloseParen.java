@@ -37,9 +37,10 @@ public class TokenTypePairedCloseParen extends TokenTypePairedClose {
         return false;
     }
 
+
     @Override
-    public TokenTypePairedOpen getMatchingTokenType() throws IllegalArgumentException {
-        return TokenTypePairedOpenBrace.getInstance();
+    public boolean isMatchingTokenType(TokenTypePairedOpen t) throws IllegalArgumentException {
+        return t instanceof TokenTypePairedOpenParen;
     }
     
 }

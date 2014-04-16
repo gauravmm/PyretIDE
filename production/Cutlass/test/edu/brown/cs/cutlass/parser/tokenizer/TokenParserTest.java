@@ -4,13 +4,7 @@
  */
 package edu.brown.cs.cutlass.parser.tokenizer;
 
-import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -44,7 +38,7 @@ public class TokenParserTest {
      */
     @Test
     public void testParseTokens_String() {
-        System.err.println(TokenParser.parseTokens(in).getTokenLines());
+        System.out.println(TokenParser.parseTokens(in).getTokenLines());
     }
 
 }

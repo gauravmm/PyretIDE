@@ -91,5 +91,9 @@ public class Token implements Element {
     public boolean isLeaf() {
         return true;
     }
-    
+
+    @Override
+    public String toString() {
+        return "(" + type.getClass() + " " + value + ')';
+    }
 }
