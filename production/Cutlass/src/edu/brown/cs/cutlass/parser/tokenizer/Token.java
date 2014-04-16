@@ -17,16 +17,20 @@ public class Token {
     private final int length;
     private final int offset;
     private final TokenType type;
-    
-    public Token next = null;
-    public Token previous = null;
+
+    private Token next = null;
+    private Token previous = null;
     private TokenStyle style = TokenStyles.getDefaultStyle();
-    
+
     public Token(String value, int length, int offset, TokenType type) {
         this.value = value;
         this.length = length;
         this.offset = offset;
         this.type = type;
+        if(type.getStyle() != null){
+            style = type.getStyle();
+        }
+        type.applyStyle(this);
     }
 
     public String getValue() {
@@ -41,19 +45,23 @@ public class Token {
         return offset;
     }
 
+    
     public TokenType getType() {
         return type;
     }
-
     
+    
+    // Type:
     public TokenStyle getStyle() {
         return style;
     }
-    
+
     public void setStyle(TokenStyle style) {
         this.style = style;
     }
 
+    // Linked List Implementation:
+    
     public Token getNextToken() {
         return next;
     }
@@ -70,6 +78,16 @@ public class Token {
         this.previous = previous;
     }
 
+    public boolean hasNextToken() {
+        return next != null;
+    }
+
+    public boolean hasPreviousToken() {
+        return next != null;
+    }
+
+    // Debug:
+    
     @Override
     public String toString() {
         return "(" + type.getClass().getSimpleName() + " " + offset + " " + value + ')';
