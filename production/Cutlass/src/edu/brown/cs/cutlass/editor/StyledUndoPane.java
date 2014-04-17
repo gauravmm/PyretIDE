@@ -29,20 +29,13 @@ import javax.swing.undo.UndoManager;
 public class StyledUndoPane extends JEditorPane implements DocumentListener{
     
     private UndoManager undoer;
-    private SyntaxHighlighter overDoc;
+   // private SyntaxHighlighter overDoc;
     
     public StyledUndoPane(CharSequence fileContent){
         super();
         
-        StyledDocument document = new DefaultStyledDocument();
-        overDoc = new SyntaxHighlighter(document);
-        try {
-            document.insertString(0, fileContent.toString(), null);
-        } catch (BadLocationException ex) {
-            Logger.getLogger(StyledUndoPane.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        overDoc.highlight();
+        StyledDocument document = new PyretStyledDocument(fileContent);
+
         this.setEditorKit(new StyledEditorKit());
         this.setDocument(document);
         document.addDocumentListener(this);
@@ -50,9 +43,15 @@ public class StyledUndoPane extends JEditorPane implements DocumentListener{
     
     
     public static void main(String[] args){
-        StyledUndoPane test = new StyledUndoPane("def function()#comment:\ncase(Link):\nend\nend");
+        StyledUndoPane test = new StyledUndoPane("fun to-celsius(f): "
+                + "\nf + 1"
+                + "\nwhere:"
+                + "\nto-celsius(1) is 2"
+                + "\nend");
+        
         JFrame j = new JFrame("test");
         j.add(test);
+        j.setDefaultCloseOperation(3);
         j.setSize(500,500);
         j.setVisible(true);
         
@@ -60,17 +59,17 @@ public class StyledUndoPane extends JEditorPane implements DocumentListener{
 
     @Override
     public void insertUpdate(DocumentEvent e) {
-        overDoc.highlight();
+        //overDoc.highlight();
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        overDoc.highlight();
+        //overDoc.highlight();
     }
 
     @Override
     public void changedUpdate(DocumentEvent e) {
-        overDoc.highlight();
+        //overDoc.highlight();
     }
     
 }
