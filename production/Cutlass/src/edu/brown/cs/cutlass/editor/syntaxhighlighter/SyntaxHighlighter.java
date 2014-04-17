@@ -19,6 +19,7 @@ import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import javax.swing.text.BadLocationException;
 
 /**
@@ -39,10 +40,10 @@ public class SyntaxHighlighter {
      *
      */
     public void highlight() {
-        highlight(-1);
+        highlight(-1, false);
     }
 
-    public void highlight(int position) {
+    public void highlight(int position, boolean reindent) {
         try {
             //Convert entire contents of document into Lines
             TokenParserOutput parseTokens = TokenParser.parseTokens(sdoc.getText(0, sdoc.getLength()));
@@ -50,9 +51,12 @@ public class SyntaxHighlighter {
 
             //Clear the document of text
             sdoc.removeWithoutHighlight(0, sdoc.getLength());
+
             // Process document using current token
+            // NOTE: MUST NOT CHANGE reindent here:
             Option<Token> opt = getCurrentToken(tokenLines, position);
-            if (opt.hasData()) {
+                        
+            if (opt.hasData()) {    
                 Token t = opt.getData();
                 if (t.getType() instanceof TokenTypePaired) {
                     TokenPaired ttp = (TokenPaired) t;
@@ -62,7 +66,22 @@ public class SyntaxHighlighter {
                     }
                 } else if (t.getType() instanceof TokenTypeDefault) {
                     // Highlight each type of TokenTypeDefault with the same value
+                    List<Token> get = parseTokens.getTokenCollected().get(TokenTypeDefault.getInstance()).get(t.getValue());
+                    if(get != null){
+                        for(Token similarTokens : get){
+                            similarTokens.setStyle(TokenStylePaired.getInstance());
+                        }
+                    }
                 }
+            }
+
+            // Handle reindent here:
+            if (reindent) {
+                /*
+                 We expect a bug in which, after reindenting, the position of
+                 the cursor is not adjusted. Ill fix that after you're done with
+                 this.
+                 */
             }
 
             //Iterate over every Line of document
@@ -106,18 +125,18 @@ public class SyntaxHighlighter {
             return new Option<>();
         }
         Line currLine = lines.get(linenum);
-        
+
         int toknum = Collections.binarySearch(currLine.getContents(), new Integer(pos));
         if (toknum < 0) {
             return new Option<>();
         }
         Token t = currLine.getContents().get(toknum);
-        
+
         if (t.getOffset() <= pos && pos < (t.getOffset() + t.getLength())) {
-            // Do bracket highlighting
+            return new Option<>(t);
         } else {
-            
+            //System.out.format("%d\t%d\t%d\t%s%n", t.getOffset(), t.getLength(), pos, t.getValue());
+            throw new IllegalStateException("This should not be possible");
         }
-        return new Option<>();
     }
 }

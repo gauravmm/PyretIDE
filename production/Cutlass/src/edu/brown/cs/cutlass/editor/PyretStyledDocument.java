@@ -40,10 +40,12 @@ public class PyretStyledDocument extends DefaultStyledDocument {
         highlight();
     }
 
-    private void highlight() {
-        int pos = parent.getCaretPosition();
-        highlighter.highlight(pos);
-        parent.setCaretPosition(Math.min(pos, this.getLength()));
+    public void highlight() {
+        int posSt = parent.getSelectionStart();
+        int posEnd = parent.getSelectionEnd();
+        highlighter.highlight(posEnd == posSt ? posSt : -1, false);
+        parent.setSelectionStart(posSt);
+        parent.setSelectionEnd(posEnd);
     }
 
     public void removeWithoutHighlight(int offSet, int amt) {

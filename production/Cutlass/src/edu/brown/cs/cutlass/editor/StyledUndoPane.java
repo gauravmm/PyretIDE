@@ -4,8 +4,12 @@
  */
 package edu.brown.cs.cutlass.editor;
 
+import edu.brown.cs.cutlass.util.Lumberjack;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.undo.UndoManager;
 
@@ -48,6 +52,8 @@ public class StyledUndoPane extends JEditorPane {
         this.setDocument(document);
         document.insertString(0, fileContent.toString(), null);
 
+        this.addCaretListener(new CaretListenerImpl());
+
         /* document.addDocumentListener(new DocumentListener() {}); */
     }
 
@@ -60,5 +66,45 @@ public class StyledUndoPane extends JEditorPane {
         j.setVisible(true);
         j.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+    }
+
+    private class CaretListenerImpl implements CaretListener {
+
+        public CaretListenerImpl() {
+        }
+
+        final Object isReindentingMutex = new Object();
+        boolean isReindenting = false;
+        int lastPos = -1;
+
+        @Override
+        public void caretUpdate(CaretEvent e) {
+            if (lastPos != e.getDot()) {
+                synchronized (isReindentingMutex) {
+                    if (isReindenting) {
+                        return;
+                    }
+                    isReindenting = true;
+                }
+
+                lastPos = e.getDot();
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            document.highlight();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Lumberjack.log(Lumberjack.Level.WARN, e);
+                        } finally {
+                            // We don't need to bother locking the release
+                            synchronized (isReindentingMutex) {
+                                isReindenting = false;
+                            }
+                        }
+                    }
+                });
+            }
+        }
     }
 }
