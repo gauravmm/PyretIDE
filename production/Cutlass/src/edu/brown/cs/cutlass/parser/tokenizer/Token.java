@@ -17,6 +17,7 @@ public class Token {
     private final int length;
     private final int offset;
     private final TokenType type;
+    private Line line = null;
 
     private Token next = null;
     private Token previous = null;

@@ -5,12 +5,10 @@
 
 package edu.brown.cs.cutlass.parser.tokenizer;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.Document;
-import javax.swing.text.Element;
 
 /**
  *
@@ -28,10 +26,11 @@ public class Line {
 
     public Line(int n, int offset, int length, int expectedIndentation, List<Token> contents) {
         this.expectedIndentation = expectedIndentation;
-        this.contents = Collections.unmodifiableList(contents);
         if(contents == null){
             throw new IllegalStateException("Null contents passed.");
         }
+        this.contents = Collections.unmodifiableList(new ArrayList<>(contents));
+        
         
         this.offset = offset;
         this.length = length;

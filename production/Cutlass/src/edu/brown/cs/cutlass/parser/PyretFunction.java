@@ -5,14 +5,19 @@
 
 package edu.brown.cs.cutlass.parser;
 
+import edu.brown.cs.cutlass.parser.tokenizer.TokenPairedOpening;
+
 /**
  * Represents 
  * @author Gaurav Manek
  */
 public class PyretFunction extends PyretBlock {
-
-    public PyretFunction(PyretLocation location, String name) {
+    
+    private final TokenPairedOpening scopeOpen;
+    
+    public PyretFunction(PyretLocation location, String name, TokenPairedOpening scopeOpen) {
         super(location, name);
+        this.scopeOpen = scopeOpen;
     }
     
 }

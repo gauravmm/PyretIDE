@@ -26,8 +26,6 @@ public class TokenTypeStringTest {
      */
     @Test
     public void testRegex() {
-        System.out.println(p.pattern());
-        
         getMatchSame("'asd'");
         getMatchSame("'as\\'d'");
         getMatchSame("'as\\\\\\'d'");
