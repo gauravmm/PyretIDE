@@ -18,31 +18,59 @@ import java.util.Map;
  * @author Gaurav Manek
  */
 public class PyretFeatureExtractor {
-    public PyretMetadata extract(TokenParserOutput tpo){
+
+    public PyretMetadata extract(TokenParserOutput tpo) {
         // Keywords
         Map<String, List<Token>> keywords = tpo.getTokenCollected().get(TokenTypeKeywordAggregate.getInstance());
-        if(keywords == null){
+        if (keywords == null) {
             throw new IllegalStateException("Collected tokens not properly set-up.");
         }
-        
+
         // Extract function definitions:
         List<Token> funLocs = keywords.get("fun");
-        for (Token tok : funLocs){
-            
+        for (Token tok : funLocs) {
+            // 
         }
-        
+
         return null;
     }
-    
-    private Option<Token> getNextToken(Token start, TokenType type, boolean inSameLine){
+
+    private Option<Token> getNextToken(Token start, TokenType type) {
+        return getNextToken(start, type, true);
+    }
+
+    private Option<Token> getNextToken(Token start, TokenType type, boolean onlySkipWhitespace) {
         Token tok = start;
-        while(true){
-            if(tok.hasNextToken()){
-                break;
+        while (true) {
+            if (tok.hasNextToken()) {
+                tok = tok.getNextToken();
+                if (tok.getType() == type) {
+                    return new Option<>(tok);
+                } else if (onlySkipWhitespace && !tok.getType().ignoreForExpectedToken()) {
+                    return new Option<>();
+                }
             } else {
                 return new Option<>();
             }
         }
-        return null;
+    }
+
+    private Option<Token> getNextToken(Token start, List<TokenType> types, boolean onlySkipWhitespace) {
+        Token tok = start;
+        while (true) {
+            if (tok.hasNextToken()) {
+                tok = tok.getNextToken();
+                for (TokenType type : types) {
+                    if (tok.getType() == type) {
+                        return new Option<>(tok);
+                    }
+                }
+                if (onlySkipWhitespace && !tok.getType().ignoreForExpectedToken()) {
+                    return new Option<>();
+                }
+            } else {
+                return new Option<>();
+            }
+        }
     }
 }
