@@ -21,7 +21,8 @@ public final class TokenStyles {
             TokenStyleNumber.getInstance(),
             TokenStylePunct.getInstance(),
             TokenStyleString.getInstance(),
-            TokenStyleError.getInstance()
+            TokenStyleError.getInstance(),
+            TokenStylePaired.getInstance()
     );
     
     public static TokenStyle getDefaultStyle(){
