@@ -17,7 +17,7 @@ public class TokenStylePunct extends TokenStyleColor {
     }
     
     private TokenStylePunct() {
-        super(new Color(51,01,70));
+        super(new Color(51,01,70).brighter());
     }
     
 }
