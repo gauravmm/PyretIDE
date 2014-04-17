@@ -5,31 +5,22 @@
 package edu.brown.cs.cutlass.editor;
 
 import edu.brown.cs.cutlass.editor.syntaxhighlighter.SyntaxHighlighter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.StyledDocument;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.undo.UndoManager;
 
-/** An extended JEditorPane. Has the following features:
- * ~Highlights contents according to highlighting rules set by
- * the SyntaxHighlighter class.
+/**
+ * An extended JEditorPane. Has the following features: ~Highlights contents
+ * according to highlighting rules set by the SyntaxHighlighter class.
  * ~Maintains an undo/redo stack and has visible undo/redo methods
  *
  * @author miles
  */
-public class StyledUndoPane extends JEditorPane implements DocumentListener {
+public class StyledUndoPane extends JEditorPane {
 
     private UndoManager undoer;
-    private final SyntaxHighlighter overDoc;
-    private PyretStyledDocument document;
+    private final PyretStyledDocument document;
 
     public final static String testStr = "data BinTree:\n"
             + "  | leaf\n"
@@ -52,46 +43,13 @@ public class StyledUndoPane extends JEditorPane implements DocumentListener {
     public StyledUndoPane(CharSequence fileContent) {
         super();
 
-        document = new PyretStyledDocument();
-        
+        document = new PyretStyledDocument(this);
+
         this.setEditorKit(new StyledEditorKit());
         this.setDocument(document);
-        document.addDocumentListener(this);
-        
-        overDoc = new SyntaxHighlighter(document);
-        overDoc.highlight(fileContent.toString());
-    }
+        document.insertString(0, fileContent.toString(), null);
 
-
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-        rehighlight();
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        rehighlight();
-    }
-
-    @Override
-    public void changedUpdate(DocumentEvent e) {
-        rehighlight();
-    }
-
-    private void rehighlight() {
-        
-        /*SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    overDoc.highlight(document.getText(0, document.getLength()));
-                } catch (BadLocationException ex) {
-                    Logger.getLogger(StyledUndoPane.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-
-        });*/
+        /* document.addDocumentListener(new DocumentListener() {}); */
     }
 
     public static void main(String[] args) {
@@ -101,6 +59,7 @@ public class StyledUndoPane extends JEditorPane implements DocumentListener {
         j.setDefaultCloseOperation(3);
         j.setSize(500, 500);
         j.setVisible(true);
+        j.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
 }

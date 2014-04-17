@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.StyledDocument;
 
 /**
  *
@@ -36,8 +35,9 @@ public class SyntaxHighlighter {
         //Convert entire contents of document into Lines
         List<Line> token_lines = TokenParser.parseTokens(put).getTokenLines();
 
+        
         //Clear the document of text
-        sdoc.fakeRemove(0, sdoc.getLength());
+        sdoc.removeWithoutHighlight(0, sdoc.getLength());
 
         //Iterate over every Line of document
         for (Line l : token_lines) {
@@ -47,13 +47,13 @@ public class SyntaxHighlighter {
             //Iterate over every Token of every Line
             for (Token t : line_tokens) {
                 //Insert the string represented by each token with its appropriate color
-                sdoc.addString(sdoc.getLength(), t.getValue(), t.getTokenStyle().getStyle());
-                System.out.println(t.getType().getClass().getCanonicalName());
-                System.out.println(t.getTokenStyle().getStyle());
-                System.out.println();
+                sdoc.insertStringWithoutHighlight(sdoc.getLength(), t.getValue(), t.getTokenStyle().getStyle());
+                //System.out.println(t.getType().getClass().getCanonicalName());
+                //System.out.println(t.getTokenStyle().getStyle());
+                //System.out.println();
                 //System.out.println(t.getTokenStyle().getName());
             }
-            sdoc.addString(sdoc.getLength(), "\n", null);
+            sdoc.insertStringWithoutHighlight(sdoc.getLength(), "\n", null);
         }
         //sdoc = tempDoc;
     }
@@ -69,7 +69,7 @@ public class SyntaxHighlighter {
             List<Line> token_lines = TokenParser.parseTokens(sdoc.getText(0, sdoc.getLength())).getTokenLines();
 
             //Clear the document of text
-            sdoc.fakeRemove(0, sdoc.getLength());
+            sdoc.removeWithoutHighlight(0, sdoc.getLength());
 
             //Iterate over every Line of document
             for (Line l : token_lines) {
@@ -79,13 +79,13 @@ public class SyntaxHighlighter {
                 //Iterate over every Token of every Line
                 for (Token t : line_tokens) {
                     //Insert the string represented by each token with its appropriate color
-                    sdoc.addString(sdoc.getLength(), t.getValue(), t.getTokenStyle().getStyle());
+                    sdoc.insertStringWithoutHighlight(sdoc.getLength(), t.getValue(), t.getTokenStyle().getStyle());
                     //System.out.println(t.getType().getClass().getCanonicalName());
                     //System.out.println(t.getTokenStyle().getStyle());
                     //System.out.println();
                     //System.out.println(t.getTokenStyle().getName());
                 }
-                sdoc.addString(sdoc.getLength(), "\n", null);
+                sdoc.insertStringWithoutHighlight(sdoc.getLength(), Line.LINE_TERMINATOR, null);
 
             }
             //sdoc = tempDoc;
