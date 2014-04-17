@@ -30,9 +30,7 @@ public class Line {
             throw new IllegalStateException("Null contents passed.");
         }
         this.contents = Collections.unmodifiableList(new ArrayList<>(contents));
-        for(Token c : this.contents){
-            c.setLine(this);
-        }
+        
         
         this.offset = offset;
         this.length = length;

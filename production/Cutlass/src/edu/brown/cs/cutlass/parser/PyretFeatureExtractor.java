@@ -38,7 +38,7 @@ public class PyretFeatureExtractor {
         Token tok = start;
         while(true){
             if(tok.hasNextToken()){
-                
+                break;
             } else {
                 return new Option<>();
             }

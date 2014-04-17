@@ -87,14 +87,6 @@ public class Token {
         return next != null;
     }
 
-    public Line getLine() {
-        return line;
-    }
-
-    public void setLine(Line line) {
-        this.line = line;
-    }
-
     // Debug:
     
     @Override
