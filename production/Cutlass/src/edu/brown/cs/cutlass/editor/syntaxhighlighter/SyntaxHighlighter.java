@@ -14,9 +14,8 @@ import edu.brown.cs.cutlass.parser.tokenizer.TokenTypePaired;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStylePaired;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyles;
+import edu.brown.cs.cutlass.util.Lumberjack;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 
 /**
@@ -57,8 +56,7 @@ public class SyntaxHighlighter {
                 //Iterate over every Token of every Line
                 for (Token t : line_tokens) {
                     // Check if the cursor is in this position:
-                    if (t.getOffset() <= position && position < (t.getOffset() + t.getLength()) ) {
-                        System.out.format("%d\t%d\t%d\t%s%n",position, t.getOffset(), t.getOffset() + t.getLength(), t.getValue());
+                    if (t.getOffset() <= position && position < (t.getOffset() + t.getLength() + 1)) {
                         // Do bracket highlighting
                         if (t.getType() instanceof TokenTypePaired) {
                             TokenPaired ttp = (TokenPaired) t;
@@ -76,8 +74,7 @@ public class SyntaxHighlighter {
             }
             //sdoc = tempDoc;
         } catch (BadLocationException ex) {
-            System.out.println("uh oh");
-            Logger.getLogger(SyntaxHighlighter.class.getName()).log(Level.SEVERE, null, ex);
+            Lumberjack.log(Lumberjack.Level.ERROR, ex);
         }
 
     }

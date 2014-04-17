@@ -43,7 +43,7 @@ public class PyretStyledDocument extends DefaultStyledDocument {
     private void highlight() {
         int pos = parent.getCaretPosition();
         highlighter.highlight(pos);
-        parent.setCaretPosition(pos);
+        parent.setCaretPosition(Math.min(pos, this.getLength()));
     }
 
     public void removeWithoutHighlight(int offSet, int amt) {
