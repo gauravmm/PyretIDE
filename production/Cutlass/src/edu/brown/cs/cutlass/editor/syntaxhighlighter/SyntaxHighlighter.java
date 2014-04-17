@@ -46,12 +46,10 @@ public class SyntaxHighlighter {
                 
                 //Iterate over every Token of every Line
                 for (Token t : line_tokens) {
+                    // Check if the cursor is in this position:
+                    
                     //Insert the string represented by each token with its appropriate color
                     sdoc.insertStringWithoutHighlight(sdoc.getLength(), t.getValue(), t.getTokenStyle().getStyle());
-                    //System.out.println(t.getType().getClass().getCanonicalName());
-                    //System.out.println(t.getTokenStyle().getStyle());
-                    //System.out.println();
-                    //System.out.println(t.getTokenStyle().getName());
                 }
                 sdoc.insertStringWithoutHighlight(sdoc.getLength(), Line.LINE_TERMINATOR, null);
 

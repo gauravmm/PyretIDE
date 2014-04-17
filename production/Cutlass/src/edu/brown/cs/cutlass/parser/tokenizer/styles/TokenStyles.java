@@ -28,6 +28,10 @@ public final class TokenStyles {
         return TokenStyleDefault.getInstance();
     }
     
+    public static TokenStyle getErrorStyle(){
+        return TokenStyleError.getInstance();
+    }
+    
     public static List<TokenStyle> getAllStyles(){
         return list;
     }
