@@ -47,6 +47,14 @@ public class PyretStyledDocument extends DefaultStyledDocument {
         parent.setSelectionStart(posSt);
         parent.setSelectionEnd(posEnd);
     }
+    
+    public void highlightAndIndent() {
+        int posSt = parent.getSelectionStart();
+        int posEnd = parent.getSelectionEnd();
+        highlighter.highlight(posEnd == posSt ? posSt : -1, true);
+        parent.setSelectionStart(posSt);
+        parent.setSelectionEnd(posEnd);
+    }
 
     public void removeWithoutHighlight(int offSet, int amt) {
         try {

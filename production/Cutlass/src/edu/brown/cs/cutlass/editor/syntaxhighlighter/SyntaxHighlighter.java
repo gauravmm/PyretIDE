@@ -17,6 +17,7 @@ import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyles;
 import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.TokenTypeDefault;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +76,7 @@ public class SyntaxHighlighter {
                 }
             }
 
+            List<Line> indentedLines = new ArrayList<>();
             // Handle reindent here:
             if (reindent) {
                 /*
@@ -82,6 +84,10 @@ public class SyntaxHighlighter {
                  the cursor is not adjusted. Ill fix that after you're done with
                  this.
                  */
+                for(Line l : tokenLines){
+                    indentedLines.add(l.toIndentedLine());
+                }
+                tokenLines = indentedLines;
             }
 
             //Iterate over every Line of document

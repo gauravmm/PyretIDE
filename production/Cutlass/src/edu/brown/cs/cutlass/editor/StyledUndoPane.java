@@ -59,6 +59,7 @@ public class StyledUndoPane extends JEditorPane{
         
         document.addUndoableEditListener(undoer);
         document.insertString(0, fileContent.toString(), null);
+        this.addKeyListener(new EditorKeyListener(document));
 
         this.addCaretListener(new CaretListenerImpl());
 
