@@ -17,7 +17,7 @@ public class TokenStyleNumber extends TokenStyleColor {
     }
     
     private TokenStyleNumber() {
-        super(new Color(95,102,68));
+        super(new Color(17,102,68));
     }
     
 }

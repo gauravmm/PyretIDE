@@ -35,7 +35,8 @@ public final class TokenTypes {
             TokenTypeString.getInstance(),
             TokenTypeNumber.getInstance(),
             TokenTypeWhitespace.getInstance(),
-            TokenTypeDefault.getInstance()
+            TokenTypeDefault.getInstance(),
+            TokenTypeError.getInstance()
     );
 
     public static List<TokenType> getTypes() {

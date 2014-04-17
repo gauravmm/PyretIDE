@@ -14,13 +14,14 @@ import java.util.List;
  */
 public final class TokenStyles {
     
-    private static List<TokenStyle> list = Arrays.asList(
+    private static final List<TokenStyle> list = Arrays.asList(
             TokenStyleDefault.getInstance(),
             TokenStyleComment.getInstance(),
             TokenStyleKeyword.getInstance(),
             TokenStyleNumber.getInstance(),
             TokenStylePunct.getInstance(),
-            TokenStyleString.getInstance()
+            TokenStyleString.getInstance(),
+            TokenStyleError.getInstance()
     );
     
     public static TokenStyle getDefaultStyle(){

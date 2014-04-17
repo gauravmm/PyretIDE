@@ -27,38 +27,6 @@ public class SyntaxHighlighter {
         this.sdoc = addAllStyles(d);
     }
 
-    /** Highlights a specific entered string
-     * 
-     * @Param put the String to highlight and replace the current document with
-     */
-    public void highlight(String put) {
-        //Convert entire contents of document into Lines
-        List<Line> token_lines = TokenParser.parseTokens(put).getTokenLines();
-
-        
-        //Clear the document of text
-        sdoc.removeWithoutHighlight(0, sdoc.getLength());
-
-        //Iterate over every Line of document
-        for (Line l : token_lines) {
-            List<Token> line_tokens = l.getContents();
-
-            //sdoc.insertString(sdoc.getLength(), l.toIndentedString(), null);
-            //Iterate over every Token of every Line
-            for (Token t : line_tokens) {
-                //Insert the string represented by each token with its appropriate color
-                sdoc.insertStringWithoutHighlight(sdoc.getLength(), t.getValue(), t.getTokenStyle().getStyle());
-                //System.out.println(t.getType().getClass().getCanonicalName());
-                //System.out.println(t.getTokenStyle().getStyle());
-                //System.out.println();
-                //System.out.println(t.getTokenStyle().getName());
-            }
-            sdoc.insertStringWithoutHighlight(sdoc.getLength(), "\n", null);
-        }
-        //sdoc = tempDoc;
-    }
-
-    
     /** Highlights the current document
      * 
      * 

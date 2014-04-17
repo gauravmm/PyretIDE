@@ -19,7 +19,7 @@ public class TokenStyleError extends TokenStyleColor {
     }
     
     private TokenStyleError() {
-        super(new Color(160,61,57));
+        super(new Color(255,61,57));
     }
 
     @Override
@@ -27,7 +27,5 @@ public class TokenStyleError extends TokenStyleColor {
         super.setStyle(s); 
         StyleConstants.setUnderline(s,true);
     }
-    
-    
     
 }
