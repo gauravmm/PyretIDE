@@ -12,12 +12,17 @@ import javax.swing.text.StyledDocument;
  * @author Gaurav Manek
  */
 public abstract class TokenStyle {
+    
+    private static int currCount = 0;
+    private static String getNextName(){
+        return String.format("Style_%d", currCount++);
+    }
 
     private final String styleName;
     private Style style = null;
 
     public TokenStyle() {
-        this.styleName = this.getClass().getCanonicalName();
+        this.styleName = getNextName();
     }
 
     public final void applyTo(StyledDocument sD) {

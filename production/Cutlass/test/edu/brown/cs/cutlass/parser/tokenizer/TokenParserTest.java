@@ -15,7 +15,7 @@ public class TokenParserTest {
     public TokenParserTest() {
     }
 
-    String in = "data BinTree:\n"
+    public final static String test = "data BinTree:\n"
             + "  | leaf\n"
             + "  | node(value, left, right)\n"
             + "end\n"
@@ -38,7 +38,7 @@ public class TokenParserTest {
      */
     @Test
     public void testParseTokens_String() {
-        System.out.println(TokenParser.parseTokens(in).getTokenLines());
+        System.out.println(TokenParser.parseTokens(test).getTokenLines());
     }
     
 
