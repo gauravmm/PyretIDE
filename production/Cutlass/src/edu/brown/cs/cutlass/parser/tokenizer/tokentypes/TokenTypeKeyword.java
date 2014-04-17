@@ -23,7 +23,7 @@ public class TokenTypeKeyword extends TokenType {
     private static final TokenTypeKeyword instance = new TokenTypeKeyword();
 
     private TokenTypeKeyword() {
-        super(Pattern.compile("^((method)|(var)|(when)|(import)|(provide)|(except)|(for)|(from)|(and)|(or)|(not)|(as)|(if)|(else)|(cases))"));
+        super(Pattern.compile("^((method\b)|(var\b)|(when\b)|(import\b)|(provide\b)|(except\b)|(for\b)|(from\b)|(and\b)|(or\b)|(not\b)|(as\b)|(if\b)|(else\b)|(cases\b))"));
     }
 
     @Override

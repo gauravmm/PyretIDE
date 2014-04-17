@@ -25,7 +25,7 @@ public class TokenTypeKeywordColon extends TokenType {
     private static final TokenTypeKeywordColon instance = new TokenTypeKeywordColon();
 
     private TokenTypeKeywordColon() {
-        super(Pattern.compile("^((doc)|(try)|(ask)|(otherwise)|(then)|(with)|(sharing)|(where)|(check)|(graph)|(block))"));
+        super(Pattern.compile("^((try)|(ask)|(otherwise)|(then)|(with)|(sharing)|(where)|(check)|(graph)|(block))"));
     }
 
     @Override
