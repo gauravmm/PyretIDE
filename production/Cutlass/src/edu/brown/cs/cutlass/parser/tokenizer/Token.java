@@ -96,9 +96,9 @@ public class Token implements Comparable<Integer> {
     @Override
     public int compareTo(Integer o) {
         if(o < offset){
-            return -1;
-        } else if (o > offset + length){
             return 1;
+        } else if (o >= offset + length){
+            return -1;
         } else {
             return 0;
         }
