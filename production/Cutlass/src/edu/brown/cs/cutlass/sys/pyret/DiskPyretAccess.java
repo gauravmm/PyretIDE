@@ -4,16 +4,16 @@
  */
 package edu.brown.cs.cutlass.sys.pyret;
 
-import java.nio.file.Files;
-
 import edu.brown.cs.cutlass.sys.io.disk.DiskIdentifier;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -27,11 +27,19 @@ public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
     private static String temp_file;
     private static Process run_proc;
     
+    private static final List<String> error_list = Arrays.asList("Avast, there be bugs!","check-fun:","check-method:","apply-fun:","Arity mismatch","Expected","Bad args to prim",
+                                                                 "brand:","was not found on","Cannot lookup mutable field","Cannot lookup immutable field","field: expected string, got",
+                                                                 "Updating non-existent field","typecheck failed:","Tried to set value in already-initialized placeholder","expected Placeholder and got",
+                                                                 "char-at: Index too large for string","runtime:","Division by zero","has-field:","substring:","py-match doesn't work over","py-match fell through on a",
+                                                                 "INTERNAL ERROR:","Runtime link is already set to","Runtime empty is already set to");
+    private static final HashSet<String> error_msgs = new HashSet<>();
+    
     private static final List<PyretOutputValue> out_vals = new ArrayList<>();
     private static final List<PyretOutputValue> err_vals = new ArrayList<>();
 	
     public DiskPyretAccess(DiskIdentifier id){
         identifier = id;
+        error_msgs.addAll(error_list);
     }
 
     @Override
@@ -72,6 +80,7 @@ public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
          *  when any response is recieved from the code.
          */
      try{
+         //Expected that identifier represents full path to user's .arr file
          File user_file = new File(identifier.getId().toString());
          run_build.directory(user_file.getParentFile());
          String usr_file_name = user_file.getName();
@@ -89,7 +98,7 @@ public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
          output.read(out);
          String out_string = new String(out, "UTF-8");
 
-         if(out_string.contains("Avast, there be bugs!")){
+         if(error_msgs.contains(out_string)){
              PyretOutputValue pev = new PyretOutputValue(AbstractPyretAccess.Stream.STDERR, out_string);
              publish(pev);
              err_vals.add(pev);
@@ -107,8 +116,8 @@ public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
                  int errCode = Integer.parseInt(out_string.substring(index+6,index+7));
                  return new PyretTerminationValue(errCode);
              }
+             return new PyretTerminationValue(1);
          }
-         return new PyretTerminationValue(0);
      } 
      catch(IOException|InterruptedException e){
          return new PyretTerminationValue(1);
