@@ -17,7 +17,7 @@ public class TokenStyleKeyword extends TokenStyleColor {
     }
     
     private TokenStyleKeyword() {
-        super(Color.MAGENTA);
+        super(new Color(119,84,180));
     }
     
 }

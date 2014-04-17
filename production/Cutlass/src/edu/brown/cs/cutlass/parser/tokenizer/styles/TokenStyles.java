@@ -14,30 +14,23 @@ import java.util.List;
  */
 public final class TokenStyles {
     
-    private static List<TokenStyle> list = Arrays.asList(
+    private static final List<TokenStyle> list = Arrays.asList(
             TokenStyleDefault.getInstance(),
             TokenStyleComment.getInstance(),
-            TokenStyleDoublePunct.getInstance(),
             TokenStyleKeyword.getInstance(),
-            TokenStyleKeywordAggregate.getInstance(),
-            TokenStyleKeywordColon.getInstance(),
-            TokenStyleKeywordDoc.getInstance(),
             TokenStyleNumber.getInstance(),
-            TokenStyleCloseBrace.getInstance(),
-            TokenStyleCloseBrack.getInstance(),
-            TokenStyleCloseColon.getInstance(),
-            TokenStyleCloseParen.getInstance(),
-            TokenStyleOpenBrace.getInstance(),
-            TokenStyleOpenBrack.getInstance(),
-            TokenStyleOpenColon.getInstance(),
-            TokenStyleOpenCloseColon.getInstance(),
-            TokenStyleSinglePunct.getInstance(),
+            TokenStylePunct.getInstance(),
             TokenStyleString.getInstance(),
-            TokenStyleWhitespace.getInstance()
+            TokenStyleError.getInstance(),
+            TokenStylePaired.getInstance()
     );
     
     public static TokenStyle getDefaultStyle(){
         return TokenStyleDefault.getInstance();
+    }
+    
+    public static TokenStyle getErrorStyle(){
+        return TokenStyleError.getInstance();
     }
     
     public static List<TokenStyle> getAllStyles(){

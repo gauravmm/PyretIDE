@@ -11,19 +11,18 @@ import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyles;
  *
  * @author Gaurav Manek
  */
-public class Token {
+public class Token implements Comparable<Integer> {
 
     private final String value;
     private final int length;
     private final int offset;
     private final TokenType type;
-    private Line line = null;
 
     private Token next = null;
     private Token previous = null;
     private TokenStyle style = TokenStyles.getDefaultStyle();
 
-    public Token(String value, int length, int offset, TokenType type) {
+    public Token(String value, int offset, int length, TokenType type) {
         this.value = value;
         this.length = length;
         this.offset = offset;
@@ -93,4 +92,16 @@ public class Token {
     public String toString() {
         return "(" + type.getClass().getSimpleName() + " " + offset + " " + value + ')';
     }
+
+    @Override
+    public int compareTo(Integer o) {
+        if(o < offset){
+            return 1;
+        } else if (o >= offset + length){
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+    
 }

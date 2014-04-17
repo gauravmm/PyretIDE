@@ -5,6 +5,7 @@
  */
 package edu.brown.cs.cutlass.parser.tokenizer;
 
+import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyles;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -100,6 +101,9 @@ public final class TokenParser {
                         expectedFutureToken.pop();
                     } else {
                         parsingErrors.add(new ParsingError(token, "A different token is expected here, are you forgetting something?"));
+                        if (prev != null) {
+                            prev.setStyle(TokenStyles.getErrorStyle());
+                        }
                     }
                 }
 
@@ -126,6 +130,7 @@ public final class TokenParser {
                     // If the type matches correctly:
                     if (pairOpenStart.empty()) {
                         parsingErrors.add(new ParsingError(token, "There is nothing to close here."));
+                        token.setStyle(TokenStyles.getErrorStyle());
                     } else if (ttc.isMatchingTokenType(pairOpenStart.peek().getType())) {
                         // This token matches the closing token.
                         // Give them references to each other and remove it from the list.
@@ -134,6 +139,7 @@ public final class TokenParser {
                         tc.other = startingToken;
                     } else {
                         parsingErrors.add(new ParsingError(token, "This doesn't close anything."));
+                        token.setStyle(TokenStyles.getErrorStyle());
                     }
                 }
 
@@ -175,10 +181,15 @@ public final class TokenParser {
 
         // Check that everything has been closed:
         while (!pairOpenStart.empty()) {
-            parsingErrors.add(new ParsingError(pairOpenStart.pop(), "This is not closed."));
+            TokenPairedOpening errtok = pairOpenStart.pop();
+            parsingErrors.add(new ParsingError(errtok, "This is not closed."));
+            errtok.setStyle(TokenStyles.getErrorStyle());
         }
 
         if (!expectedFutureToken.empty()) {
+            if(prev != null){
+                prev.setStyle(TokenStyles.getErrorStyle());
+            }
             StringBuilder ex = new StringBuilder();
             ex.append("The following tokens are expected: ");
             while (!expectedFutureToken.empty()) {

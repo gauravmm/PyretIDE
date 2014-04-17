@@ -8,33 +8,38 @@ package edu.brown.cs.cutlass.parser.tokenizer.tokentypes;
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenType;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
-import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStylePunct;
+import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleError;
 import java.util.regex.Pattern;
 
 /**
  *
  * @author dilip
  */
-public class TokenTypeDoublePunct extends TokenType {
+public class TokenTypeError extends TokenType {
 
-    public static TokenTypeDoublePunct getInstance(){
+    public static TokenTypeError getInstance(){
         return instance;
     }
     
-    private static final TokenTypeDoublePunct instance = new TokenTypeDoublePunct();
+    private static final TokenTypeError instance = new TokenTypeError();
     
-    private TokenTypeDoublePunct(){
-        super(Pattern.compile("^((::)|(==)|(>=)|(<=)|(=>)|(->)|(:=)|(<>))"));
+    private TokenTypeError(){
+        super(Pattern.compile("^([^\\s]*)"));
     }
     
     @Override
     public Token constructToken(String value, int offset, int length) {
-        return new Token(value, offset, length, TokenTypeDoublePunct.getInstance());
+        return new Token(value, offset, length, TokenTypeError.getInstance());
+    }
+
+    @Override
+    public boolean toAggregate() {
+        return true;
     }
     
     @Override
     public TokenStyle getStyle() {
-        return TokenStylePunct.getInstance();
+        return TokenStyleError.getInstance();
     }
-
+    
 }
