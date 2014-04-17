@@ -6,18 +6,15 @@
 package edu.brown.cs.cutlass.editor;
 
 import edu.brown.cs.cutlass.editor.syntaxhighlighter.SyntaxHighlighter;
-import edu.brown.cs.cutlass.parser.tokenizer.*;
-
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.undo.UndoManager;
@@ -29,7 +26,7 @@ import javax.swing.undo.UndoManager;
 public class StyledUndoPane extends JEditorPane implements DocumentListener{
     
     private UndoManager undoer;
-    private SyntaxHighlighter overDoc;
+    private final SyntaxHighlighter overDoc;
     
     public StyledUndoPane(CharSequence fileContent){
         super();
@@ -60,17 +57,28 @@ public class StyledUndoPane extends JEditorPane implements DocumentListener{
 
     @Override
     public void insertUpdate(DocumentEvent e) {
-        overDoc.highlight();
+        rehighlight();
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        overDoc.highlight();
+        rehighlight();
     }
 
     @Override
     public void changedUpdate(DocumentEvent e) {
-        overDoc.highlight();
+        rehighlight();
+    }
+
+    private void rehighlight() {
+        SwingUtilities.invokeLater(new Runnable(){
+
+            @Override
+            public void run() {
+                overDoc.highlight();
+            }
+            
+        });
     }
     
 }
