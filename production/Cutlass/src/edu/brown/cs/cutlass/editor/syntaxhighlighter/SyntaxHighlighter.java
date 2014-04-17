@@ -39,11 +39,9 @@ public class SyntaxHighlighter {
             //Convert entire contents of document into Lines
             List<Line> token_lines = TokenParser.parseTokens(sdoc.getText(0, sdoc.getLength())).getTokenLines();
             //Clear the document of text
-            /*
-            StyledDocument tempDoc = addAllStyles(new DefaultStyledDocument());
-            temp = tempDoc.addStyle("red", null);
-            StyleConstants.setForeground(temp, Color.red);
-            */
+            
+            sdoc.remove(0, sdoc.getLength());
+             
         StyleConstants.setForeground(temp, Color.red);
             //Iterate over every Line of document
             for(Line l : token_lines){

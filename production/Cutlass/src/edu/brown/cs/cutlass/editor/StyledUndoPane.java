@@ -50,7 +50,7 @@ public class StyledUndoPane extends JEditorPane implements DocumentListener{
     
     
     public static void main(String[] args){
-        StyledUndoPane test = new StyledUndoPane("def function():\ncase(Link):\nend\nend");
+        StyledUndoPane test = new StyledUndoPane("def function()#comment:\ncase(Link):\nend\nend");
         JFrame j = new JFrame("test");
         j.add(test);
         j.setSize(500,500);
