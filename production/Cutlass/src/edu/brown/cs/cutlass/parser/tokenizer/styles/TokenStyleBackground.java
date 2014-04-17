@@ -13,19 +13,18 @@ import javax.swing.text.StyleConstants;
  *
  * @author Gaurav Manek
  */
-public abstract class TokenStyleBold extends TokenStyle {
+public abstract class TokenStyleBackground extends TokenStyle {
 
     private final Color color;
 
-    public TokenStyleBold(Color color) {
+    public TokenStyleBackground(Color color) {
         super();
         this.color = color;
     }
     
     @Override
     protected void setStyle(Style s) {
-        StyleConstants.setForeground(s, color);
-        StyleConstants.setBold(s, true);
+        StyleConstants.setBackground(s, color);
     }
     
 }
