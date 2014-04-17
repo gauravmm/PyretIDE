@@ -17,8 +17,11 @@ import javax.swing.text.DefaultStyledDocument;
  */
 public class PyretStyledDocument extends DefaultStyledDocument {
 
+    private SyntaxHighlighter highlighter;
+    
     public PyretStyledDocument() {
         super();
+        highlighter = new SyntaxHighlighter(this);
     }
 
     @Override
@@ -28,6 +31,7 @@ public class PyretStyledDocument extends DefaultStyledDocument {
         } catch (BadLocationException ex) {
             Logger.getLogger(PyretStyledDocument.class.getName()).log(Level.SEVERE, null, ex);
         }
+        highlighter.highlight();
     }
 
     @Override
@@ -37,6 +41,7 @@ public class PyretStyledDocument extends DefaultStyledDocument {
         } catch (BadLocationException ex) {
             Logger.getLogger(PyretStyledDocument.class.getName()).log(Level.SEVERE, null, ex);
         }
+        highlighter.highlight();
     }
 
     public void fakeRemove(int offSet, int amt) {
