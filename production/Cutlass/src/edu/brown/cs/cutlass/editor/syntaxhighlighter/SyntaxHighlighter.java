@@ -37,22 +37,23 @@ public class SyntaxHighlighter {
         List<Line> token_lines = TokenParser.parseTokens(put).getTokenLines();
 
         //Clear the document of text
-        sdoc.remove(0, sdoc.getLength());
+        sdoc.fakeRemove(0, sdoc.getLength());
 
         //Iterate over every Line of document
         for (Line l : token_lines) {
             List<Token> line_tokens = l.getContents();
 
-            sdoc.insertString(sdoc.getLength(), l.toIndentedString(), null);
+            //sdoc.insertString(sdoc.getLength(), l.toIndentedString(), null);
             //Iterate over every Token of every Line
-            /*for (Token t : line_tokens) {
+            for (Token t : line_tokens) {
                 //Insert the string represented by each token with its appropriate color
-                sdoc.insertString(sdoc.getLength(), t.getValue(), t.getTokenStyle().getStyle());
+                sdoc.addString(sdoc.getLength(), t.getValue(), t.getTokenStyle().getStyle());
                 System.out.println(t.getType().getClass().getCanonicalName());
                 System.out.println(t.getTokenStyle().getStyle());
                 System.out.println();
                 //System.out.println(t.getTokenStyle().getName());
-            }*/
+            }
+            sdoc.addString(sdoc.getLength(), "\n", null);
         }
         //sdoc = tempDoc;
     }
@@ -74,7 +75,7 @@ public class SyntaxHighlighter {
             for (Line l : token_lines) {
                 List<Token> line_tokens = l.getContents();
                 
-                sdoc.insertString(sdoc.getLength(), "\n", null);
+                
                 //Iterate over every Token of every Line
                 for (Token t : line_tokens) {
                     //Insert the string represented by each token with its appropriate color
@@ -84,6 +85,7 @@ public class SyntaxHighlighter {
                     //System.out.println();
                     //System.out.println(t.getTokenStyle().getName());
                 }
+                sdoc.addString(sdoc.getLength(), "\n", null);
 
             }
             //sdoc = tempDoc;
