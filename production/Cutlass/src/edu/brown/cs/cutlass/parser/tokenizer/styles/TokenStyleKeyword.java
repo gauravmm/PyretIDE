@@ -17,7 +17,7 @@ public class TokenStyleKeyword extends TokenStyleColor {
     }
     
     private TokenStyleKeyword() {
-        super(new Color(119,84,180).darker().darker());
+        super(new Color(119,84,180));
     }
     
 }
