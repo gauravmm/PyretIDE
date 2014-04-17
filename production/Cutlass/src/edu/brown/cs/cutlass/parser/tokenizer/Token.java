@@ -23,7 +23,7 @@ public class Token {
     private Token previous = null;
     private TokenStyle style = TokenStyles.getDefaultStyle();
 
-    public Token(String value, int length, int offset, TokenType type) {
+    public Token(String value, int offset, int length, TokenType type) {
         this.value = value;
         this.length = length;
         this.offset = offset;

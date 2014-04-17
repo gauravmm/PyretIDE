@@ -7,8 +7,12 @@ package edu.brown.cs.cutlass.editor.syntaxhighlighter;
 import edu.brown.cs.cutlass.editor.PyretStyledDocument;
 import edu.brown.cs.cutlass.parser.tokenizer.Line;
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
+import edu.brown.cs.cutlass.parser.tokenizer.TokenPaired;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenParser;
+import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
+import edu.brown.cs.cutlass.parser.tokenizer.TokenTypePaired;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
+import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStylePaired;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyles;
 import java.util.List;
 import java.util.logging.Level;
@@ -27,14 +31,21 @@ public class SyntaxHighlighter {
         this.sdoc = addAllStyles(d);
     }
 
-    /** Highlights the current document
-     * 
-     * 
+    /**
+     * Highlights the current document
+     *
+     *
      */
     public void highlight() {
+        highlight(-1);
+    }
+
+    public void highlight(int position) {
+        System.err.println(position);
         try {
             //Convert entire contents of document into Lines
-            List<Line> token_lines = TokenParser.parseTokens(sdoc.getText(0, sdoc.getLength())).getTokenLines();
+            TokenParserOutput parseTokens = TokenParser.parseTokens(sdoc.getText(0, sdoc.getLength()));
+            List<Line> token_lines = parseTokens.getTokenLines();
 
             //Clear the document of text
             sdoc.removeWithoutHighlight(0, sdoc.getLength());
@@ -42,12 +53,21 @@ public class SyntaxHighlighter {
             //Iterate over every Line of document
             for (Line l : token_lines) {
                 List<Token> line_tokens = l.getContents();
-                
-                
+
                 //Iterate over every Token of every Line
                 for (Token t : line_tokens) {
                     // Check if the cursor is in this position:
-                    
+                    if (t.getOffset() <= position && position < (t.getOffset() + t.getLength()) ) {
+                        System.out.format("%d\t%d\t%d\t%s%n",position, t.getOffset(), t.getOffset() + t.getLength(), t.getValue());
+                        // Do bracket highlighting
+                        if (t.getType() instanceof TokenTypePaired) {
+                            TokenPaired ttp = (TokenPaired) t;
+                            if (ttp.other != null) {
+                                ttp.setStyle(TokenStylePaired.getInstance());
+                                ttp.other.setStyle(TokenStylePaired.getInstance());
+                            }
+                        }
+                    }
                     //Insert the string represented by each token with its appropriate color
                     sdoc.insertStringWithoutHighlight(sdoc.getLength(), t.getValue(), t.getTokenStyle().getStyle());
                 }
@@ -61,6 +81,7 @@ public class SyntaxHighlighter {
         }
 
     }
+
     public void updateDocument(PyretStyledDocument newdoc) {
         this.sdoc = addAllStyles(newdoc);
     }

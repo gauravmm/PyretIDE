@@ -23,7 +23,7 @@ public class TokenTypeKeywordAggregate extends TokenType {
     private static final TokenTypeKeywordAggregate instance = new TokenTypeKeywordAggregate();
 
     private TokenTypeKeywordAggregate() {
-        super(Pattern.compile("^((fun\b)|(data\b))"));
+        super(Pattern.compile("^((fun)|(data))"));
     }
 
     @Override

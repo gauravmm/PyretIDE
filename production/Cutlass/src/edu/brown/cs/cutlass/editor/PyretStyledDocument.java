@@ -42,7 +42,7 @@ public class PyretStyledDocument extends DefaultStyledDocument {
 
     private void highlight() {
         int pos = parent.getCaretPosition();
-        highlighter.highlight();
+        highlighter.highlight(pos);
         parent.setCaretPosition(pos);
     }
 
