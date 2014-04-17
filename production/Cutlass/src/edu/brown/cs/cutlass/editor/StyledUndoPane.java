@@ -18,7 +18,10 @@ import javax.swing.text.StyledDocument;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.undo.UndoManager;
 
-/**
+/** An extended JEditorPane. Has the following features:
+ * ~Highlights contents according to highlighting rules set by
+ * the SyntaxHighlighter class.
+ * ~Maintains an undo/redo stack and has visible undo/redo methods
  *
  * @author miles
  */
@@ -26,6 +29,7 @@ public class StyledUndoPane extends JEditorPane implements DocumentListener {
 
     private UndoManager undoer;
     private final SyntaxHighlighter overDoc;
+    private PyretStyledDocument document;
 
     public final static String testStr = "data BinTree:\n"
             + "  | leaf\n"
@@ -48,7 +52,7 @@ public class StyledUndoPane extends JEditorPane implements DocumentListener {
     public StyledUndoPane(CharSequence fileContent) {
         super();
 
-        PyretStyledDocument document = new PyretStyledDocument();
+        document = new PyretStyledDocument();
         
         this.setEditorKit(new StyledEditorKit());
         this.setDocument(document);
@@ -58,14 +62,6 @@ public class StyledUndoPane extends JEditorPane implements DocumentListener {
         overDoc.highlight(fileContent.toString());
     }
 
-    public static void main(String[] args) {
-        StyledUndoPane test = new StyledUndoPane(testStr);
-        JFrame j = new JFrame("test");
-        j.add(test);
-        j.setSize(500, 500);
-        j.setVisible(true);
-
-    }
 
     @Override
     public void insertUpdate(DocumentEvent e) {
@@ -83,15 +79,28 @@ public class StyledUndoPane extends JEditorPane implements DocumentListener {
     }
 
     private void rehighlight() {
-        /*
-        SwingUtilities.invokeLater(new Runnable() {
+        
+        /*SwingUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
-                overDoc.highlight();
+                try {
+                    overDoc.highlight(document.getText(0, document.getLength()));
+                } catch (BadLocationException ex) {
+                    Logger.getLogger(StyledUndoPane.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
 
         });*/
     }
 
+    public static void main(String[] args) {
+        StyledUndoPane test = new StyledUndoPane(testStr);
+        JFrame j = new JFrame("test");
+        j.add(test);
+        j.setDefaultCloseOperation(3);
+        j.setSize(500, 500);
+        j.setVisible(true);
+
+    }
 }
