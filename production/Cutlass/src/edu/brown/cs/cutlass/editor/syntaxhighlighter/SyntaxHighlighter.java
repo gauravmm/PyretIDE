@@ -14,7 +14,10 @@ import edu.brown.cs.cutlass.parser.tokenizer.TokenTypePaired;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStylePaired;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyles;
+import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.TokenTypeDefault;
 import edu.brown.cs.cutlass.util.Lumberjack;
+import edu.brown.cs.cutlass.util.Option;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.text.BadLocationException;
 
@@ -40,32 +43,34 @@ public class SyntaxHighlighter {
     }
 
     public void highlight(int position) {
-        System.err.println(position);
         try {
             //Convert entire contents of document into Lines
             TokenParserOutput parseTokens = TokenParser.parseTokens(sdoc.getText(0, sdoc.getLength()));
-            List<Line> token_lines = parseTokens.getTokenLines();
+            List<Line> tokenLines = parseTokens.getTokenLines();
 
             //Clear the document of text
             sdoc.removeWithoutHighlight(0, sdoc.getLength());
+            // Process document using current token
+            Option<Token> opt = getCurrentToken(tokenLines, position);
+            if (opt.hasData()) {
+                Token t = opt.getData();
+                if (t.getType() instanceof TokenTypePaired) {
+                    TokenPaired ttp = (TokenPaired) t;
+                    if (ttp.other != null) {
+                        ttp.setStyle(TokenStylePaired.getInstance());
+                        ttp.other.setStyle(TokenStylePaired.getInstance());
+                    }
+                } else if (t.getType() instanceof TokenTypeDefault) {
+                    // Highlight each type of TokenTypeDefault with the same value
+                }
+            }
 
             //Iterate over every Line of document
-            for (Line l : token_lines) {
+            for (Line l : tokenLines) {
                 List<Token> line_tokens = l.getContents();
 
                 //Iterate over every Token of every Line
                 for (Token t : line_tokens) {
-                    // Check if the cursor is in this position:
-                    if (t.getOffset() <= position && position < (t.getOffset() + t.getLength() + 1)) {
-                        // Do bracket highlighting
-                        if (t.getType() instanceof TokenTypePaired) {
-                            TokenPaired ttp = (TokenPaired) t;
-                            if (ttp.other != null) {
-                                ttp.setStyle(TokenStylePaired.getInstance());
-                                ttp.other.setStyle(TokenStylePaired.getInstance());
-                            }
-                        }
-                    }
                     //Insert the string represented by each token with its appropriate color
                     sdoc.insertStringWithoutHighlight(sdoc.getLength(), t.getValue(), t.getTokenStyle().getStyle());
                 }
@@ -88,5 +93,31 @@ public class SyntaxHighlighter {
             ts.applyTo(d);
         }
         return d;
+    }
+
+    private Option<Token> getCurrentToken(List<Line> lines, int pos) {
+        if (pos < 0) {
+            return new Option<>();
+        }
+        // Check if the cursor is in this position:
+
+        int linenum = Collections.binarySearch(lines, new Integer(pos));
+        if (linenum < 0) {
+            return new Option<>();
+        }
+        Line currLine = lines.get(linenum);
+        
+        int toknum = Collections.binarySearch(currLine.getContents(), new Integer(pos));
+        if (toknum < 0) {
+            return new Option<>();
+        }
+        Token t = currLine.getContents().get(toknum);
+        
+        if (t.getOffset() <= pos && pos < (t.getOffset() + t.getLength())) {
+            // Do bracket highlighting
+        } else {
+            
+        }
+        return new Option<>();
     }
 }

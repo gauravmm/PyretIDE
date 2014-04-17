@@ -4,7 +4,6 @@
  */
 package edu.brown.cs.cutlass.editor;
 
-import edu.brown.cs.cutlass.editor.syntaxhighlighter.SyntaxHighlighter;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.text.StyledEditorKit;
