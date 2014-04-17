@@ -17,6 +17,7 @@ public class Token {
     private final int length;
     private final int offset;
     private final TokenType type;
+    private Line line = null;
 
     private Token next = null;
     private Token previous = null;
@@ -84,6 +85,14 @@ public class Token {
 
     public boolean hasPreviousToken() {
         return next != null;
+    }
+
+    public Line getLine() {
+        return line;
+    }
+
+    public void setLine(Line line) {
+        this.line = line;
     }
 
     // Debug:
