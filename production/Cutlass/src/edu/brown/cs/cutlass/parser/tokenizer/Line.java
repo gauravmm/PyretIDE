@@ -69,8 +69,10 @@ public class Line implements Comparable<Integer> {
     }
 
     /**
-     * NOTE: This function returns token offsets, lengths and links between tokens in an inconsistent state.
-     * @return 
+     * NOTE: This function returns token offsets, lengths and links between
+     * tokens in an inconsistent state.
+     *
+     * @return
      */
     public Line toIndentedLine() {
         ArrayList<Token> nCont = new ArrayList<>();
@@ -91,21 +93,23 @@ public class Line implements Comparable<Integer> {
         // Starting token:
         if (ci.hasNext()) {
             Token tok = ci.next();
-            if(TokenTypes.isWhitespaceTokenType(tok.getType())){
+            if (TokenTypes.isWhitespaceTokenType(tok.getType())) {
                 // Swap token into linked list
-                startingToken.setPreviousToken(tok.getPreviousToken());
-                startingToken.setNextToken(tok.getNextToken());
+                //startingToken.setPreviousToken(tok.getPreviousToken());
+                //startingToken.setNextToken(tok.getNextToken());
             } else {
                 // Insert token into linked list
-                if(tok.hasPreviousToken()){
-                    tok.getPreviousToken().setNextToken(startingToken);
-                }
-                startingToken.setPreviousToken(tok.getPreviousToken());
-                startingToken.setNextToken(tok.getNextToken());
-                tok.setPreviousToken(startingToken);
+                /*
+                 if(tok.hasPreviousToken()){
+                 tok.getPreviousToken().setNextToken(startingToken);
+                 }
+                 startingToken.setPreviousToken(tok.getPreviousToken());
+                 startingToken.setNextToken(tok.getNextToken());
+                 tok.setPreviousToken(startingToken);
+                 */
                 nCont.add(tok); // Add the first token if its not whitespace:    
             }
-            
+
             while (ci.hasNext()) {
                 tok = ci.next();
                 if (TokenTypes.isWhitespaceTokenType(tok.getType())) {
@@ -117,7 +121,7 @@ public class Line implements Comparable<Integer> {
         } else {
             // This line is empty, return it with just the leading spaces.
         }
-        
+
         return new Line(this.number, this.offset, this.length, this.expectedIndentation, nCont);
     }
 
