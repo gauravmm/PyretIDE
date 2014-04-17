@@ -8,7 +8,7 @@ package edu.brown.cs.cutlass.parser.tokenizer.styles;
 import java.awt.Color;
 
 
-public class TokenStylePaired extends TokenStyleColor {
+public class TokenStylePaired extends TokenStyleBold {
 
     private static final TokenStylePaired instance = new TokenStylePaired();
     
