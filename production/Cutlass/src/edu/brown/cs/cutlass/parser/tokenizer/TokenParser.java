@@ -6,6 +6,7 @@
 package edu.brown.cs.cutlass.parser.tokenizer;
 
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyles;
+import edu.brown.cs.cutlass.util.Pair;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,7 +34,7 @@ public final class TokenParser {
 
     public static TokenParserOutput parseTokens(List<String> input) {
         Stack<TokenPairedOpening> pairOpenStart = new Stack<>();
-        Stack<TokenType> expectedFutureToken = new Stack<>();
+        Stack<Pair<Token,TokenType>> expectedFutureToken = new Stack<>();
         List<ParsingError> parsingErrors = new LinkedList<>();
 
         List<TokenType> types = TokenTypes.getTypes();
@@ -97,13 +98,11 @@ public final class TokenParser {
                 // Check if previous expectation is correct:
                 TokenType tt = token.getType();
                 if (!tt.ignoreForExpectedToken() && !expectedFutureToken.empty()) {
-                    if (expectedFutureToken.peek() == tt) {
+                    if (expectedFutureToken.peek().getY() == tt) {
                         expectedFutureToken.pop();
                     } else {
                         parsingErrors.add(new ParsingError(token, "A different token is expected here, are you forgetting something?"));
-                        if (prev != null) {
-                            prev.setStyle(TokenStyles.getErrorStyle());
-                        }
+                        expectedFutureToken.pop().getX().setStyle(TokenStyles.getErrorStyle());
                     }
                 }
 
@@ -113,7 +112,7 @@ public final class TokenParser {
                     ListIterator<TokenType> listIterator = efT.listIterator(efT.size());
                     // Push the expected future tokens onto the stack in reverse order.
                     while (listIterator.hasPrevious()) {
-                        expectedFutureToken.push(listIterator.previous());
+                        expectedFutureToken.push(new Pair<>(token, listIterator.previous()));
                     }
                 }
 
@@ -187,7 +186,7 @@ public final class TokenParser {
         }
 
         if (!expectedFutureToken.empty()) {
-            if(prev != null){
+            if (prev != null) {
                 prev.setStyle(TokenStyles.getErrorStyle());
             }
             StringBuilder ex = new StringBuilder();
