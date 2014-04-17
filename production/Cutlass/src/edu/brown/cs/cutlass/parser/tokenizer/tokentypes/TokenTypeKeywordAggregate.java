@@ -7,7 +7,7 @@ package edu.brown.cs.cutlass.parser.tokenizer.tokentypes;
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenType;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
-import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleKeywordAggregate;
+import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleKeyword;
 import java.util.regex.Pattern;
 
 /**
@@ -38,7 +38,7 @@ public class TokenTypeKeywordAggregate extends TokenType {
 
     @Override
     public TokenStyle getStyle() {
-        return TokenStyleKeywordAggregate.getInstance();
+        return TokenStyleKeyword.getInstance();
     }
 
 }

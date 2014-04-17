@@ -7,7 +7,7 @@ package edu.brown.cs.cutlass.parser.tokenizer.tokentypes;
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenType;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
-import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleKeywordColon;
+import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleKeyword;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -42,7 +42,7 @@ public class TokenTypeKeywordColon extends TokenType {
 
     @Override
     public TokenStyle getStyle() {
-        return TokenStyleKeywordColon.getInstance();
+        return TokenStyleKeyword.getInstance();
     }
 
 }

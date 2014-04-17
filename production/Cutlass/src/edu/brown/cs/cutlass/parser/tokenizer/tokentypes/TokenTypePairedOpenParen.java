@@ -8,7 +8,7 @@ import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenPairedOpening;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenTypePairedOpen;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
-import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleOpenParen;
+import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStylePunct;
 import java.util.regex.Pattern;
 
 /**
@@ -34,7 +34,7 @@ public class TokenTypePairedOpenParen extends TokenTypePairedOpen {
 
     @Override
     public TokenStyle getStyle() {
-        return TokenStyleOpenParen.getInstance();
+        return TokenStylePunct.getInstance();
     }
 
 }

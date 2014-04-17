@@ -17,7 +17,7 @@ public class TokenStyleString extends TokenStyleColor {
     }
     
     private TokenStyleString() {
-        super(Color.ORANGE);
+        super(new Color(170,17,17));
     }
     
 }

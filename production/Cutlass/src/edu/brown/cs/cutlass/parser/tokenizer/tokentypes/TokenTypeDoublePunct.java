@@ -8,7 +8,7 @@ package edu.brown.cs.cutlass.parser.tokenizer.tokentypes;
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenType;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
-import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleDoublePunct;
+import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStylePunct;
 import java.util.regex.Pattern;
 
 /**
@@ -34,7 +34,7 @@ public class TokenTypeDoublePunct extends TokenType {
     
     @Override
     public TokenStyle getStyle() {
-        return TokenStyleDoublePunct.getInstance();
+        return TokenStylePunct.getInstance();
     }
 
 }

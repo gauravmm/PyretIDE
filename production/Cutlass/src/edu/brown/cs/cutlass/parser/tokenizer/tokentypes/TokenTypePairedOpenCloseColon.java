@@ -10,7 +10,7 @@ import edu.brown.cs.cutlass.parser.tokenizer.TokenType;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenTypePairedClose;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenTypePairedOpen;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
-import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleOpenCloseColon;
+import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStylePunct;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -50,7 +50,7 @@ public class TokenTypePairedOpenCloseColon extends TokenTypePairedClose {
 
     @Override
     public TokenStyle getStyle() {
-        return TokenStyleOpenCloseColon.getInstance();
+        return TokenStylePunct.getInstance();
     }
 
 }
