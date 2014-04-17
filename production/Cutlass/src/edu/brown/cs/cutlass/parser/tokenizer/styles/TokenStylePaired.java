@@ -17,7 +17,7 @@ public class TokenStylePaired extends TokenStyleBold {
     }
     
     private TokenStylePaired() {
-        super(new Color(51,01,70));
+        super(Color.PINK);
     }
     
 }
