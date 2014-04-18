@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class PyretData extends PyretBlock {
 
-    private List<PyretDataVariant> variants = new LinkedList<>();
+    private final List<PyretDataVariant> variants = new LinkedList<>();
     
     public PyretData(PyretLocation location, String name) {
         super(location, name);
@@ -32,7 +32,5 @@ public class PyretData extends PyretBlock {
     public boolean add(PyretDataVariant e) {
         return variants.add(e);
     }
-    
-    
     
 }

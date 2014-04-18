@@ -4,7 +4,6 @@
  */
 package edu.brown.cs.cutlass.parser;
 
-import edu.brown.cs.cutlass.parser.tokenizer.Line;
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 
 /**

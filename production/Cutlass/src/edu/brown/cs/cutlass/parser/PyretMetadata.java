@@ -44,9 +44,9 @@ public final class PyretMetadata {
      * I called from?"). Function calls that do not appear in any function also
      * appear in this.
      */
-    public final Map<PyretFunction, List<PyretLocation>> functionCalls;
+    public final Map<PyretFunction, List<PyretFunctionCall>> functionCalls;
 
-    public PyretMetadata(List<PyretFunction> functions, List<PyretData> data, Map<PyretFunction, List<PyretFunction>> functionCallGraphFrom, Map<PyretFunction, List<PyretFunction>> functionCallGraphTo, Map<PyretFunction, List<PyretLocation>> functionCalls) {
+    public PyretMetadata(List<PyretFunction> functions, List<PyretData> data, Map<PyretFunction, List<PyretFunction>> functionCallGraphFrom, Map<PyretFunction, List<PyretFunction>> functionCallGraphTo, Map<PyretFunction, List<PyretFunctionCall>> functionCalls) {
         this.functions = Collections.unmodifiableList(functions);
         this.data = Collections.unmodifiableList(data);
         this.functionCallGraphFrom = Collections.unmodifiableMap(functionCallGraphFrom);
