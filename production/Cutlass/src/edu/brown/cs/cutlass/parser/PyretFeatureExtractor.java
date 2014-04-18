@@ -55,8 +55,17 @@ public class PyretFeatureExtractor {
             if (!checkParenToken.hasData()) { // If there is no open paren, skip it.
                 continue;
             }
+            TokenPairedOpening parenOpenToken = (TokenPairedOpening) checkParenToken.getData();
+            if(parenOpenToken.other == null){
+                continue;
+            }
+            
+            Option<Token> tokenScope = getNextToken(parenOpenToken.other, TokenTypePairedOpenColon.getInstance());
+            if(!tokenScope.hasData()){
+                continue;
+            }
 
-            functions.add(new PyretFunction(new PyretLocation(tok), funNameToken.getValue()));
+            functions.add(new PyretFunction(new PyretLocation(tok), funNameToken.getValue(), (TokenPairedOpening) tokenScope.getData()));
         }
 
         // Extract function calls:
