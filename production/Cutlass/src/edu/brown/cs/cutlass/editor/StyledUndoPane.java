@@ -27,7 +27,7 @@ import javax.swing.undo.UndoManager;
  */
 public class StyledUndoPane extends JEditorPane{
 
-    private UndoManager undoer;
+    //private UndoManager undoer;
     private final PyretStyledDocument document;
 
     public final static String testStr = "data BinTree:\n"
@@ -52,12 +52,12 @@ public class StyledUndoPane extends JEditorPane{
         super();
 
         document = new PyretStyledDocument(this);
-        undoer = new UndoManager();
+        //undoer = new UndoManager();
         
         this.setEditorKit(new StyledEditorKit());
         this.setDocument(document);
         
-        document.addUndoableEditListener(undoer);
+        //document.addUndoableEditListener(undoer);
         document.insertString(0, fileContent.toString(), null);
         this.addKeyListener(new EditorKeyListener(document));
 
@@ -72,8 +72,8 @@ public class StyledUndoPane extends JEditorPane{
      *  maybe make these two methods synchronized??
      */
     public void undo(){
-        if(undoer.canUndo()){
-            undoer.undo();
+        if(document.undoer.canUndo()){
+            document.undoer.undo();
         }
     }
     /** Tries to redo the last change to the document.
@@ -81,8 +81,8 @@ public class StyledUndoPane extends JEditorPane{
      * 
      */
     public void redo(){
-        if(undoer.canRedo()){
-            undoer.redo();
+        if(document.undoer.canRedo()){
+           document.undoer.redo();
         }
     }
     public static void main(String[] args) {
