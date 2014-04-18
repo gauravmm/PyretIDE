@@ -1,0 +1,136 @@
+<html>
+<head>
+</head>
+<body>
+<div id="out"></div>
+<script type="text/javascript">
+  var ERRORCLASS = 'error';
+  function wordRegexp(words) {
+    return ("^((" + words.join(")|(") + "))(?![a-zA-Z0-9-_])");
+  }
+  
+  const pyret_indent_regex = new RegExp("^[a-zA-Z_][a-zA-Z0-9$_\\-]*");
+  const pyret_keywords = 
+    wordRegexp(["fun", "method", "var", "when", "import", "provide", 
+                "data", "end", "except", "for", "from", 
+                "and", "or", "not", "as", "if", "else", "cases"]);
+  const pyret_keywords_colon = 
+    wordRegexp(["doc", "try", "ask", "otherwise", "then", "with", "sharing", "where", "check", "graph", "block"]);
+  const pyret_single_punctuation = 
+    new RegExp("^([" + ["\\:", "\\.", "<", ">", ",", "^", 
+                        ";", "|", "=", "+", "*", "/", "\\", // NOTE: No minus
+                        "\\(", "\\)", "{", "}", "\\[", "\\]"].join('') + "])");
+  const pyret_double_punctuation = 
+    new RegExp("^((" + ["::", "==", ">=", "<=", "=>", "->", ":=", "<>"].join(")|(") + "))");
+  const initial_operators = { "-": true, "+": true, "*": true, "/": true, "<": true, "<=": true,
+                              ">": true, ">=": true, "==": true, "<>": true, ".": true, "^": true,
+                              "is": true, "raises": true, "satisfies": true }
+  
+  
+  function ret(state, tokType, content, style) {
+    state.lastToken = tokType; state.lastContent = content;
+    return style;
+  }
+
+  function tokenBase(stream, state) { 
+    if (stream.eatSpace())
+      return "IGNORED-SPACE";
+
+    var ch = stream.peek();
+    
+
+    // Handle Comments
+    if (ch === '#') {
+      stream.skipToEnd();
+      return ret(state, "COMMENT", state.lastContent, 'comment');
+    }
+    // Handle Number Literals
+    if (stream.match(/^[0-9]+(\.[0-9]+)?/))
+      return ret(state, 'number', stream.current(), 'number');
+    
+    if (ch === '"') {
+      state.tokenizer = tokenStringDouble;
+      state.lastToken = '"';
+      stream.eat('"');
+      return state.tokenizer(stream, state);
+    }
+    if (ch === "'") {
+      state.tokenizer = tokenStringSingle;
+      state.lastToken = "'";
+      stream.eat("'");
+      return state.tokenizer(stream, state);
+    }
+    // Level 1
+    var match;
+    if ((match = stream.match(pyret_double_punctuation, true)) || 
+        (match = stream.match(pyret_single_punctuation, true))) {
+      if (state.dataNoPipeColon && (match[0] == ":" || match[0] == "|"))
+        state.dataNoPipeColon = false;
+      return ret(state, match[0], match[0], 'builtin');
+    }
+    if (match = stream.match(pyret_keywords, true)) {
+      if (match[0] == "data")
+        state.dataNoPipeColon = true;
+      return ret(state, match[0], match[0], 'keyword');
+    }
+    if (match = stream.match(pyret_keywords_colon, true)) {
+      if (stream.peek() === ":")
+        return ret(state, match[0], match[0], 'keyword');
+      else
+        return ret(state, 'name', match[0], 'variable');
+    }
+    // Level 2
+    if (match = stream.match(pyret_indent_regex)) {
+      if (state.lastToken === "|" || state.lastToken === "::" || state.lastToken === "data"
+          || state.dataNoPipeColon) {
+        state.dataNoPipeColon = false;
+        return ret(state, 'name', match[0], 'type');
+      }
+      else if (stream.match(/\s*\(/, false))
+        return ret(state, 'name', match[0], 'function-name');
+      return ret(state, 'name', match[0], 'variable');
+    }
+    if (stream.eat("-"))
+      return ret(state, '-', '-', 'builtin');
+    stream.next();
+    return null;
+  }
+  function mkTokenString(singleOrDouble) {
+    return function(stream, state) {
+      var insideRE = singleOrDouble === "'" ? /[^'\\]/ : /[^"\\]/;
+      var endRE = singleOrDouble === "'" ? /'/ : /"/;
+      while (!stream.eol()) {
+        stream.eatWhile(insideRE);
+        if (stream.eat('\\')) {
+          stream.next();
+          if (stream.eol())
+            return ret(state, 'string', stream.current(), 'string');
+        } else if (stream.eat(singleOrDouble)) {
+          state.tokenizer = tokenBase;
+          return ret(state, 'string', stream.current(), 'string');
+        } else
+          stream.eat(endRE);
+      }
+      return ret(state, 'string', stream.current(), 'string');
+    };
+  }
+  
+  out = "<pre>";
+  out += "pyret_indent_regex"  + "\t" + "^[a-zA-Z_][a-zA-Z0-9$_\\-]*" + "\n";
+  out += "pyret_keywords\t" + wordRegexp(["fun", "method", "var", "when", "import", "provide", 
+                "data", "end", "except", "for", "from", 
+                "and", "or", "not", "as", "if", "else", "cases"]) + "\n";
+  out += "pyret_keywords_colon\t" + wordRegexp(["doc", "try", "ask", "otherwise", "then", "with", "sharing", "where", "check", "graph", "block"]) + "\n";
+  out += "pyret_single_punctuation\t" + ("^([" + ["\\:", "\\.", "<", ">", ",", "^", 
+                        ";", "|", "=", "+", "*", "/", "\\", // NOTE: No minus
+                        "\\(", "\\)", "{", "}", "\\[", "\\]"].join('') + "])") + "\n";
+  out += "pyret_double_punctuation\t" + ("^((" + ["::", "==", ">=", "<=", "=>", "->", ":=", "<>"].join(")|(") + "))") + "\n";
+  out += "initial_operators" + { "-": true, "+": true, "*": true, "/": true, "<": true, "<=": true,
+                              ">": true, ">=": true, "==": true, "<>": true, ".": true, "^": true,
+                              "is": true, "raises": true, "satisfies": true } + "</pre>";
+	document.getElementById("out").innerText = out;
+	
+	alert(out);
+</script>
+</body>
+</html>

@@ -99,7 +99,7 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     jTextField1.setText("");
     jEditorPane1.setText(textf_input + "\n");
     try{
-        Process p = Runtime.getRuntime().exec("ls");
+        Process p = Runtime.getRuntime().exec(textf_input);
         p.waitFor();
         InputStream output = p.getInputStream();
         InputStream error = p.getErrorStream();

@@ -4,6 +4,8 @@
  */
 package edu.brown.cs.cutlass.parser;
 
+import edu.brown.cs.cutlass.parser.tokenizer.Token;
+
 /**
  *
  * @author Gaurav Manek
@@ -14,9 +16,9 @@ public class PyretLocation {
      * The number of characters from the start of file that this location points
      * to.
      */
-    public final long offset;
-    
-    public PyretLocation(long offset) {
-        this.offset = offset;
+    public final Token token;
+
+    public PyretLocation(Token token) {
+        this.token = token;
     }
 }
