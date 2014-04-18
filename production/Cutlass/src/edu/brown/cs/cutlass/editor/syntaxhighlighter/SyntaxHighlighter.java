@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
 
 /**
  *
@@ -51,6 +53,7 @@ public class SyntaxHighlighter {
             List<Line> tokenLines = parseTokens.getTokenLines();
 
             //Clear the document of text
+            int initiallength = sdoc.getLength();
             sdoc.removeWithoutHighlight(0, sdoc.getLength());
 
             // Process document using current token
@@ -101,6 +104,10 @@ public class SyntaxHighlighter {
                 }
                 sdoc.insertStringWithoutHighlight(sdoc.getLength(), Line.LINE_TERMINATOR, null);
 
+            }
+            
+            while(initiallength > sdoc.getLength()){
+                sdoc.insertStringWithoutHighlight(sdoc.getLength(),"\n",SimpleAttributeSet.EMPTY);
             }
             //sdoc = tempDoc;
         } catch (BadLocationException ex) {
