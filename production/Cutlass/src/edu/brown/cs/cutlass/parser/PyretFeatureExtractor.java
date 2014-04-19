@@ -6,7 +6,6 @@ package edu.brown.cs.cutlass.parser;
 
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenPaired;
-import edu.brown.cs.cutlass.parser.tokenizer.TokenPairedClosing;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenPairedOpening;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenType;
