@@ -18,6 +18,7 @@ public class PyretStyledDocument extends DefaultStyledDocument {
 
     private final SyntaxHighlighter highlighter;
     private final StyledUndoPane parent;
+    public final ControlledUndoManager undoer;
 
     PyretStyledDocument(StyledUndoPane parent) {
         super();
@@ -26,6 +27,9 @@ public class PyretStyledDocument extends DefaultStyledDocument {
             throw new IllegalArgumentException("parent must not be null!");
         }
         this.parent = parent;
+        
+        undoer = new ControlledUndoManager();
+        this.addUndoableEditListener(undoer);
     }
 
     @Override
@@ -43,7 +47,13 @@ public class PyretStyledDocument extends DefaultStyledDocument {
     public void highlight() {
         int posSt = parent.getSelectionStart();
         int posEnd = parent.getSelectionEnd();
+        
+        undoer.setIsHighlighting(true);
+        
         highlighter.highlight(posEnd == posSt ? posSt : -1, false);
+        
+        undoer.setIsHighlighting(false);
+        
         parent.setSelectionStart(posSt);
         parent.setSelectionEnd(posEnd);
     }
@@ -51,7 +61,13 @@ public class PyretStyledDocument extends DefaultStyledDocument {
     public void highlightAndIndent() {
         int posSt = parent.getSelectionStart();
         int posEnd = parent.getSelectionEnd();
+        
+        undoer.setIsHighlighting(true);
+        
         highlighter.highlight(posEnd == posSt ? posSt : -1, true);
+        
+        undoer.setIsHighlighting(false);
+        
         parent.setSelectionStart(posSt);
         parent.setSelectionEnd(posEnd);
     }
