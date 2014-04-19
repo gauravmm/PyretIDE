@@ -31,11 +31,6 @@ public class TokenTypeComment extends TokenType {
     public boolean ignoreForExpectedToken() {
         return true;
     }
-    
-    @Override
-    public Token constructToken(String value, int offset, int length) {
-        return new Token(value, offset, length, TokenTypeComment.getInstance());
-    }
 
     @Override
     public TokenStyle getStyle() {

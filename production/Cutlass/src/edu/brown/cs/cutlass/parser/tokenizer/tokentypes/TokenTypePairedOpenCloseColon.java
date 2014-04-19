@@ -6,6 +6,7 @@ package edu.brown.cs.cutlass.parser.tokenizer.tokentypes;
 
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenPairedClosing;
+import edu.brown.cs.cutlass.parser.tokenizer.TokenScope;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenType;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenTypePairedClose;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenTypePairedOpen;
@@ -32,8 +33,8 @@ public class TokenTypePairedOpenCloseColon extends TokenTypePairedClose {
     }
 
     @Override
-    public Token constructToken(String value, int offset, int length) {
-        return new TokenPairedClosing(value, offset, length, TokenTypePairedOpenCloseColon.getInstance());
+    public Token constructToken(String value, int offset, int length, TokenScope scope) {
+        return new TokenPairedClosing(value, offset, length, scope, TokenTypePairedOpenCloseColon.getInstance());
     }
 
     @Override

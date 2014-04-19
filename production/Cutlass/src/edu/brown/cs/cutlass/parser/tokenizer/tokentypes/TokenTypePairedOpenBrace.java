@@ -6,6 +6,7 @@ package edu.brown.cs.cutlass.parser.tokenizer.tokentypes;
 
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenPairedOpening;
+import edu.brown.cs.cutlass.parser.tokenizer.TokenScope;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenTypePairedOpen;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStylePunct;
@@ -28,8 +29,8 @@ public class TokenTypePairedOpenBrace extends TokenTypePairedOpen {
     }
 
     @Override
-    public Token constructToken(String value, int offset, int length) {
-        return new TokenPairedOpening(value, offset, length, TokenTypePairedOpenBrace.getInstance());
+    public Token constructToken(String value, int offset, int length, TokenScope scope) {
+        return new TokenPairedOpening(value, offset, length, scope, TokenTypePairedOpenBrace.getInstance());
     }
 
     @Override

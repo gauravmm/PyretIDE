@@ -17,17 +17,24 @@ public class Token implements Comparable<Integer> {
     private final int length;
     private final int offset;
     private final TokenType type;
+    private final TokenScope scope;
 
     private Token next = null;
     private Token previous = null;
     private TokenStyle style = TokenStyles.getDefaultStyle();
 
-    public Token(String value, int offset, int length, TokenType type) {
+    @Deprecated
+    private Token(String value, int offset, int length, TokenType type) {
+        this(value, offset, length, new TokenScope(), type);
+    }
+
+    public Token(String value, int offset, int length, TokenScope scope, TokenType type) {
         this.value = value;
         this.length = length;
         this.offset = offset;
+        this.scope = scope;
         this.type = type;
-        if(type.getStyle() != null){
+        if (type.getStyle() != null) {
             style = type.getStyle();
         }
         type.applyStyle(this);
@@ -45,12 +52,10 @@ public class Token implements Comparable<Integer> {
         return offset;
     }
 
-    
     public TokenType getType() {
         return type;
     }
-    
-    
+
     // Type:
     public TokenStyle getTokenStyle() {
         return style;
@@ -61,7 +66,6 @@ public class Token implements Comparable<Integer> {
     }
 
     // Linked List Implementation:
-    
     public Token getNextToken() {
         return next;
     }
@@ -87,7 +91,6 @@ public class Token implements Comparable<Integer> {
     }
 
     // Debug:
-    
     @Override
     public String toString() {
         return "(" + type.getClass().getSimpleName() + " " + offset + " " + value + ')';
@@ -95,13 +98,13 @@ public class Token implements Comparable<Integer> {
 
     @Override
     public int compareTo(Integer o) {
-        if(o < offset){
+        if (o < offset) {
             return 1;
-        } else if (o >= offset + length){
+        } else if (o >= offset + length) {
             return -1;
         } else {
             return 0;
         }
     }
-    
+
 }

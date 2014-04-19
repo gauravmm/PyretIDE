@@ -31,11 +31,6 @@ public class TokenTypeString extends TokenType {
     }
 
     @Override
-    public Token constructToken(String value, int offset, int length) {
-        return new Token(value, offset, length, TokenTypeString.getInstance());
-    }
-
-    @Override
     public TokenStyle getStyle() {
         return TokenStyleString.getInstance();
     }

@@ -30,9 +30,4 @@ public class TokenTypeWhitespace extends TokenType {
         return true;
     }
 
-    @Override
-    public Token constructToken(String value, int offset, int length) {
-        return new Token(value, offset, length, TokenTypeWhitespace.getInstance());
-    }
-
 }

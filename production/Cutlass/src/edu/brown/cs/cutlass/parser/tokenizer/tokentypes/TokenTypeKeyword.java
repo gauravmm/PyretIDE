@@ -4,7 +4,6 @@
  */
 package edu.brown.cs.cutlass.parser.tokenizer.tokentypes;
 
-import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenType;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleKeyword;
@@ -24,11 +23,6 @@ public class TokenTypeKeyword extends TokenType {
 
     private TokenTypeKeyword() {
         super(Pattern.compile("^((method)|(var)|(when)|(import)|(provide)|(except)|(for)|(from)|(and)|(or)|(not)|(as)|(if)|(else)|(cases)|(is))"));
-    }
-
-    @Override
-    public Token constructToken(String value, int offset, int length) {
-        return new Token(value, offset, length, TokenTypeKeyword.getInstance());
     }
 
     @Override

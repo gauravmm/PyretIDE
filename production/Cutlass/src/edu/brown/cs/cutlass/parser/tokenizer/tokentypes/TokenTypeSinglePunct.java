@@ -26,10 +26,6 @@ public class TokenTypeSinglePunct extends TokenType {
         super(Pattern.compile("^([\\.<>,^|=+*/])"));
     }
 
-    @Override
-    public Token constructToken(String value, int offset, int length) {
-        return new Token(value, offset, length, TokenTypeSinglePunct.getInstance());
-    }
 
     @Override
     public TokenStyle getStyle() {

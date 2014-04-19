@@ -5,7 +5,6 @@
 
 package edu.brown.cs.cutlass.parser.tokenizer.tokentypes;
 
-import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenType;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleDefault;
@@ -25,11 +24,6 @@ public class TokenTypeDefault extends TokenType {
     
     private TokenTypeDefault(){
         super(Pattern.compile("^([a-zA-Z][a-zA-Z0-9\\-]*)"));
-    }
-    
-    @Override
-    public Token constructToken(String value, int offset, int length) {
-        return new Token(value, offset, length, TokenTypeDefault.getInstance());
     }
 
     @Override

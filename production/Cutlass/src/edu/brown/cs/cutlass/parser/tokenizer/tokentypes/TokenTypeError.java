@@ -5,7 +5,6 @@
 
 package edu.brown.cs.cutlass.parser.tokenizer.tokentypes;
 
-import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenType;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleError;
@@ -25,11 +24,6 @@ public class TokenTypeError extends TokenType {
     
     private TokenTypeError(){
         super(Pattern.compile("^([^\\s]*)"));
-    }
-    
-    @Override
-    public Token constructToken(String value, int offset, int length) {
-        return new Token(value, offset, length, TokenTypeError.getInstance());
     }
 
     @Override
