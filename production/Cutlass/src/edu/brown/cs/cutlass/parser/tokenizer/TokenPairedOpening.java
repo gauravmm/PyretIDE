@@ -10,8 +10,8 @@ package edu.brown.cs.cutlass.parser.tokenizer;
  */
 public class TokenPairedOpening extends TokenPaired {
 
-    public TokenPairedOpening(String value, int length, int offset, TokenTypePairedOpen type) {
-        super(value, length, offset, type);
+    public TokenPairedOpening(String value, int length, int offset, TokenScope scope, TokenTypePairedOpen type) {
+        super(value, length, offset, scope, type);
     }
 
     @Override

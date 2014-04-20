@@ -85,7 +85,7 @@ public class Line implements Comparable<Integer> {
         }
         String indent = sb.toString();
 
-        Token startingToken = TokenTypeWhitespace.getInstance().constructToken(indent, offset, indent.length());
+        Token startingToken = TokenTypeWhitespace.getInstance().constructToken(indent, offset, indent.length(), new TokenScope());
         nCont.add(startingToken); // Add the leading whitespace
 
         Iterator<Token> ci = contents.iterator();
@@ -113,7 +113,7 @@ public class Line implements Comparable<Integer> {
             while (ci.hasNext()) {
                 tok = ci.next();
                 if (TokenTypes.isWhitespaceTokenType(tok.getType())) {
-                    nCont.add(TokenTypeWhitespace.getInstance().constructToken(LINE_SPACING, offset, indent.length()));
+                    nCont.add(TokenTypeWhitespace.getInstance().constructToken(LINE_SPACING, offset, indent.length(), tok.getScope()));
                 } else {
                     nCont.add(tok);
                 }

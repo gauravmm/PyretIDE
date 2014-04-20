@@ -5,18 +5,16 @@
 package edu.brown.cs.cutlass.parser.tokenizer;
 
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
-import edu.brown.cs.cutlass.util.Option;
+import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.TokenTypeComment;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.regex.Pattern;
-import javax.swing.text.AttributeSet;
 
 /**
  *
  * @author Gaurav Manek
  */
-public abstract class TokenType implements AttributeSet {
+public abstract class TokenType {
 
     /*
      Whitespace (but not newlines) --
@@ -53,9 +51,16 @@ public abstract class TokenType implements AttributeSet {
      * @param value The string that matches the pattern.
      * @param offset The offset at which the token starts
      * @param length The length of the token.
+     * @param scope The current scope of the token.
      * @return A Token containing the given contents.
      */
-    public abstract Token constructToken(String value, int offset, int length);
+    //public abstract Token constructToken(String value, int offset, int length);
+    public Token constructToken(String value, int offset, int length, TokenScope scope) {
+        //return new Token(value, offset, length, scope, getTokenType());
+        return new Token(value, offset, length, scope, this);
+    }
+    
+    //protected abstract TokenType getTokenType(); 
 
     /**
      *
@@ -72,51 +77,6 @@ public abstract class TokenType implements AttributeSet {
 
     public boolean ignoreForExpectedToken() {
         return false;
-    }
-
-    @Override
-    public int getAttributeCount() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean isDefined(Object attrName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean isEqual(AttributeSet attr) {
-        return this == attr;
-    }
-
-    @Override
-    public AttributeSet copyAttributes() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object getAttribute(Object key) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Enumeration<?> getAttributeNames() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean containsAttribute(Object name, Object value) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean containsAttributes(AttributeSet attributes) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public AttributeSet getResolveParent() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

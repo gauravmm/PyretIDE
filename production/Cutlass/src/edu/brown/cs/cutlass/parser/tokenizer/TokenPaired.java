@@ -11,9 +11,9 @@ package edu.brown.cs.cutlass.parser.tokenizer;
 public class TokenPaired extends Token {
 
     public TokenPaired other;
-    
-    public TokenPaired(String value, int length, int offset, TokenTypePaired type) {
-        super(value, length, offset, type);
-    }    
-    
+
+    public TokenPaired(String value, int length, int offset, TokenScope scope, TokenTypePaired type) {
+        super(value, length, offset, scope, type);
+    }
+
 }

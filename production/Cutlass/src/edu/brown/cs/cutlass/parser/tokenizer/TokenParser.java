@@ -34,6 +34,7 @@ public final class TokenParser {
 
     public static TokenParserOutput parseTokens(List<String> input) {
         Stack<TokenPairedOpening> pairOpenStart = new Stack<>();
+        TokenScope scope = new TokenScope();
         Stack<Pair<Token,TokenType>> expectedFutureToken = new Stack<>();
         List<ParsingError> parsingErrors = new LinkedList<>();
 
@@ -79,7 +80,7 @@ public final class TokenParser {
                         }
                         int size = m.end() - m.start();
                         matchedType = tt;
-                        token = tt.constructToken(m.group(), offset, size);
+                        token = tt.constructToken(m.group(), offset, size, scope);
                         offset += size;
                         inLine = inLine.substring(size);
 
@@ -119,6 +120,7 @@ public final class TokenParser {
                 // Pair matching
                 if (tt instanceof TokenTypePairedOpen) {
                     pairOpenStart.add((TokenPairedOpening) token);
+                    scope = scope.push(token);
                 } else if (tt instanceof TokenTypePairedClose) {
                     if (!(token instanceof TokenPairedClosing)) {
                         throw new IllegalStateException("Illegal state in parser.");
@@ -134,6 +136,8 @@ public final class TokenParser {
                         // This token matches the closing token.
                         // Give them references to each other and remove it from the list.
                         TokenPairedOpening startingToken = pairOpenStart.pop();
+                        // Pop the scope stack.
+                        scope = scope.getRest();
                         startingToken.other = tc;
                         tc.other = startingToken;
                     } else {
