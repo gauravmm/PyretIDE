@@ -6,6 +6,7 @@ package edu.brown.cs.cutlass.parser.tokenizer;
 
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyles;
+import java.util.Objects;
 
 /**
  *
@@ -56,6 +57,10 @@ public class Token implements Comparable<Integer> {
         return type;
     }
 
+    public TokenScope getScope() {
+        return scope;
+    }
+    
     // Type:
     public TokenStyle getTokenStyle() {
         return style;
@@ -106,5 +111,40 @@ public class Token implements Comparable<Integer> {
             return 0;
         }
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + Objects.hashCode(this.value);
+        hash = 97 * hash + this.length;
+        hash = 97 * hash + this.offset;
+        hash = 97 * hash + Objects.hashCode(this.type);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Token other = (Token) obj;
+        if (!Objects.equals(this.value, other.value)) {
+            return false;
+        }
+        if (this.length != other.length) {
+            return false;
+        }
+        if (this.offset != other.offset) {
+            return false;
+        }
+        if (!Objects.equals(this.type, other.type)) {
+            return false;
+        }
+        return true;
+    }
+
 
 }
