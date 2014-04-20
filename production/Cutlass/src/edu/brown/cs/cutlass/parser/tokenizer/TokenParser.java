@@ -25,7 +25,7 @@ import java.util.regex.Matcher;
 public final class TokenParser {
 
     public static TokenParserOutput parseTokens(String s) {
-        return parseTokens(s.split("(\r)?\n"));
+        return parseTokens(s.split("(\r)?\n", -1)); // -1 to prevent multiple delimiters from being discarded.
     }
 
     public static TokenParserOutput parseTokens(String[] s) {
@@ -206,4 +206,5 @@ public final class TokenParser {
 
         return new TokenParserOutput(outLine, aggregator, parsingErrors);
     }
+    
 }

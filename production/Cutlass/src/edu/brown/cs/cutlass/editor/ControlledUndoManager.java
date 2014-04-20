@@ -30,7 +30,6 @@ public class ControlledUndoManager extends UndoManager {
 
     @Override
     public boolean addEdit(UndoableEdit anEdit){
-       System.out.println(this.canUndo());
        if(isHighlighting){
            return super.addEdit(new ControlledEdit(anEdit, false));
        }
@@ -38,8 +37,8 @@ public class ControlledUndoManager extends UndoManager {
     }
 
     private class ControlledEdit implements UndoableEdit{
-        private UndoableEdit realEdit;
-        private boolean significance;
+        private final UndoableEdit realEdit;
+        private final boolean significance;
         
         public ControlledEdit(UndoableEdit edit, boolean significance0) {
             realEdit = edit;

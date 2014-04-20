@@ -19,11 +19,9 @@ import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.SimpleAttributeSet;
 
 /**
  *
@@ -59,8 +57,8 @@ public class SyntaxHighlighter {
             // Process document using current token
             // NOTE: MUST NOT CHANGE reindent here:
             Option<Token> opt = getCurrentToken(tokenLines, position);
-                        
-            if (opt.hasData()) {    
+
+            if (opt.hasData()) {
                 Token t = opt.getData();
                 if (t.getType() instanceof TokenTypePaired) {
                     TokenPaired ttp = (TokenPaired) t;
@@ -71,8 +69,8 @@ public class SyntaxHighlighter {
                 } else if (t.getType() instanceof TokenTypeDefault) {
                     // Highlight each type of TokenTypeDefault with the same value
                     List<Token> get = parseTokens.getTokenCollected().get(TokenTypeDefault.getInstance()).get(t.getValue());
-                    if(get != null){
-                        for(Token similarTokens : get){
+                    if (get != null) {
+                        for (Token similarTokens : get) {
                             similarTokens.setStyle(TokenStylePaired.getInstance());
                         }
                     }
@@ -87,29 +85,30 @@ public class SyntaxHighlighter {
                  the cursor is not adjusted. Ill fix that after you're done with
                  this.
                  */
-                for(Line l : tokenLines){
+                for (Line l : tokenLines) {
                     indentedLines.add(l.toIndentedLine());
                 }
                 tokenLines = indentedLines;
             }
 
-            //Iterate over every Line of document
-            for (Line l : tokenLines) {
-                List<Token> line_tokens = l.getContents();
+            Iterator<Line> it = tokenLines.iterator();
+            if (it.hasNext()) {
+                while (true) {
+                    Line l = it.next();
+                    List<Token> line_tokens = l.getContents();
+                    for (Token t : line_tokens) {
+                        //Insert the string represented by each token with its appropriate color
+                        sdoc.insertStringWithoutHighlight(sdoc.getLength(), t.getValue(), t.getTokenStyle().getStyle());
+                    }
 
-                //Iterate over every Token of every Line
-                for (Token t : line_tokens) {
-                    //Insert the string represented by each token with its appropriate color
-                    sdoc.insertStringWithoutHighlight(sdoc.getLength(), t.getValue(), t.getTokenStyle().getStyle());
+                    if (it.hasNext()) {
+                        sdoc.insertStringWithoutHighlight(sdoc.getLength(), Line.LINE_TERMINATOR, null);
+                    } else {
+                        break;
+                    }
                 }
-                sdoc.insertStringWithoutHighlight(sdoc.getLength(), Line.LINE_TERMINATOR, null);
+            }
 
-            }
-            
-            while(initiallength > sdoc.getLength()){
-                sdoc.insertStringWithoutHighlight(sdoc.getLength(),"\n",SimpleAttributeSet.EMPTY);
-            }
-            //sdoc = tempDoc;
         } catch (BadLocationException ex) {
             Lumberjack.log(Lumberjack.Level.ERROR, ex);
         }
