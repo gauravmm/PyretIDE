@@ -2,6 +2,7 @@ package edu.brown.cs.cutlass;
 
 import edu.brown.cs.cutlass.config.ConfigEngine;
 import edu.brown.cs.cutlass.editor.PnlEditor;
+import edu.brown.cs.cutlass.editor.callgraph.CallGraphEntry;
 import edu.brown.cs.cutlass.sys.SystemAbstraction;
 import edu.brown.cs.cutlass.sys.io.AbstractIO;
 import edu.brown.cs.cutlass.sys.io.AbstractIOException;
@@ -141,7 +142,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         spltPrimary = new javax.swing.JSplitPane();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        lstCallGraph = new javax.swing.JList<CallGraphEntry>();
         jLabel1 = new javax.swing.JLabel();
         tabEditors = new javax.swing.JTabbedPane();
         jToolBar1 = new javax.swing.JToolBar();
@@ -206,13 +207,13 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         jPanel2.setMinimumSize(new java.awt.Dimension(250, 100));
         jPanel2.setPreferredSize(new java.awt.Dimension(150, 665));
 
-        jList1.setFont(new java.awt.Font("Monospaced", 0, 13)); // NOI18N
-        jList1.setModel(new javax.swing.AbstractListModel() {
+        lstCallGraph.setFont(new java.awt.Font("Monospaced", 0, 13)); // NOI18N
+        lstCallGraph.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "BinaryTree (data)", "tree-to-list (fun)", "is-sorted (fun)", "is-bst (fun)" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane3.setViewportView(jList1);
+        jScrollPane3.setViewportView(lstCallGraph);
 
         jLabel1.setText("Quick Navigation");
 
@@ -224,7 +225,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -843,7 +844,6 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JList jList1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -861,6 +861,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JPopupMenu.Separator jSeparator9;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JList<CallGraphEntry> lstCallGraph;
     private javax.swing.JMenuItem mnuBlockComment;
     private javax.swing.JMenuItem mnuCloseAllTabs;
     private javax.swing.JMenuItem mnuCloseCurrentTab;

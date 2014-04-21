@@ -11,7 +11,6 @@ import edu.brown.cs.cutlass.sys.LaskuraSystemAbstraction;
 import edu.brown.cs.cutlass.sys.SystemAbstraction;
 import edu.brown.cs.cutlass.sys.io.AbstractIO;
 import edu.brown.cs.cutlass.sys.io.AbstractIOException;
-import edu.brown.cs.cutlass.sys.io.disk.DiskIO;
 import edu.brown.cs.cutlass.sys.io.laskura.LaskuraIO;
 import edu.brown.cs.cutlass.sys.io.laskura.ui.PnlLaskuraLogin;
 import edu.brown.cs.cutlass.util.Lumberjack;
