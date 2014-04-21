@@ -128,7 +128,7 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
     }
 
     @Override
-    public void handleJumpTo(long offset) {
+    public void handleJumpTo(int offset) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

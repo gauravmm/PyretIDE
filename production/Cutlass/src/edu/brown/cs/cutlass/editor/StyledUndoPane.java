@@ -31,10 +31,10 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
 
         document = new PyretStyledDocument(this);
         //undoer = new UndoManager();
-        
+
         this.setEditorKit(new StyledEditorKit());
         this.setDocument(document);
-        
+
         //document.addUndoableEditListener(undoer);
         document.insertString(0, fileContent.toString(), null);
         this.addKeyListener(new EditorKeyListener(document));
@@ -42,30 +42,38 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
         this.addCaretListener(new CaretListenerImpl());
         this.listener = listener;
     }
-    
-    /** Tries to undo the last change to the document.
-     *  Checks to see if it can undo first.
-     *  
-     *  maybe make these two methods synchronized??
+
+    /**
+     * Tries to undo the last change to the document. Checks to see if it can
+     * undo first.
+     *
+     * maybe make these two methods synchronized??
      */
-    public void undo(){
-        if(document.undoer.canUndo()){
+    public void undo() {
+        if (document.undoer.canUndo()) {
             document.undoer.undo();
         }
     }
-    /** Tries to redo the last change to the document.
-     *  Checks to see if it can redo first.
-     * 
+
+    /**
+     * Tries to redo the last change to the document. Checks to see if it can
+     * redo first.
+     *
      */
-    public void redo(){
-        if(document.undoer.canRedo()){
-           document.undoer.redo();
+    public void redo() {
+        if (document.undoer.canRedo()) {
+            document.undoer.redo();
         }
     }
 
     @Override
-    public void handleJumpTo(long offset) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void handleJumpTo(int offset) {
+        this.getCaret().setDot(offset);
+    }
+
+    @Override
+    public EditorJumpTo createJumpTo(int offset) {
+        return new EditorJumpTo(this, offset);
     }
 
     void highlighted(TokenParserOutput parseTokens, Option<Token> opt, StyledUndoPane listener) {
@@ -76,7 +84,7 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
     public void highlighted(TokenParserOutput output, Option<Token> currentToken, EditorJumpToClient client) {
         listener.highlighted(output, currentToken, client);
     }
-                
+
     private class CaretListenerImpl implements CaretListener {
 
         public CaretListenerImpl() {
@@ -96,23 +104,23 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
                     isReindenting = true;
                 }
 
-            lastPos = e.getDot();
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        document.highlight();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Lumberjack.log(Lumberjack.Level.WARN, e);
-                    } finally {
-                        // We don't need to bother locking the release
-                        synchronized (isReindentingMutex) {
-                            isReindenting = false;
+                lastPos = e.getDot();
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            document.highlight();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Lumberjack.log(Lumberjack.Level.WARN, e);
+                        } finally {
+                            // We don't need to bother locking the release
+                            synchronized (isReindentingMutex) {
+                                isReindenting = false;
+                            }
                         }
                     }
-                }
-            });
+                });
             }
         }
     }

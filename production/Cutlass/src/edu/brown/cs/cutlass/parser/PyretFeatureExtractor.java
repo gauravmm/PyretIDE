@@ -4,6 +4,8 @@
  */
 package edu.brown.cs.cutlass.parser;
 
+import edu.brown.cs.cutlass.editor.EditorJumpTo;
+import edu.brown.cs.cutlass.editor.EditorJumpToClient;
 import edu.brown.cs.cutlass.editor.callgraph.CallGraphEntry;
 import edu.brown.cs.cutlass.parser.tokenizer.*;
 import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.*;
@@ -11,6 +13,7 @@ import edu.brown.cs.cutlass.util.Option;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,7 +25,7 @@ import java.util.Set;
  */
 public class PyretFeatureExtractor {
 
-    public static List<CallGraphEntry> getCallGraphEntries(PyretMetadata meta, Option<Token> token) {
+    public static List<CallGraphEntry> getCallGraphEntries(PyretMetadata meta, Option<Token> token, EditorJumpToClient client) {
         ArrayList<CallGraphEntry> rv = new ArrayList<>();
 
         // Figure out scope for current token
@@ -38,8 +41,14 @@ public class PyretFeatureExtractor {
         }
 
         // Now tokenFunction contains the most specific scope of the current token, or null if no such scope can be located.
-        
-        
+        if (tokenFunction == null) {
+            for (PyretFunction fun : meta.functions.values()) {
+                rv.add(new CallGraphEntry(fun.getName(), false, false, false, fun.isDataVariant()?new Option<>(fun.getConstructorOf().getData().name):new Option<String>(), client.createJumpTo(fun.getLocation().token.getOffset())));
+            }
+        } else {
+            
+        }
+
         return rv;
     }
 
@@ -51,7 +60,7 @@ public class PyretFeatureExtractor {
             throw new IllegalStateException("Collected tokens not properly set-up.");
         }
 
-        Map<Token, PyretFunction> functions = new HashMap<>();
+        Map<Token, PyretFunction> functions = new LinkedHashMap<>();
 
         // Extract function definitions:
         List<Token> funLocs = keywords.get("fun");
@@ -151,7 +160,7 @@ public class PyretFeatureExtractor {
         for (PyretFunction fun : functions.values()) {
             List<PyretFunctionCall> functionCallsSingle = new ArrayList<>();
             List<Token> possibleFunctionCalls = names.get(fun.getName());
-            if (fun.getConstructorOf().hasData()) {
+            if (fun.isDataVariant()) {
                 for (Token funCall : possibleFunctionCalls) {
                     if (funCall != fun.location.token) {
                         functionCallsSingle.add(new PyretFunctionCall(new PyretLocation(funCall), fun));
@@ -197,7 +206,7 @@ public class PyretFeatureExtractor {
         }
 
         // Figure out the current scope
-        return new PyretMetadata(functions, data, functionCallGraphFrom, functionCallGraphTo, functionCalls, new Option<List<PyretFunction>>());
+        return new PyretMetadata(functions, data, functionCallGraphFrom, functionCallGraphTo, functionCalls);
     }
 
     private static Option<Token> getNextToken(Token start, TokenType type) {

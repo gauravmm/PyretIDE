@@ -14,9 +14,9 @@ package edu.brown.cs.cutlass.editor;
 public class EditorJumpTo {
 
     private final EditorJumpToClient client;
-    private final long offset; // We can always switch to another form of identification, such as a function name, etc.
+    private final int offset; // We can always switch to another form of identification, such as a function name, etc.
 
-    public EditorJumpTo(EditorJumpToClient client, long offset) {
+    public EditorJumpTo(EditorJumpToClient client, int offset) {
         this.client = client;
         this.offset = offset;
     }

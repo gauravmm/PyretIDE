@@ -50,14 +50,11 @@ public final class PyretMetadata {
      */
     public final Map<PyretFunction, List<PyretFunctionCall>> functionCalls;
     
-    public final Option<List<PyretFunction>> currentTokenScopes;
-
-    public PyretMetadata(Map<Token, PyretFunction> functions, Collection<PyretData> data, Map<PyretFunction, Set<PyretFunction>> functionCallGraphFrom, Map<PyretFunction, Set<PyretFunction>> functionCallGraphTo, Map<PyretFunction, List<PyretFunctionCall>> functionCalls, Option<List<PyretFunction>> currentTokenScopes) {
+    public PyretMetadata(Map<Token, PyretFunction> functions, Collection<PyretData> data, Map<PyretFunction, Set<PyretFunction>> functionCallGraphFrom, Map<PyretFunction, Set<PyretFunction>> functionCallGraphTo, Map<PyretFunction, List<PyretFunctionCall>> functionCalls) {
         this.functions = Collections.unmodifiableMap(functions);
         this.data = Collections.unmodifiableCollection(data);
         this.functionCallGraphFrom = Collections.unmodifiableMap(functionCallGraphFrom);
         this.functionCallGraphTo = Collections.unmodifiableMap(functionCallGraphTo);
         this.functionCalls = Collections.unmodifiableMap(functionCalls);
-        this.currentTokenScopes = currentTokenScopes;
     }
 }

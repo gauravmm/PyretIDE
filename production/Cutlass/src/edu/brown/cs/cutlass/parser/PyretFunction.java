@@ -36,8 +36,8 @@ public class PyretFunction extends PyretBlock {
         return scopeOpen;
     }
 
-    public Option<PyretDataVariant> getConstructorOf() {
-        return constructorOf;
+    public PyretDataVariant getConstructorOf() {
+        return constructorOf.getData();
     }
 
     public boolean isDataVariant() {
