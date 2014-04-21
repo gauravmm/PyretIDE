@@ -4,7 +4,6 @@
  */
 package edu.brown.cs.cutlass.editor;
 
-import edu.brown.cs.cutlass.editor.syntaxhighlighter.SyntaxHighlighter;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -22,7 +21,7 @@ public class PyretStyledDocument extends DefaultStyledDocument {
 
     PyretStyledDocument(StyledUndoPane parent) {
         super();
-        highlighter = new SyntaxHighlighter(this);
+        highlighter = new SyntaxHighlighter(this, parent);
         if (parent == null) {
             throw new IllegalArgumentException("parent must not be null!");
         }

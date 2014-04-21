@@ -4,6 +4,7 @@
  */
 package edu.brown.cs.cutlass.editor;
 
+import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import javax.swing.JEditorPane;
 import javax.swing.SwingUtilities;
@@ -18,11 +19,12 @@ import javax.swing.text.StyledEditorKit;
  *
  * @author miles
  */
-public class StyledUndoPane extends JEditorPane{
+public class StyledUndoPane extends JEditorPane implements PyretHighlightedListener {
 
     private final PyretStyledDocument document;
+    private final PyretHighlightedListener listener;
 
-    public StyledUndoPane(CharSequence fileContent) {
+    public StyledUndoPane(CharSequence fileContent, PyretHighlightedListener listener) {
         super();
 
         document = new PyretStyledDocument(this);
@@ -36,8 +38,7 @@ public class StyledUndoPane extends JEditorPane{
         this.addKeyListener(new EditorKeyListener(document));
 
         this.addCaretListener(new CaretListenerImpl());
-
-
+        this.listener = listener;
     }
     
     /** Tries to undo the last change to the document.
@@ -58,6 +59,12 @@ public class StyledUndoPane extends JEditorPane{
         if(document.undoer.canRedo()){
            document.undoer.redo();
         }
+    }
+
+    @Override
+    public void highlighted(TokenParserOutput output) {
+        // Pass it upwards
+        listener.highlighted(output);
     }
                 
     private class CaretListenerImpl implements CaretListener {
