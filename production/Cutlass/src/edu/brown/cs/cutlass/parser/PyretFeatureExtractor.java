@@ -9,8 +9,11 @@ import edu.brown.cs.cutlass.editor.EditorJumpToClient;
 import edu.brown.cs.cutlass.editor.callgraph.CallGraphEntry;
 import edu.brown.cs.cutlass.parser.tokenizer.*;
 import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.*;
+import edu.brown.cs.cutlass.util.Lumberjack;
+import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -43,10 +46,26 @@ public class PyretFeatureExtractor {
         // Now tokenFunction contains the most specific scope of the current token, or null if no such scope can be located.
         if (tokenFunction == null) {
             for (PyretFunction fun : meta.functions.values()) {
-                rv.add(new CallGraphEntry(fun.getName(), false, false, false, fun.isDataVariant()?new Option<>(fun.getConstructorOf().getData().name):new Option<String>(), client.createJumpTo(fun.getLocation().token.getOffset())));
+                rv.add(new CallGraphEntry(fun.getName(), false, false, false, fun.isDataVariant() ? new Option<>(fun.getConstructorOf().getData().name) : new Option<String>(), client.createJumpTo(fun.getLocation().token.getOffset())));
             }
         } else {
+            Set<PyretFunction> callsFrom = meta.functionCallGraphFrom.get(tokenFunction);
+            Set<PyretFunction> callsTo = meta.functionCallGraphTo.get(tokenFunction);
             
+            if(callsFrom == null || callsTo == null){
+                Lumberjack.log(Lumberjack.Level.ERROR, "Call Graph From/To not populated correctly!");
+                callsFrom = Collections.emptySet();
+                callsTo = Collections.emptySet();
+            }
+            
+            for (PyretFunction fun : meta.functions.values()) {
+                rv.add(new CallGraphEntry(
+                        fun.getName(), 
+                        tokenFunction.equals(fun), 
+                        callsFrom.contains(fun), 
+                        callsTo.contains(fun), 
+                        fun.isDataVariant() ? new Option<>(fun.getConstructorOf().getData().name) : new Option<String>(), client.createJumpTo(fun.getLocation().token.getOffset())));
+            }
         }
 
         return rv;

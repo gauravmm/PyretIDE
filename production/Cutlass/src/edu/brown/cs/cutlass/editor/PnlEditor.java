@@ -126,11 +126,6 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
     public void close() throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    @Override
-    public void handleJumpTo(int offset) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
     public CharSequence getSelectedText(){
         return jTextArea1.getSelectedText();
@@ -159,4 +154,5 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
         jTextArea1.setText(current.substring(0, position - selected.length()) + current.substring(position));
         jTextArea1.setCaretPosition(position - selected.length());
     }
+
 }

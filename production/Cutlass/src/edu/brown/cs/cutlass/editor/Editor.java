@@ -9,7 +9,7 @@ package edu.brown.cs.cutlass.editor;
  *
  * @author Gaurav Manek
  */
-public interface Editor extends AutoCloseable, EditorJumpToClient {
+public interface Editor extends AutoCloseable {
 
     //
     // Pyret Interaction:
