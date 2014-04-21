@@ -18,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -79,9 +80,9 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
             lbl.setMinimumSize(toolbarIconSize);
             lbl.setPreferredSize(toolbarIconSize);
             lbl.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            
+
             ImageIcon tmpImg = new ImageIcon(getClass().getResource("/edu/brown/cs/cutlass/assets/icons/" + p.getY()));
-            
+
             // Calculate the dimensions
             Dimension thisIconSize = null;//new Dimension(tmpImg.getIconWidth(), tmpImg.getIconHeight());
             // If the icon is larger than the space for it in at least one dimension, resize it:
@@ -95,7 +96,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
                     thisIconSize = new Dimension(toolbarIconSize.width, tmpHeight);
                 }
             }
-            
+
             // If we don't need to resize the icon:
             if (thisIconSize == null) {
                 lbl.setIcon(tmpImg);
@@ -104,14 +105,27 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
             }
         }
 //</editor-fold>
-        
-        if(optLaunchState.hasData()){
+
+        if (optLaunchState.hasData()) {
             LaunchState launchState = optLaunchState.getData();
             // Load data from the launchState
         } else {
             // Load default
             addClosableTab(tabEditors, new PnlDefaultEditor(this), "Default");
-            //tabEditors.addTab("Default", new PnlDefaultEditor());
+        }
+        
+        // SK Easter egg
+        String username = System.getProperty("user.name").toLowerCase();
+        boolean isSK = username.equals("sk") || username.startsWith("shriram");
+        if (!isSK) {
+            try {
+                String localMachine = java.net.InetAddress.getLocalHost().getHostName();
+                isSK = localMachine.equals("sk") || localMachine.startsWith("shriram");
+            } catch (UnknownHostException ex) {
+            }
+        }
+        if(isSK){
+            this.setTitle(this.getTitle() + " - Aspire Higher");
         }
     }
 
@@ -577,13 +591,13 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         // TODO add your handling code here:
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_tbBookmarkNextMouseClicked
-    
+
     private void mnuHelpAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpAboutActionPerformed
         JOptionPane.showMessageDialog(this,
-                "Cutlass - Pyret IDE\n" +
-                "For CSCI 0320 Spring 2014, Term Project\n" +
-                "By: Dilip Arumugam, Gaurav Manek,\n" +
-                "      Miles Holland, Zachary Zagorski",
+                "Cutlass - Pyret IDE\n"
+                + "For CSCI 0320 Spring 2014, Term Project\n"
+                + "By: Dilip Arumugam, Gaurav Manek,\n"
+                + "      Miles Holland, Zachary Zagorski",
                 "About", JOptionPane.INFORMATION_MESSAGE);
 
     }//GEN-LAST:event_mnuHelpAboutActionPerformed
@@ -603,7 +617,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
             //get the contents of their editor and store as seq - either CharSequence or List<CharSequence>
             String seq = ""; //placeholder to allow the code to compile
             Option<T> destination = io.requestUserFileDestination();
-            if (destination.hasData()){
+            if (destination.hasData()) {
                 io.setUserFile(destination.getData(), seq);
             }
         } catch (AbstractIOException ex) {
@@ -621,7 +635,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             Option<T> destination = io.requestUserFileSource();
-            if (destination.hasData()){
+            if (destination.hasData()) {
                 List<CharSequence> chars = io.getUserFile(destination.getData());
                 //Set editor text to chars
             }
@@ -651,7 +665,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
 
     private void mnuCloseAllTabsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCloseAllTabsActionPerformed
         int tabs = tabEditors.getTabCount();
-        for (int i = tabs - 1; i >= 0; i--){
+        for (int i = tabs - 1; i >= 0; i--) {
             tabEditors.remove(i);
         }
     }//GEN-LAST:event_mnuCloseAllTabsActionPerformed
@@ -669,7 +683,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
     private void mnuCutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCutActionPerformed
         // TODO add your handling code here:
         AbstractClipboard clippy = systemAbstraction.getClipboard();
-        PnlEditor onTop = (PnlEditor)tabEditors.getSelectedComponent();
+        PnlEditor onTop = (PnlEditor) tabEditors.getSelectedComponent();
         CharSequence seq = onTop.getSelectedText();
         clippy.put(seq);
         onTop.deleteSelection();
@@ -678,7 +692,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
     private void mnuCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCopyActionPerformed
         // TODO add your handling code here:
         AbstractClipboard clippy = systemAbstraction.getClipboard();
-        PnlEditor onTop = (PnlEditor)tabEditors.getSelectedComponent();
+        PnlEditor onTop = (PnlEditor) tabEditors.getSelectedComponent();
         CharSequence seq = onTop.getSelectedText();
         clippy.put(seq);
     }//GEN-LAST:event_mnuCopyActionPerformed
@@ -686,7 +700,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
     private void mnuPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPasteActionPerformed
         // TODO add your handling code here:
         AbstractClipboard clippy = systemAbstraction.getClipboard();
-        PnlEditor onTop = (PnlEditor)tabEditors.getSelectedComponent();
+        PnlEditor onTop = (PnlEditor) tabEditors.getSelectedComponent();
         String toPaste = clippy.get();
         onTop.paste(toPaste);
     }//GEN-LAST:event_mnuPasteActionPerformed
@@ -711,122 +725,122 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_mnuDeleteLineActionPerformed
 
-    
-    public void newTab(){
+    public void newTab() {
         this.mnuFileNewActionPerformed(null);
     }
-    
-    public void closeTab(JComponent c){
+
+    public void closeTab(JComponent c) {
         this.tabEditors.remove(c);
     }
+
     /**
-   * Adds a component to a JTabbedPane with a little "close tab" button on the
-   * right side of the tab.
-   *
-   * @param tabbedPane the JTabbedPane
-   * @param c any JComponent
-   * @param title the title for the tab
-   */
-  public static void addClosableTab(final JTabbedPane tabbedPane, final JComponent c, final String title) {
-    // Add the tab to the pane without any label
-    tabbedPane.addTab(null, c);
-    int pos = tabbedPane.indexOfComponent(c);
+     * Adds a component to a JTabbedPane with a little "close tab" button on the
+     * right side of the tab.
+     *
+     * @param tabbedPane the JTabbedPane
+     * @param c any JComponent
+     * @param title the title for the tab
+     */
+    public static void addClosableTab(final JTabbedPane tabbedPane, final JComponent c, final String title) {
+        // Add the tab to the pane without any label
+        tabbedPane.addTab(null, c);
+        int pos = tabbedPane.indexOfComponent(c);
 
-    // Create a FlowLayout that will spaaaaaace things 5px apart
-    FlowLayout f = new FlowLayout(FlowLayout.CENTER, 5, 0);
+        // Create a FlowLayout that will spaaaaaace things 5px apart
+        FlowLayout f = new FlowLayout(FlowLayout.CENTER, 5, 0);
 
-    // Make a small JPanel with the layout and make it non-opaque
-    JPanel pnlTab = new JPanel(f);
-    pnlTab.setOpaque(false);
+        // Make a small JPanel with the layout and make it non-opaque
+        JPanel pnlTab = new JPanel(f);
+        pnlTab.setOpaque(false);
 
-    // Add a JLabel with title and the left-side tab icon
-    JLabel lblTitle = new JLabel(title);
+        // Add a JLabel with title and the left-side tab icon
+        JLabel lblTitle = new JLabel(title);
 
-    // Create a JButton for the close tab button
-    JButton btnClose = new JButton();
-    btnClose.setOpaque(false);
-    btnClose.setText("X");
-    btnClose.setPreferredSize(new Dimension(15, 18));
+        // Create a JButton for the close tab button
+        JButton btnClose = new JButton();
+        btnClose.setOpaque(false);
+        btnClose.setText("X");
+        btnClose.setPreferredSize(new Dimension(15, 18));
 
-    // Set border null so the button doesn't make the tab too big
-    btnClose.setBorder(BorderFactory.createEtchedBorder());
-    btnClose.setBorderPainted(false);
-    btnClose.setContentAreaFilled(false);
+        // Set border null so the button doesn't make the tab too big
+        btnClose.setBorder(BorderFactory.createEtchedBorder());
+        btnClose.setBorderPainted(false);
+        btnClose.setContentAreaFilled(false);
 
-    // Make sure the button can't get focus, otherwise it looks funny
-    btnClose.setFocusable(false);
+        // Make sure the button can't get focus, otherwise it looks funny
+        btnClose.setFocusable(false);
 
-    // Put the panel together
-    pnlTab.add(lblTitle);
-    pnlTab.add(btnClose);
+        // Put the panel together
+        pnlTab.add(lblTitle);
+        pnlTab.add(btnClose);
 
-    // Add a thin border to keep the image below the top edge of the tab
-    // when the tab is selected
-    pnlTab.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
+        // Add a thin border to keep the image below the top edge of the tab
+        // when the tab is selected
+        pnlTab.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
 
-    // Now assign the component for the tab
-    tabbedPane.setTabComponentAt(pos, pnlTab);
+        // Now assign the component for the tab
+        tabbedPane.setTabComponentAt(pos, pnlTab);
 
-    // Add the listener that removes the tab
-    ActionListener listener = new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        // The component parameter must be declared "final" so that it can be
-        // referenced in the anonymous listener class like this.
-        tabbedPane.remove(c);
-      }
-    };
-    btnClose.addActionListener(listener);
-    
-    MouseListener buttonMouseListener = new MouseAdapter() {
-        @Override
-        public void mouseEntered(MouseEvent e) {
-            Component component = e.getComponent();
-            if (component instanceof AbstractButton) {
-                AbstractButton button = (AbstractButton) component;
-                button.setBorderPainted(true);
+        // Add the listener that removes the tab
+        ActionListener listener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // The component parameter must be declared "final" so that it can be
+                // referenced in the anonymous listener class like this.
+                tabbedPane.remove(c);
             }
-        }
- 
-        @Override
-        public void mouseExited(MouseEvent e) {
-            Component component = e.getComponent();
-            if (component instanceof AbstractButton) {
-                AbstractButton button = (AbstractButton) component;
-                button.setBorderPainted(false);
+        };
+        btnClose.addActionListener(listener);
+
+        MouseListener buttonMouseListener = new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                Component component = e.getComponent();
+                if (component instanceof AbstractButton) {
+                    AbstractButton button = (AbstractButton) component;
+                    button.setBorderPainted(true);
+                }
             }
-        }
-    };
-    btnClose.addMouseListener(buttonMouseListener);
 
-    // Optionally bring the new tab to the front
-    tabbedPane.setSelectedComponent(c);
-    c.requestFocusInWindow();
+            @Override
+            public void mouseExited(MouseEvent e) {
+                Component component = e.getComponent();
+                if (component instanceof AbstractButton) {
+                    AbstractButton button = (AbstractButton) component;
+                    button.setBorderPainted(false);
+                }
+            }
+        };
+        btnClose.addMouseListener(buttonMouseListener);
 
-    //-------------------------------------------------------------
-    // Bonus: Adding a <Ctrl-W> keystroke binding to close the tab
-    //-------------------------------------------------------------
-    AbstractAction closeTabAction = new AbstractAction() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        tabbedPane.remove(c);
-      }
-    };
+        // Optionally bring the new tab to the front
+        tabbedPane.setSelectedComponent(c);
+        c.requestFocusInWindow();
 
-    // Create a keystroke
-    KeyStroke controlW = KeyStroke.getKeyStroke("control W");
+        //-------------------------------------------------------------
+        // Bonus: Adding a <Ctrl-W> keystroke binding to close the tab
+        //-------------------------------------------------------------
+        AbstractAction closeTabAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tabbedPane.remove(c);
+            }
+        };
 
-    // Get the appropriate input map using the JComponent constants.
-    // This one works well when the component is a container. 
-    InputMap inputMap = c.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        // Create a keystroke
+        KeyStroke controlW = KeyStroke.getKeyStroke("control W");
 
-    // Add the key binding for the keystroke to the action name
-    inputMap.put(controlW, "closeTab");
+        // Get the appropriate input map using the JComponent constants.
+        // This one works well when the component is a container. 
+        InputMap inputMap = c.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-    // Now add a single binding for the action name to the anonymous action
-    c.getActionMap().put("closeTab", closeTabAction);
-  }
-    
+        // Add the key binding for the keystroke to the action name
+        inputMap.put(controlW, "closeTab");
+
+        // Now add a single binding for the action name to the anonymous action
+        c.getActionMap().put("closeTab", closeTabAction);
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JList jList1;
