@@ -4,6 +4,7 @@
  */
 package edu.brown.cs.cutlass.parser;
 
+import edu.brown.cs.cutlass.editor.callgraph.CallGraphEntry;
 import edu.brown.cs.cutlass.parser.tokenizer.*;
 import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.*;
 import edu.brown.cs.cutlass.util.Option;
@@ -20,6 +21,27 @@ import java.util.Set;
  * @author Gaurav Manek
  */
 public class PyretFeatureExtractor {
+
+    public static List<CallGraphEntry> getCallGraphEntries(PyretMetadata meta, Option<Token> token) {
+        ArrayList<CallGraphEntry> rv = new ArrayList<>();
+
+        // Figure out scope for current token
+        PyretFunction tokenFunction = null;
+        if (token.hasData()) {
+            for (Token possibleParent : token.getData().getScope()) {
+                PyretFunction possibleFunction = meta.functions.get(possibleParent);
+                if (possibleFunction != null) {
+                    tokenFunction = possibleFunction;
+                    break;
+                }
+            }
+        }
+
+        // Now tokenFunction contains the most specific scope of the current token, or null if no such scope can be located.
+        
+        
+        return rv;
+    }
 
     public static PyretMetadata extract(TokenParserOutput tpo) {
         // Keywords
@@ -174,7 +196,8 @@ public class PyretFeatureExtractor {
             }
         }
 
-        return new PyretMetadata(functions.values(), data, functionCallGraphFrom, functionCallGraphTo, functionCalls);
+        // Figure out the current scope
+        return new PyretMetadata(functions, data, functionCallGraphFrom, functionCallGraphTo, functionCalls, new Option<List<PyretFunction>>());
     }
 
     private static Option<Token> getNextToken(Token start, TokenType type) {

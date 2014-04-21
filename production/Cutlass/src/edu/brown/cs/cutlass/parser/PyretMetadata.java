@@ -4,6 +4,8 @@
  */
 package edu.brown.cs.cutlass.parser;
 
+import edu.brown.cs.cutlass.parser.tokenizer.Token;
+import edu.brown.cs.cutlass.util.Option;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +22,7 @@ public final class PyretMetadata {
     /**
      * A read-only list of all functions found in the source code.
      */
-    public final Collection<PyretFunction> functions;
+    public final Map<Token, PyretFunction> functions;
 
     /**
      * A read-only list of all Data definitions found in the source code.
@@ -47,12 +49,15 @@ public final class PyretMetadata {
      * appear in this.
      */
     public final Map<PyretFunction, List<PyretFunctionCall>> functionCalls;
+    
+    public final Option<List<PyretFunction>> currentTokenScopes;
 
-    public PyretMetadata(Collection<PyretFunction> functions, Collection<PyretData> data, Map<PyretFunction, Set<PyretFunction>> functionCallGraphFrom, Map<PyretFunction, Set<PyretFunction>> functionCallGraphTo, Map<PyretFunction, List<PyretFunctionCall>> functionCalls) {
-        this.functions = Collections.unmodifiableCollection(functions);
+    public PyretMetadata(Map<Token, PyretFunction> functions, Collection<PyretData> data, Map<PyretFunction, Set<PyretFunction>> functionCallGraphFrom, Map<PyretFunction, Set<PyretFunction>> functionCallGraphTo, Map<PyretFunction, List<PyretFunctionCall>> functionCalls, Option<List<PyretFunction>> currentTokenScopes) {
+        this.functions = Collections.unmodifiableMap(functions);
         this.data = Collections.unmodifiableCollection(data);
         this.functionCallGraphFrom = Collections.unmodifiableMap(functionCallGraphFrom);
         this.functionCallGraphTo = Collections.unmodifiableMap(functionCallGraphTo);
         this.functionCalls = Collections.unmodifiableMap(functionCalls);
+        this.currentTokenScopes = currentTokenScopes;
     }
 }

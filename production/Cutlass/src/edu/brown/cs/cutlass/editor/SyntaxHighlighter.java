@@ -4,7 +4,6 @@
  */
 package edu.brown.cs.cutlass.editor;
 
-import edu.brown.cs.cutlass.editor.PyretStyledDocument;
 import edu.brown.cs.cutlass.parser.tokenizer.Line;
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenPaired;
@@ -30,9 +29,9 @@ import javax.swing.text.BadLocationException;
 public class SyntaxHighlighter {
 
     private PyretStyledDocument sdoc;
-    private PyretHighlightedListener listener;
+    private final StyledUndoPane listener;
     
-    SyntaxHighlighter(PyretStyledDocument d, PyretHighlightedListener l) {
+    SyntaxHighlighter(PyretStyledDocument d, StyledUndoPane l) {
         this.sdoc = addAllStyles(d);
         this.listener = l;
     }
@@ -115,7 +114,7 @@ public class SyntaxHighlighter {
                 }
             }
         }
-        listener.highlighted(parseTokens);
+        listener.highlighted(parseTokens, opt, listener);
     }
 
     public void updateDocument(PyretStyledDocument newdoc) {

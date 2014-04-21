@@ -4,8 +4,10 @@
  */
 package edu.brown.cs.cutlass.editor;
 
+import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
 import edu.brown.cs.cutlass.util.Lumberjack;
+import edu.brown.cs.cutlass.util.Option;
 import javax.swing.JEditorPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
@@ -19,7 +21,7 @@ import javax.swing.text.StyledEditorKit;
  *
  * @author miles
  */
-public class StyledUndoPane extends JEditorPane implements PyretHighlightedListener {
+public class StyledUndoPane extends JEditorPane implements PyretHighlightedListener, EditorJumpToClient {
 
     private final PyretStyledDocument document;
     private final PyretHighlightedListener listener;
@@ -62,9 +64,17 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
     }
 
     @Override
-    public void highlighted(TokenParserOutput output) {
-        // Pass it upwards
-        listener.highlighted(output);
+    public void handleJumpTo(long offset) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    void highlighted(TokenParserOutput parseTokens, Option<Token> opt, StyledUndoPane listener) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void highlighted(TokenParserOutput output, Option<Token> currentToken, EditorJumpToClient client) {
+        listener.highlighted(output, currentToken, client);
     }
                 
     private class CaretListenerImpl implements CaretListener {
