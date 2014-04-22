@@ -4,8 +4,7 @@
  */
 package edu.brown.cs.cutlass.parser.tokenizer.tokentypes;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import edu.brown.cs.cutlass.util.Option;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,8 +17,7 @@ public class TokenTypeStringTest {
     public TokenTypeStringTest() {
     }
 
-    Pattern p = TokenTypeString.getInstance().getPattern();//Pattern.compile("('([^']|([^\\\\]\\'))*')");
-    //Pattern p = Pattern.compile("^'([^'\\\\]|((\\\\\\\\)*\\\\')|(\\[^']))*'");
+    TokenTypeString p = TokenTypeString.getInstance();
 
     /**
      * Test of toAggregate method, of class TokenTypeString.
@@ -31,25 +29,27 @@ public class TokenTypeStringTest {
         getMatchSame("'as\\\\\\'d'");
         getMatchSame("'\\\\\\'d'");
         Assert.assertEquals("'as\\'da'", getMatch("'as\\'da'ff"));
-        
+
         getMatchSame("\"asd\"");
         getMatchSame("\"as\\\"d\"");
         getMatchSame("\"as\\\\\\\"d\"");
         getMatchSame("\"\\\\\\\"d\"");
         Assert.assertEquals("\"as\\\"da\"", getMatch("\"as\\\"da\"ff"));
     }
-    
+
     public String getMatch(String test) {
         //System.out.println(test);
-        Matcher m = p.matcher(test);
-        if (!m.find()) {
+        Option<String> m = p.getMatch(test);
+        if (m.hasData()) {
+            return m.getData();
+        } else {
+            Assert.fail();
             return null;
         }
-        return m.group();
     }
-    
-    public void getMatchSame(String test){
-        Assert.assertEquals(test, getMatch(test));
+
+    public void getMatchSame(String test) {
+        Assert.assertEquals(test, p.getMatch(test).getData());
     }
 
 }
