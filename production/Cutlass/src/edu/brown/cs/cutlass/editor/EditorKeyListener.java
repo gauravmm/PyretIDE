@@ -24,6 +24,7 @@ class EditorKeyListener implements KeyListener {
     public void keyReleased(KeyEvent e) {
         // Ctrl + I or TAB auto-indent
         if((e.isControlDown() && e.getKeyCode() == KeyEvent.VK_I) || e.getKeyCode() == KeyEvent.VK_TAB){
+            e.consume();
             psdoc.highlightAndIndent();
         }
     }
