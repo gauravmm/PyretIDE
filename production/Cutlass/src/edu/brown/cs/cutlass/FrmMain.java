@@ -13,10 +13,13 @@ import edu.brown.cs.cutlass.sys.pyret.AbstractPyretAccess;
 import edu.brown.cs.cutlass.sys.ux.AbstractClipboard;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -41,6 +44,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -75,7 +79,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         this.config = configEngine;
         this.io = sys.getIO();
         this.systemAbstraction = sys;
-        
+
         this.lstCallGraph.setCellRenderer(new CallGraphEntryRenderer());
 
         //<editor-fold defaultstate="collapsed" desc="Load Toolbar Icons">
@@ -121,7 +125,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             // Load default
             addClosableTab(tabEditors, new PnlDefaultEditor(this), "Default");
         }
-        
+
         // SK Easter egg
         String username = System.getProperty("user.name").toLowerCase();
         isSK = username.equals("sk") || username.startsWith("shriram");
@@ -132,7 +136,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             } catch (UnknownHostException ex) {
             }
         }
-        if(isSK){
+        if (isSK) {
             this.setTitle(this.getTitle() + " - Aspire Higher");
         }
     }
@@ -612,7 +616,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
     private void mnuFileNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileNewActionPerformed
         //Open a new empty tab
-        addClosableTab(tabEditors, new PnlEditor(this, isSK?"# I'm sorry, Dave. I'm afraid I can't do that.":"# Avast!"), "New Tab");
+        addClosableTab(tabEditors, new PnlEditor(this, isSK ? "# I'm sorry, Dave. I'm afraid I can't do that." : "# Avast!"), "New Tab");
     }//GEN-LAST:event_mnuFileNewActionPerformed
 
     private void mnuFileSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileSaveAsActionPerformed
@@ -664,7 +668,9 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         int selected = tabEditors.getSelectedIndex();
         //Insert handling for "Do you want to save your changes to ______?"
         //mnuFileSaveActionPerformed(null);
-        if (selected >= 0) tabEditors.remove(selected);
+        if (selected >= 0) {
+            tabEditors.remove(selected);
+        }
     }//GEN-LAST:event_mnuCloseCurrentTabActionPerformed
 
     private void mnuCloseAllTabsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCloseAllTabsActionPerformed
@@ -755,6 +761,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
         // Make a small JPanel with the layout and make it non-opaque
         JPanel pnlTab = new JPanel(f);
+        pnlTab.setAlignmentY(SwingConstants.CENTER);
         pnlTab.setOpaque(false);
 
         // Add a JLabel with title and the left-side tab icon
@@ -763,7 +770,12 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         // Create a JButton for the close tab button
         JButton btnClose = new JButton();
         btnClose.setOpaque(false);
+        btnClose.setForeground(Color.GRAY);
+        btnClose.setFont(btnClose.getFont().deriveFont(Font.BOLD, 8));
         btnClose.setText("X");
+        btnClose.setMargin(new Insets(0, 0, 0, 0));
+        btnClose.setAlignmentX(SwingConstants.CENTER);
+        btnClose.setAlignmentY(SwingConstants.CENTER);
         btnClose.setPreferredSize(new Dimension(15, 18));
 
         // Set border null so the button doesn't make the tab too big
@@ -900,12 +912,16 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void handleQuickNavigationChange(CallGraphEntry quickNav) {
+    public AbstractPyretAccess getPyretAccess() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public AbstractPyretAccess getPyretAccess() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void handleQuickNavigationChange(List<CallGraphEntry> quickNav) {
+        DefaultListModel<CallGraphEntry> defaultListModel = new DefaultListModel<>();
+        for (CallGraphEntry q : quickNav) {
+            defaultListModel.addElement(q);
+        }
+        lstCallGraph.setModel(defaultListModel);
     }
 }

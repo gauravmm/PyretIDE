@@ -28,19 +28,17 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
 
     public StyledUndoPane(CharSequence fileContent, PyretHighlightedListener listener) {
         super();
-
+        this.listener = listener;
+        
+        // Document setup
         document = new PyretStyledDocument(this);
-        //undoer = new UndoManager();
-
         this.setEditorKit(new StyledEditorKit());
         this.setDocument(document);
-
-        //document.addUndoableEditListener(undoer);
         document.insertString(0, fileContent.toString(), null);
+        
+        // Add listeners after content is updated.
         this.addKeyListener(new EditorKeyListener(document));
-
         this.addCaretListener(new CaretListenerImpl());
-        this.listener = listener;
     }
 
     /**
@@ -74,10 +72,6 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
     @Override
     public EditorJumpTo createJumpTo(int offset) {
         return new EditorJumpTo(this, offset);
-    }
-
-    void highlighted(TokenParserOutput parseTokens, Option<Token> opt, StyledUndoPane listener) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

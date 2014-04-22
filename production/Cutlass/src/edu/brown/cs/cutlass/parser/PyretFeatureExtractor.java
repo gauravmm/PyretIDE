@@ -4,12 +4,10 @@
  */
 package edu.brown.cs.cutlass.parser;
 
-import edu.brown.cs.cutlass.editor.EditorJumpTo;
 import edu.brown.cs.cutlass.editor.EditorJumpToClient;
 import edu.brown.cs.cutlass.editor.callgraph.CallGraphEntry;
 import edu.brown.cs.cutlass.parser.tokenizer.*;
 import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.*;
-import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import java.util.ArrayList;

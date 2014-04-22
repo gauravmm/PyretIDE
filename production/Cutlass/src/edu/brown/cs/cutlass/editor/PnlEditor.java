@@ -2,37 +2,48 @@
  * Cutlass - Pyret IDE
  * For CSCI 0320 Spring 2014, Term Project
  */
-
 package edu.brown.cs.cutlass.editor;
 
+import edu.brown.cs.cutlass.editor.callgraph.CallGraphEntry;
+import edu.brown.cs.cutlass.parser.PyretFeatureExtractor;
+import edu.brown.cs.cutlass.parser.PyretMetadata;
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
 import edu.brown.cs.cutlass.util.Option;
+import java.util.List;
 
 /**
  *
  * @author Gaurav Manek
  */
 public class PnlEditor extends javax.swing.JPanel implements Editor {
-    
-    private final EditorClient client;
+
+    private final EditorClient editorClient;
     private final StyledUndoPane editorPane;
-    
+
     /**
      * Creates new form EditorPanel
+     *
      * @param client
      * @param initialContents The initial contents of the editor panel
      */
     public PnlEditor(EditorClient client, String initialContents) {
         initComponents();
-        
-        this.client = client;
-        
+
+        this.editorClient = client;
+
         // Prepare and add editor pane
-        this.editorPane = new StyledUndoPane(initialContents, new PyretHighlightedListenerImpl());
+        this.editorPane = new StyledUndoPane(initialContents, new PyretHighlightedListener() {
+            @Override
+            public void highlighted(TokenParserOutput output, Option<Token> currentToken, EditorJumpToClient client) {
+                PyretMetadata extract = PyretFeatureExtractor.extract(output);
+                List<CallGraphEntry> callGraphEntries = PyretFeatureExtractor.getCallGraphEntries(extract, currentToken, client);
+                editorClient.handleQuickNavigationChange(callGraphEntries);
+            }
+        });
         scrlEditor.getViewport().removeAll();
         scrlEditor.getViewport().add(editorPane);
-        
+
         // The output pane is outputPane
         outputPane.setText("Hello! I am a placeholder.");
     }
@@ -136,44 +147,32 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
     public void close() throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    public CharSequence getSelectedText(){
+
+    public CharSequence getSelectedText() {
         return jTextArea1.getSelectedText();
     }
-    
-    public CharSequence getText(){
+
+    public CharSequence getText() {
         return jTextArea1.getText();
     }
-    
-    public void paste(String toPaste){
+
+    public void paste(String toPaste) {
         int position = jTextArea1.getCaretPosition();
         String current = jTextArea1.getText();
         jTextArea1.setText(current.substring(0, position) + toPaste + current.substring(position));
         jTextArea1.setCaretPosition(position + toPaste.length());
     }
-    
-    public void selectAll(){
+
+    public void selectAll() {
         jTextArea1.setSelectionStart(0);
         jTextArea1.setSelectionEnd(jTextArea1.getText().length());
     }
-    
-    public void deleteSelection(){
+
+    public void deleteSelection() {
         String selected = jTextArea1.getSelectedText();
         int position = jTextArea1.getCaretPosition();
         String current = jTextArea1.getText();
         jTextArea1.setText(current.substring(0, position - selected.length()) + current.substring(position));
         jTextArea1.setCaretPosition(position - selected.length());
     }
-
-    static class PyretHighlightedListenerImpl implements PyretHighlightedListener {
-
-        public PyretHighlightedListenerImpl() {
-        }
-
-        @Override
-        public void highlighted(TokenParserOutput output, Option<Token> currentToken, EditorJumpToClient client) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-    }
-
 }

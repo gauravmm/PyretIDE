@@ -114,7 +114,8 @@ public class SyntaxHighlighter {
                 }
             }
         }
-        //listener.highlighted(parseTokens, opt, listener);
+        
+        listener.highlighted(parseTokens, opt, listener);
     }
 
     public void updateDocument(PyretStyledDocument newdoc) {

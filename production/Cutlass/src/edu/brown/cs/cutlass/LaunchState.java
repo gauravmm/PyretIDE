@@ -20,6 +20,7 @@ import java.util.List;
  * This includes the files currently open. This is an immutable object.
  *
  * @author Gaurav Manek T is an arrPointer
+ * @param <T>
  */
 public class LaunchState<T extends AbstractIdentifier> {
     // T is an AbstractIdentifer that identifies a unique resource on the 
@@ -151,12 +152,10 @@ public class LaunchState<T extends AbstractIdentifier> {
                 }
             }
         }
-        
+
         //this check is important, please do not remove it.
-        if(currentTabID0 < 0 || currentTabID0 >= openFiles0.size()){
-             Lumberjack.log(Level.ERROR, "Tab is was not in bounds");
-                        throw new IllegalArgumentException("Error: Tab is was not in bounds.");
-  
+        if (currentTabID0 < 0 || currentTabID0 >= openFiles0.size()) {
+            throw new IllegalArgumentException("Error: Tab is was not in bounds.");
         }
         // Note: LaunchState is not responsible for checking the consistency of the data it holds.
         // Actual creating and returning of a LaunchState
@@ -167,6 +166,7 @@ public class LaunchState<T extends AbstractIdentifier> {
      * Produce a LaunchState that represents the state of the program at
      * closing.
      *
+     * @param <R> The type of identifier.
      * @param filesOpen The files currently open.
      * @param tabId The current tab in the foreground.
      * @return A LaunchState object with the current state.
