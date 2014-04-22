@@ -7,6 +7,8 @@ package edu.brown.cs.cutlass.parser;
 import edu.brown.cs.cutlass.editor.EditorJumpToClient;
 import edu.brown.cs.cutlass.editor.callgraph.CallGraphEntry;
 import edu.brown.cs.cutlass.parser.tokenizer.*;
+import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleAnnotation;
+import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleError;
 import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.*;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
@@ -49,19 +51,19 @@ public class PyretFeatureExtractor {
         } else {
             Set<PyretFunction> callsFrom = meta.functionCallGraphFrom.get(tokenFunction);
             Set<PyretFunction> callsTo = meta.functionCallGraphTo.get(tokenFunction);
-            
-            if(callsFrom == null || callsTo == null){
+
+            if (callsFrom == null || callsTo == null) {
                 Lumberjack.log(Lumberjack.Level.ERROR, "Call Graph From/To not populated correctly!");
                 callsFrom = Collections.emptySet();
                 callsTo = Collections.emptySet();
             }
-            
+
             for (PyretFunction fun : meta.functions.values()) {
                 rv.add(new CallGraphEntry(
-                        fun.getName(), 
-                        tokenFunction.equals(fun), 
-                        callsFrom.contains(fun), 
-                        callsTo.contains(fun), 
+                        fun.getName(),
+                        tokenFunction.equals(fun),
+                        callsFrom.contains(fun),
+                        callsTo.contains(fun),
                         fun.isDataVariant() ? new Option<>(fun.getConstructorOf().getData().name) : new Option<String>(), client.createJumpTo(fun.getLocation().token.getOffset())));
             }
         }
@@ -99,7 +101,7 @@ public class PyretFeatureExtractor {
                     continue;
                 }
 
-                Option<Token> tokenScope = getNextToken(parenOpenToken.other, TokenTypePairedOpenColon.getInstance());
+                Option<Token> tokenScope = getColonAfterAnnotation(parenOpenToken.other);
                 if (!tokenScope.hasData()) {
                     continue;
                 }
@@ -244,6 +246,31 @@ public class PyretFeatureExtractor {
                 return new Option<>();
             }
         }
+    }
+
+    private static Option<Token> getColonAfterAnnotation(Token start) {
+        Option<Token> annToken = PyretFeatureExtractor.getNextToken(start, TokenTypeAnnotation.getInstance());
+        if (annToken.hasData()) {
+            start = annToken.getData();
+            
+            Option<Token> wordToken = PyretFeatureExtractor.getNextToken(start, TokenTypeDefault.getInstance());
+            if (wordToken.hasData()) {
+                start = wordToken.getData();
+            }
+
+            Option<Token> openParenToken = PyretFeatureExtractor.getNextToken(start, TokenTypePairedOpenParen.getInstance());
+            if (openParenToken.hasData()) {
+                TokenPairedOpening opParen = (TokenPairedOpening) openParenToken.getData();
+                if (opParen.other == null) {
+                    return new Option<>();
+                } else {
+                    start = opParen.other;
+                }
+            }
+        }
+
+        Option<Token> colonToken = PyretFeatureExtractor.getNextToken(start, TokenTypePairedOpenColon.getInstance());
+        return colonToken;
     }
 
     private static Option<String> getVariantString(Token starting) {
