@@ -75,12 +75,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTextArea" name="jTextArea3">
-              <Properties>
-                <Property name="columns" type="int" value="20"/>
-                <Property name="rows" type="int" value="5"/>
-                <Property name="text" type="java.lang.String" value="&#xa;&#xa;&#xa;&#xa;&gt; raco pyret test.arr&#xa;All 10 tests passed, mate!&#xa;&gt; _"/>
-              </Properties>
+            <Component class="javax.swing.JEditorPane" name="outputPane">
             </Component>
           </SubComponents>
         </Container>

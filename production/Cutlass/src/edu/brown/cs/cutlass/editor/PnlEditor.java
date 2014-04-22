@@ -32,6 +32,9 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
         this.editorPane = new StyledUndoPane(initialContents, new PyretHighlightedListenerImpl());
         scrlEditor.getViewport().removeAll();
         scrlEditor.getViewport().add(editorPane);
+        
+        // The output pane is outputPane
+        outputPane.setText("Hello! I am a placeholder.");
     }
 
     /**
@@ -47,7 +50,7 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
         scrlEditor = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         scrlCMD = new javax.swing.JScrollPane();
-        jTextArea3 = new javax.swing.JTextArea();
+        outputPane = new javax.swing.JEditorPane();
 
         jSplitPane2.setDividerLocation(400);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -64,11 +67,7 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
         jSplitPane2.setLeftComponent(scrlEditor);
 
         scrlCMD.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-        jTextArea3.setColumns(20);
-        jTextArea3.setRows(5);
-        jTextArea3.setText("\n\n\n\n> raco pyret test.arr\nAll 10 tests passed, mate!\n> _");
-        scrlCMD.setViewportView(jTextArea3);
+        scrlCMD.setViewportView(outputPane);
 
         jSplitPane2.setRightComponent(scrlCMD);
 
@@ -88,7 +87,7 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea3;
+    private javax.swing.JEditorPane outputPane;
     private javax.swing.JScrollPane scrlCMD;
     private javax.swing.JScrollPane scrlEditor;
     // End of variables declaration//GEN-END:variables
