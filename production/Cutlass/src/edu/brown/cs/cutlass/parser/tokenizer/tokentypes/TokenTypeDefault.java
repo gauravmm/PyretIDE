@@ -25,7 +25,7 @@ public class TokenTypeDefault extends TokenType {
     private static final TokenTypeDefault instance = new TokenTypeDefault();
     
     private TokenTypeDefault() {
-        super(Pattern.compile("^([a-zA-Z]" + wordCharRegex + "*)"));
+        super(Pattern.compile("^([a-zA-Z_]" + wordCharRegex + "*)"));
     }
 
     @Override
