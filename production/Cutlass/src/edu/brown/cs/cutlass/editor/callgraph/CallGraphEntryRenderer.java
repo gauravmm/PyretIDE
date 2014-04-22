@@ -2,7 +2,7 @@
  * Cutlass - Pyret IDE
  * For CSCI 0320 Spring 2014, Term Project
  */
-package edu.brown.cs.cutlass.editor;
+package edu.brown.cs.cutlass.editor.callgraph;
 
 import edu.brown.cs.cutlass.editor.callgraph.CallGraphEntry;
 import java.awt.BorderLayout;
@@ -59,15 +59,15 @@ public class CallGraphEntryRenderer implements ListCellRenderer<CallGraphEntry> 
                 if (callsCurrent) {
                     super.setText("\u21BB");
                 } else {
-                    super.setText("\u22C5");
+                    super.setText("\u25C6");
                 }
             } else {
-                super.setText(String.format("%s\u22C5%s", calledByCurrent ? "\u27A7" : "  ", callsCurrent ? "\u27A7" : "  "));
+                super.setText(String.format("%s\u25C6%s", calledByCurrent ? "\u25BA" : "   ", callsCurrent ? "\u25BA" : "   "));
             }
             
             super.setHorizontalAlignment(CENTER);
 
-            sz = new Dimension(30, super.getPreferredSize().height);
+            sz = new Dimension(48, super.getPreferredSize().height);
 
             this.current = current;
             this.callsCurrent = callsCurrent;

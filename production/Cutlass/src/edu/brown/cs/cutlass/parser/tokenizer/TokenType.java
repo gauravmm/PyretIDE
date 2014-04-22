@@ -5,9 +5,10 @@
 package edu.brown.cs.cutlass.parser.tokenizer;
 
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
-import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.TokenTypeComment;
+import edu.brown.cs.cutlass.util.Option;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -38,11 +39,29 @@ public abstract class TokenType {
         this.pattern = pattern;
     }
 
-    // NOTE: pattern must not 
+    protected TokenType() {
+        this.pattern = Pattern.compile("^$");
+    }
+
     private final Pattern pattern;
 
-    public Pattern getPattern() {
+    protected Pattern getPattern() {
         return pattern;
+    }
+
+    public Option<String> getMatch(String inLine) {
+        Matcher m = getPattern().matcher(inLine);
+        // If this pattern matches:
+        if (m.find()) {
+            if (m.start() != 0) {
+                throw new IllegalStateException("The token parsed does not start at position 0." + this.getClass().getName() + " \"" + inLine + "\"");
+            } else if (m.end() == 0) {
+                throw new IllegalStateException("The token parsed has length 0. " + this.getClass().getName() + " \"" + inLine + "\"");
+            }
+            int size = m.end() - m.start();
+            return new Option<>(inLine.substring(0, size));
+        }
+        return new Option<>();
     }
 
     /**
@@ -59,9 +78,8 @@ public abstract class TokenType {
         //return new Token(value, offset, length, scope, getTokenType());
         return new Token(value, offset, length, scope, this);
     }
-    
-    //protected abstract TokenType getTokenType(); 
 
+    //protected abstract TokenType getTokenType(); 
     /**
      *
      * @return true, if tokens of this type should be collected by the parser

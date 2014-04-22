@@ -426,6 +426,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="tbSave">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="[Icon]"/>
             <Property name="name" type="java.lang.String" value="" noResource="true"/>
           </Properties>
@@ -437,6 +438,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="tbRun">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="[Icon]"/>
           </Properties>
           <Events>
@@ -445,6 +447,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="tbBookmarkStop">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="[Icon]"/>
           </Properties>
           <Events>
@@ -455,6 +458,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="tbUndo">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="[Icon]"/>
           </Properties>
           <Events>
@@ -463,6 +467,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="tbRedo">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="[Icon]"/>
           </Properties>
           <Events>
@@ -473,6 +478,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="tbAutoIndent">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="[Icon]"/>
           </Properties>
           <Events>
@@ -483,6 +489,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="tbBookmarkBack">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="[Icon]"/>
           </Properties>
           <Events>
@@ -491,6 +498,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="tbBookmarkSet">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="[Icon]"/>
           </Properties>
           <Events>
@@ -499,6 +507,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="tbBookmarkNext">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="[Icon]"/>
           </Properties>
           <Events>

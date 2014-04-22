@@ -7,6 +7,7 @@ package edu.brown.cs.cutlass.parser.tokenizer;
 
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyles;
 import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.TokenTypeWhitespace;
+import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,20 +72,15 @@ public final class TokenParser {
 
                 // Attempt to match:
                 for (TokenType tt : types) {
-                    Matcher m = tt.getPattern().matcher(inLine);
-                    // If this pattern matches:
-                    if (m.find()) {
-                        if (m.start() != 0) {
-                            throw new IllegalStateException("The token parsed does not start at position 0." + tt.getClass().getName() + " \"" + inLine + "\"");
-                        } else if (m.end() == 0) {
-                            throw new IllegalStateException("The token parsed has length 0. " + tt.getClass().getName() + " \"" + inLine + "\"");
-                        }
-                        int size = m.end() - m.start();
-                        matchedType = tt;
-                        token = tt.constructToken(m.group(), offset, size, scope);
+                    Option<String> m = tt.getMatch(inLine);
+                    // If this matches:
+                    if (m.hasData()) {
+                        String tokenString = m.getData();
+                        int size = tokenString.length();
+                        token = tt.constructToken(tokenString, offset, size, scope);
                         offset += size;
                         inLine = inLine.substring(size);
-
+                        matchedType = tt;
                         break;
                     }
                 }
