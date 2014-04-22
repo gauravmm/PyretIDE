@@ -67,6 +67,7 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
     @Override
     public void handleJumpTo(int offset) {
         this.getCaret().setDot(offset);
+        this.requestFocusInWindow();
     }
 
     @Override

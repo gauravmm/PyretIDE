@@ -20,6 +20,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -28,6 +29,8 @@ import java.awt.event.MouseListener;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import static java.util.Collections.list;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -81,6 +84,27 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         this.systemAbstraction = sys;
 
         this.lstCallGraph.setCellRenderer(new CallGraphEntryRenderer());
+        this.lstCallGraph.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+                    /*
+                     * http://stackoverflow.com/a/4344762
+                     * Prevents JList from thinking clicks on the trailing space
+                     * occurred on the last element.
+                     */
+                    Rectangle r = lstCallGraph.getCellBounds(lstCallGraph.getFirstVisibleIndex(), lstCallGraph.getLastVisibleIndex());
+                    if (r != null && r.contains(e.getPoint())) {
+                        int index = lstCallGraph.locationToIndex(e.getPoint());
+                        CallGraphEntry elt = lstCallGraph.getModel().getElementAt(index);
+                        if (elt != null) {
+                            // Instruct the viewer to jump to the index
+                            elt.jumpTo.jump();
+                        }
+                    }
+                }
+            }
+        });
 
         //<editor-fold defaultstate="collapsed" desc="Load Toolbar Icons">
         // Load this dimension from configEngine:
@@ -220,6 +244,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
         lstCallGraph.setFont(new java.awt.Font("Monospaced", 0, 13)); // NOI18N
         lstCallGraph.setModel(new DefaultListModel<CallGraphEntry>());
+        lstCallGraph.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jScrollPane3.setViewportView(lstCallGraph);
 
         jLabel1.setText("Quick Navigation");
@@ -917,7 +942,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     }
 
     @Override
-    public void handleQuickNavigationChange(List<CallGraphEntry> quickNav) {
+    public void handleQuickNavigationChange(Collection<CallGraphEntry> quickNav) {
         DefaultListModel<CallGraphEntry> defaultListModel = new DefaultListModel<>();
         for (CallGraphEntry q : quickNav) {
             defaultListModel.addElement(q);

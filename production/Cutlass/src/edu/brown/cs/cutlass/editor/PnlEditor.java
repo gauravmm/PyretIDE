@@ -11,6 +11,7 @@ import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
 import edu.brown.cs.cutlass.util.Option;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  *
@@ -37,7 +38,7 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
             @Override
             public void highlighted(TokenParserOutput output, Option<Token> currentToken, EditorJumpToClient client) {
                 PyretMetadata extract = PyretFeatureExtractor.extract(output);
-                List<CallGraphEntry> callGraphEntries = PyretFeatureExtractor.getCallGraphEntries(extract, currentToken, client);
+                TreeSet<CallGraphEntry> callGraphEntries = new TreeSet<>(PyretFeatureExtractor.getCallGraphEntries(extract, currentToken, client));
                 editorClient.handleQuickNavigationChange(callGraphEntries);
             }
         });
