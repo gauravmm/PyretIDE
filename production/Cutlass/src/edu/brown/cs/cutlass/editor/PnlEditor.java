@@ -8,7 +8,6 @@ package edu.brown.cs.cutlass.editor;
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
 import edu.brown.cs.cutlass.util.Option;
-import javax.swing.JEditorPane;
 
 /**
  *
@@ -17,15 +16,22 @@ import javax.swing.JEditorPane;
 public class PnlEditor extends javax.swing.JPanel implements Editor {
     
     private final EditorClient client;
+    private final StyledUndoPane editorPane;
     
     /**
      * Creates new form EditorPanel
      * @param client
+     * @param initialContents The initial contents of the editor panel
      */
-    public PnlEditor(EditorClient client) {
+    public PnlEditor(EditorClient client, String initialContents) {
         initComponents();
         
         this.client = client;
+        
+        // Prepare and add editor pane
+        this.editorPane = new StyledUndoPane(initialContents, new PyretHighlightedListenerImpl());
+        scrlEditor.getViewport().removeAll();
+        scrlEditor.getViewport().add(editorPane);
     }
 
     /**
@@ -42,13 +48,6 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
         jTextArea1 = new javax.swing.JTextArea();
         scrlCMD = new javax.swing.JScrollPane();
         jTextArea3 = new javax.swing.JTextArea();
-        jPanel1 = new javax.swing.JPanel();
-        JEditorPane jEditorPane1 = new StyledUndoPane("", new PyretHighlightedListener() {
-            @Override
-            public void highlighted(TokenParserOutput output, Option<Token> currentToken, EditorJumpToClient client) {
-            }
-        });
-        jPanel1.add(jEditorPane1);
 
         jSplitPane2.setDividerLocation(400);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -73,19 +72,6 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
 
         jSplitPane2.setRightComponent(scrlCMD);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 472, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 441, Short.MAX_VALUE)
-        );
-
-        jSplitPane2.setTopComponent(jPanel1);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -100,7 +86,6 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea3;
@@ -179,6 +164,17 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
         String current = jTextArea1.getText();
         jTextArea1.setText(current.substring(0, position - selected.length()) + current.substring(position));
         jTextArea1.setCaretPosition(position - selected.length());
+    }
+
+    static class PyretHighlightedListenerImpl implements PyretHighlightedListener {
+
+        public PyretHighlightedListenerImpl() {
+        }
+
+        @Override
+        public void highlighted(TokenParserOutput output, Option<Token> currentToken, EditorJumpToClient client) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
     }
 
 }

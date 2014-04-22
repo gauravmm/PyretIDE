@@ -2,12 +2,14 @@ package edu.brown.cs.cutlass;
 
 import edu.brown.cs.cutlass.config.ConfigEngine;
 import edu.brown.cs.cutlass.editor.CallGraphEntryRenderer;
+import edu.brown.cs.cutlass.editor.EditorClient;
 import edu.brown.cs.cutlass.editor.PnlEditor;
 import edu.brown.cs.cutlass.editor.callgraph.CallGraphEntry;
 import edu.brown.cs.cutlass.sys.SystemAbstraction;
 import edu.brown.cs.cutlass.sys.io.AbstractIO;
 import edu.brown.cs.cutlass.sys.io.AbstractIOException;
 import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
+import edu.brown.cs.cutlass.sys.pyret.AbstractPyretAccess;
 import edu.brown.cs.cutlass.sys.ux.AbstractClipboard;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
@@ -50,12 +52,13 @@ import javax.swing.KeyStroke;
  * @author Gaurav Manek
  * @param <T>
  */
-public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
+public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame implements EditorClient {
 
     private final Launcher launcher;
     private final ConfigEngine config;
     private final AbstractIO io;
     private final SystemAbstraction systemAbstraction;
+    private boolean isSK = false;
 
     /**
      * Creates new main form.
@@ -121,7 +124,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         
         // SK Easter egg
         String username = System.getProperty("user.name").toLowerCase();
-        boolean isSK = username.equals("sk") || username.startsWith("shriram");
+        isSK = username.equals("sk") || username.startsWith("shriram");
         if (!isSK) {
             try {
                 String localMachine = java.net.InetAddress.getLocalHost().getHostName();
@@ -609,7 +612,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
 
     private void mnuFileNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileNewActionPerformed
         //Open a new empty tab
-        addClosableTab(tabEditors, new PnlEditor(null), "New Tab");
+        addClosableTab(tabEditors, new PnlEditor(this, isSK?"# I'm sorry, Dave. I'm afraid I can't do that.":"# Avast!"), "New Tab");
     }//GEN-LAST:event_mnuFileNewActionPerformed
 
     private void mnuFileSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileSaveAsActionPerformed
@@ -895,4 +898,14 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
     private javax.swing.JLabel tbSave;
     private javax.swing.JLabel tbUndo;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void handleQuickNavigationChange(CallGraphEntry quickNav) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public AbstractPyretAccess getPyretAccess() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
