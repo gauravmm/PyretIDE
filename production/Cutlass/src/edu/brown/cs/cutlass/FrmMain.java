@@ -1,6 +1,7 @@
 package edu.brown.cs.cutlass;
 
 import edu.brown.cs.cutlass.config.ConfigEngine;
+import edu.brown.cs.cutlass.editor.CallGraphEntryRenderer;
 import edu.brown.cs.cutlass.editor.PnlEditor;
 import edu.brown.cs.cutlass.editor.callgraph.CallGraphEntry;
 import edu.brown.cs.cutlass.sys.SystemAbstraction;
@@ -28,6 +29,7 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
@@ -70,6 +72,8 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         this.config = configEngine;
         this.io = sys.getIO();
         this.systemAbstraction = sys;
+        
+        this.lstCallGraph.setCellRenderer(new CallGraphEntryRenderer());
 
         //<editor-fold defaultstate="collapsed" desc="Load Toolbar Icons">
         // Load this dimension from configEngine:
@@ -208,11 +212,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         jPanel2.setPreferredSize(new java.awt.Dimension(150, 665));
 
         lstCallGraph.setFont(new java.awt.Font("Monospaced", 0, 13)); // NOI18N
-        lstCallGraph.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "BinaryTree (data)", "tree-to-list (fun)", "is-sorted (fun)", "is-bst (fun)" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
+        lstCallGraph.setModel(new DefaultListModel<CallGraphEntry>());
         jScrollPane3.setViewportView(lstCallGraph);
 
         jLabel1.setText("Quick Navigation");
