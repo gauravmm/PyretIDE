@@ -780,7 +780,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     private void mnuPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPasteActionPerformed
         Editor<T> e = getCurrentEditor();
         if (e.isEditorWindow()) {
-            e.clipboardPaste(systemAbstraction.getClipboard().get());
+            e.paste(systemAbstraction.getClipboard().get());
         }
     }//GEN-LAST:event_mnuPasteActionPerformed
 

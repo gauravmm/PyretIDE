@@ -105,7 +105,7 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
     private javax.swing.JScrollPane scrlCMD;
     private javax.swing.JScrollPane scrlEditor;
     // End of variables declaration//GEN-END:variables
-    
+
     @Override
     public void run() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -117,65 +117,45 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
     }
 
     @Override
-    public void clipboardCut() throws IllegalStateException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void clipboardCopy() throws IllegalStateException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void clipboardPaste(String paste) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void paste(String paste) {
+        int dot = editorPane.getCaret().getDot();
+        String current = editorPane.getText();
+        editorPane.setText(current.substring(0, dot) + paste + current.substring(editorPane.getCaret().getMark()));
+        editorPane.setCaretPosition(dot + paste.length());
     }
 
     @Override
     public String getBuffer() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return editorPane.getText();
     }
 
     @Override
     public boolean hasSelection() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return editorPane.getSelectionStart() != editorPane.getSelectionEnd();
     }
 
     @Override
     public String getSelection() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return editorPane.getSelectedText();
     }
 
     @Override
-    public void close() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public CharSequence getSelectedText() {
-        return jTextArea1.getSelectedText();
-    }
-
-    public CharSequence getText() {
-        return jTextArea1.getText();
-    }
-
-    public void paste(String toPaste) {
-        int position = jTextArea1.getCaretPosition();
-        String current = jTextArea1.getText();
-        jTextArea1.setText(current.substring(0, position) + toPaste + current.substring(position));
-        jTextArea1.setCaretPosition(position + toPaste.length());
-    }
-
     public void selectAll() {
         jTextArea1.setSelectionStart(0);
         jTextArea1.setSelectionEnd(jTextArea1.getText().length());
     }
 
+    @Override
     public void deleteSelection() {
-        String selected = jTextArea1.getSelectedText();
-        int position = jTextArea1.getCaretPosition();
-        String current = jTextArea1.getText();
-        jTextArea1.setText(current.substring(0, position - selected.length()) + current.substring(position));
-        jTextArea1.setCaretPosition(position - selected.length());
+        int dot = editorPane.getCaret().getDot();
+        String current = editorPane.getText();
+        editorPane.setText(current.substring(0, dot) + current.substring(editorPane.getCaret().getMark()));
+        editorPane.setCaretPosition(dot);
     }
+
+    @Override
+    public void close() throws RuntimeException {
+        this.removeAll();
+    }
+
 }

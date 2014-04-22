@@ -51,29 +51,11 @@ public abstract class Editor<T extends AbstractIdentifier> extends javax.swing.J
     // Clipboard:
     //
     /**
-     * Copy the current selection to clipboard and delete it in the buffer.
-     *
-     * @throws IllegalStateException if nothing is selected.
-     */
-    public void clipboardCut() throws IllegalStateException {
-        throw defaultResponse();
-    }
-
-    /**
-     * Copy the current selection to clipboard and leave the buffer untouched.
-     *
-     * @throws IllegalStateException if nothing is selected.
-     */
-    public void clipboardCopy() throws IllegalStateException {
-        throw defaultResponse();
-    }
-
-    /**
      * Copy the clipboard contents to the current cursor position in the buffer.
      *
      * @param paste
      */
-    public void clipboardPaste(String paste) {
+    public void paste(String paste) {
         throw defaultResponse();
     }
 

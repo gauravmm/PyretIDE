@@ -81,6 +81,6 @@ public class PnlDefaultEditor<T extends AbstractIdentifier> extends Editor<T> {
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void close() throws Exception {
+    public void close() {
     }
 }
