@@ -1,7 +1,7 @@
 package edu.brown.cs.cutlass;
 
 import edu.brown.cs.cutlass.config.ConfigEngine;
-import edu.brown.cs.cutlass.editor.CallGraphEntryRenderer;
+import edu.brown.cs.cutlass.editor.callgraph.CallGraphEntryRenderer;
 import edu.brown.cs.cutlass.editor.EditorClient;
 import edu.brown.cs.cutlass.editor.PnlEditor;
 import edu.brown.cs.cutlass.editor.callgraph.CallGraphEntry;
@@ -280,6 +280,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         jToolBar1.setRollover(true);
         jToolBar1.setPreferredSize(new java.awt.Dimension(383, 42));
 
+        tbSave.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tbSave.setText("[Icon]");
         tbSave.setName(""); // NOI18N
         tbSave.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -290,6 +291,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         jToolBar1.add(tbSave);
         jToolBar1.add(jSeparator1);
 
+        tbRun.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tbRun.setText("[Icon]");
         tbRun.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -298,6 +300,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         });
         jToolBar1.add(tbRun);
 
+        tbBookmarkStop.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tbBookmarkStop.setText("[Icon]");
         tbBookmarkStop.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -307,6 +310,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         jToolBar1.add(tbBookmarkStop);
         jToolBar1.add(jSeparator3);
 
+        tbUndo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tbUndo.setText("[Icon]");
         tbUndo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -315,6 +319,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         });
         jToolBar1.add(tbUndo);
 
+        tbRedo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tbRedo.setText("[Icon]");
         tbRedo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -324,6 +329,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         jToolBar1.add(tbRedo);
         jToolBar1.add(jSeparator2);
 
+        tbAutoIndent.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tbAutoIndent.setText("[Icon]");
         tbAutoIndent.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -333,6 +339,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         jToolBar1.add(tbAutoIndent);
         jToolBar1.add(jSeparator4);
 
+        tbBookmarkBack.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tbBookmarkBack.setText("[Icon]");
         tbBookmarkBack.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -341,6 +348,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         });
         jToolBar1.add(tbBookmarkBack);
 
+        tbBookmarkSet.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tbBookmarkSet.setText("[Icon]");
         tbBookmarkSet.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -349,6 +357,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         });
         jToolBar1.add(tbBookmarkSet);
 
+        tbBookmarkNext.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tbBookmarkNext.setText("[Icon]");
         tbBookmarkNext.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
