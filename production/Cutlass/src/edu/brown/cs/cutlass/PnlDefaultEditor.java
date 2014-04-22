@@ -5,14 +5,16 @@
 package edu.brown.cs.cutlass;
 
 import edu.brown.cs.cutlass.editor.Editor;
+import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
 
 /**
  * Default Editor View - Shows a simple splash screen with instructions to
  * open/create a file.
  *
  * @author Gaurav Manek
+ * @param <T>
  */
-public class PnlDefaultEditor extends javax.swing.JPanel implements Editor {
+public class PnlDefaultEditor<T extends AbstractIdentifier> extends Editor<T> {
 
     private final FrmMain owner;
     
@@ -21,6 +23,7 @@ public class PnlDefaultEditor extends javax.swing.JPanel implements Editor {
      * @param owner a callback to the FrmMain containing this Default Editor
      */
     public PnlDefaultEditor(FrmMain owner) {
+        super(false);
         this.owner = owner;
         initComponents();
     }
@@ -76,4 +79,8 @@ public class PnlDefaultEditor extends javax.swing.JPanel implements Editor {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void close() throws Exception {
+    }
 }

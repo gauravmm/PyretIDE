@@ -18,11 +18,10 @@ import java.util.TreeSet;
  * @author Gaurav Manek
  * @param <T>
  */
-public class PnlEditor<T extends AbstractIdentifier> extends javax.swing.JPanel implements Editor {
+public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
 
     private final EditorClient editorClient;
     private final StyledUndoPane editorPane;
-    private final EditorMetadata metadata;
 
     /**
      * Creates new form EditorPanel
@@ -31,10 +30,10 @@ public class PnlEditor<T extends AbstractIdentifier> extends javax.swing.JPanel 
      * @param initialContents The initial contents of the editor panel
      */
     public PnlEditor(EditorClient client, String initialContents) {
+        super(true);
         initComponents();
 
         this.editorClient = client;
-        this.metadata = new EditorMetadata<>(true);
 
         // Prepare and add editor pane
         this.editorPane = new StyledUndoPane(initialContents, new PyretHighlightedListener() {
@@ -106,11 +105,6 @@ public class PnlEditor<T extends AbstractIdentifier> extends javax.swing.JPanel 
     private javax.swing.JScrollPane scrlCMD;
     private javax.swing.JScrollPane scrlEditor;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public boolean isEditorWindow() {
-        return metadata.isEditorWindow();
-    }
     
     @Override
     public void run() {
@@ -133,7 +127,7 @@ public class PnlEditor<T extends AbstractIdentifier> extends javax.swing.JPanel 
     }
 
     @Override
-    public void clipboardPaste() {
+    public void clipboardPaste(String paste) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -155,11 +149,6 @@ public class PnlEditor<T extends AbstractIdentifier> extends javax.swing.JPanel 
     @Override
     public void close() throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    @Override
-    public EditorMetadata getMetadata() {
-        return metadata;
     }
 
     public CharSequence getSelectedText() {

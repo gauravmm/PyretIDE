@@ -1,6 +1,7 @@
 package edu.brown.cs.cutlass;
 
 import edu.brown.cs.cutlass.config.ConfigEngine;
+import edu.brown.cs.cutlass.editor.Editor;
 import edu.brown.cs.cutlass.editor.EditorClient;
 import edu.brown.cs.cutlass.editor.PnlEditor;
 import edu.brown.cs.cutlass.editor.callgraph.CallGraphEntry;
@@ -658,7 +659,6 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
     private void mnuFileSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileSaveAsActionPerformed
         try {
-            // TODO add your handling code here:
             //get the contents of their editor and store as seq - either CharSequence or List<CharSequence>
             String seq = ""; //placeholder to allow the code to compile
             Option<T> destination = io.requestUserFileDestination();
@@ -728,38 +728,40 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     }//GEN-LAST:event_mnuRedoActionPerformed
 
     private void mnuCutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCutActionPerformed
-        // TODO add your handling code here:
-        AbstractClipboard clippy = systemAbstraction.getClipboard();
-        PnlEditor onTop = (PnlEditor) tabEditors.getSelectedComponent();
-        CharSequence seq = onTop.getSelectedText();
-        clippy.put(seq);
-        onTop.deleteSelection();
+        Editor e = getCurrentEditor();
+        if(e.isEditorWindow()){
+            systemAbstraction.getClipboard().put(e.getSelection());
+            e.deleteSelection();
+        }
     }//GEN-LAST:event_mnuCutActionPerformed
 
     private void mnuCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCopyActionPerformed
-        // TODO add your handling code here:
-        AbstractClipboard clippy = systemAbstraction.getClipboard();
-        PnlEditor onTop = (PnlEditor) tabEditors.getSelectedComponent();
-        CharSequence seq = onTop.getSelectedText();
-        clippy.put(seq);
+        Editor e = getCurrentEditor();
+        if(e.isEditorWindow()){
+            systemAbstraction.getClipboard().put(e.getSelection());
+        }
     }//GEN-LAST:event_mnuCopyActionPerformed
 
     private void mnuPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPasteActionPerformed
         // TODO add your handling code here:
-        AbstractClipboard clippy = systemAbstraction.getClipboard();
-        PnlEditor onTop = (PnlEditor) tabEditors.getSelectedComponent();
-        String toPaste = clippy.get();
-        onTop.paste(toPaste);
+        Editor e = getCurrentEditor();
+        if(e.isEditorWindow()){
+            e.clipboardPaste(systemAbstraction.getClipboard().get());
+        }
     }//GEN-LAST:event_mnuPasteActionPerformed
 
     private void mnuDeleteSelectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuDeleteSelectedActionPerformed
-        // TODO add your handling code here:
-        ((PnlEditor) tabEditors.getSelectedComponent()).deleteSelection();
+        Editor e = getCurrentEditor();
+        if(e.isEditorWindow()){
+            e.deleteSelection();
+        }
     }//GEN-LAST:event_mnuDeleteSelectedActionPerformed
 
     private void mnuSelectAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSelectAllActionPerformed
-        // TODO add your handling code here:
-        ((PnlEditor) tabEditors.getSelectedComponent()).selectAll();
+        Editor e = getCurrentEditor();
+        if(e.isEditorWindow()){
+            e.selectAll();
+        }
     }//GEN-LAST:event_mnuSelectAllActionPerformed
 
     private void mnuBlockCommentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuBlockCommentActionPerformed
@@ -779,16 +781,20 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     public void closeTab(JComponent c) {
         this.tabEditors.remove(c);
     }
+    
+    public Editor<T> getCurrentEditor(){
+        return (Editor<T>) tabEditors.getSelectedComponent();
+    }
 
     /**
      * Adds a component to a JTabbedPane with a little "close tab" button on the
      * right side of the tab.
      *
      * @param tabbedPane the JTabbedPane
-     * @param c any JComponent
+     * @param c An Editor
      * @param title the title for the tab
      */
-    public static void addClosableTab(final JTabbedPane tabbedPane, final JComponent c, final String title) {
+    public static void addClosableTab(final JTabbedPane tabbedPane, final Editor c, final String title) {
         // Add the tab to the pane without any label
         tabbedPane.addTab(null, c);
         int pos = tabbedPane.indexOfComponent(c);

@@ -5,6 +5,7 @@
 package edu.brown.cs.cutlass.editor;
 
 import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
+import edu.brown.cs.cutlass.util.Option;
 
 /**
  * Interface exposing the interactions offered by the editor
@@ -12,9 +13,20 @@ import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
  * @author Gaurav Manek
  * @param <T>
  */
-public interface Editor<T extends AbstractIdentifier> extends AutoCloseable {
+public abstract class Editor<T extends AbstractIdentifier> extends javax.swing.JPanel implements AutoCloseable {
 
-    public boolean isEditorWindow();
+    private Option<T> identifier;
+    private boolean changedSinceLastSave;
+    private final boolean isEditorWindow;
+
+    public Editor(boolean isEditorWindow) {
+        super();
+        this.isEditorWindow = isEditorWindow;
+    }
+
+    public boolean isEditorWindow() {
+        return this.isEditorWindow;
+    }
 
     //
     // Pyret Interaction:
@@ -22,14 +34,18 @@ public interface Editor<T extends AbstractIdentifier> extends AutoCloseable {
     /**
      * Run the Pyret program.
      */
-    public void run();
+    public void run() {
+        throw defaultResponse();
+    }
 
     /**
      * Stop a running Pyret program.
      *
      * @throws IllegalStateException if the program is not running.
      */
-    public void halt() throws IllegalStateException;
+    public void halt() throws IllegalStateException {
+        defaultResponse();
+    }
 
     //
     // Clipboard:
@@ -39,19 +55,26 @@ public interface Editor<T extends AbstractIdentifier> extends AutoCloseable {
      *
      * @throws IllegalStateException if nothing is selected.
      */
-    public void clipboardCut() throws IllegalStateException;
+    public void clipboardCut() throws IllegalStateException {
+        throw defaultResponse();
+    }
 
     /**
      * Copy the current selection to clipboard and leave the buffer untouched.
      *
      * @throws IllegalStateException if nothing is selected.
      */
-    public void clipboardCopy() throws IllegalStateException;
+    public void clipboardCopy() throws IllegalStateException {
+        throw defaultResponse();
+    }
 
     /**
      * Copy the clipboard contents to the current cursor position in the buffer.
+     * @param paste
      */
-    public void clipboardPaste();
+    public void clipboardPaste(String paste) {
+        throw defaultResponse();
+    }
 
     //
     // Data Access:
@@ -61,14 +84,18 @@ public interface Editor<T extends AbstractIdentifier> extends AutoCloseable {
      *
      * @return A String containing the entire contents of the editing buffer.
      */
-    public String getBuffer();
+    public String getBuffer() {
+        throw defaultResponse();
+    }
 
     /**
      * Check if any text is selected.
      *
      * @return true if some text is selected, false otherwise.
      */
-    public boolean hasSelection();
+    public boolean hasSelection() {
+        throw defaultResponse();
+    }
 
     /**
      * Get the current selection.
@@ -76,11 +103,51 @@ public interface Editor<T extends AbstractIdentifier> extends AutoCloseable {
      * @return The currently selected text as a String, or an empty String if
      * nothing is selected.
      */
-    public String getSelection();
+    public String getSelection() {
+        throw defaultResponse();
+    }
 
-    /**
-     *
-     * @return
-     */
-    public EditorMetadata<T> getMetadata();
+    private RuntimeException defaultResponse() {
+        if (isEditorWindow()) {
+            return new IllegalStateException("This is not a valid editor window.");
+        } else {
+            return new UnsupportedOperationException("Not supported yet.");
+        }
+    }
+    
+    public void deleteSelection() {
+        throw defaultResponse();
+    }
+
+    public void selectAll() {
+        throw defaultResponse();
+    }
+
+    public Option<T> getIdentifier() {
+        if (!isEditorWindow()) {
+            throw new IllegalStateException("This is not a valid editor window.");
+        }
+        return identifier;
+    }
+
+    public void setIdentifier(T identifier) {
+        if (!isEditorWindow()) {
+            throw new IllegalStateException("This is not a valid editor window.");
+        }
+        this.identifier = new Option<>(identifier);
+    }
+
+    public boolean isChangedSinceLastSave() {
+        if (!isEditorWindow()) {
+            throw new IllegalStateException("This is not a valid editor window.");
+        }
+        return changedSinceLastSave;
+    }
+
+    public void setChangedSinceLastSave(boolean changedSinceLastSave) {
+        if (!isEditorWindow()) {
+            throw new IllegalStateException("This is not a valid editor window.");
+        }
+        this.changedSinceLastSave = changedSinceLastSave;
+    }
 }
