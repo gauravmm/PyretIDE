@@ -4,12 +4,17 @@
  */
 package edu.brown.cs.cutlass.editor;
 
+import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
+
 /**
  * Interface exposing the interactions offered by the editor
  *
  * @author Gaurav Manek
+ * @param <T>
  */
-public interface Editor extends AutoCloseable {
+public interface Editor<T extends AbstractIdentifier> extends AutoCloseable {
+
+    public boolean isEditorWindow();
 
     //
     // Pyret Interaction:
@@ -72,4 +77,10 @@ public interface Editor extends AutoCloseable {
      * nothing is selected.
      */
     public String getSelection();
+
+    /**
+     *
+     * @return
+     */
+    public EditorMetadata<T> getMetadata();
 }

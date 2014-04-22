@@ -4,13 +4,15 @@
  */
 package edu.brown.cs.cutlass;
 
+import edu.brown.cs.cutlass.editor.Editor;
+
 /**
  * Default Editor View - Shows a simple splash screen with instructions to
  * open/create a file.
  *
  * @author Gaurav Manek
  */
-public class PnlDefaultEditor extends javax.swing.JPanel {
+public class PnlDefaultEditor extends javax.swing.JPanel implements Editor {
 
     private final FrmMain owner;
     

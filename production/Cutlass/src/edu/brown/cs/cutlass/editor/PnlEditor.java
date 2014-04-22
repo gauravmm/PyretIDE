@@ -9,18 +9,20 @@ import edu.brown.cs.cutlass.parser.PyretFeatureExtractor;
 import edu.brown.cs.cutlass.parser.PyretMetadata;
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
+import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
 import edu.brown.cs.cutlass.util.Option;
-import java.util.List;
 import java.util.TreeSet;
 
 /**
  *
  * @author Gaurav Manek
+ * @param <T>
  */
-public class PnlEditor extends javax.swing.JPanel implements Editor {
+public class PnlEditor<T extends AbstractIdentifier> extends javax.swing.JPanel implements Editor {
 
     private final EditorClient editorClient;
     private final StyledUndoPane editorPane;
+    private final EditorMetadata metadata;
 
     /**
      * Creates new form EditorPanel
@@ -32,6 +34,7 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
         initComponents();
 
         this.editorClient = client;
+        this.metadata = new EditorMetadata<>(true);
 
         // Prepare and add editor pane
         this.editorPane = new StyledUndoPane(initialContents, new PyretHighlightedListener() {
@@ -105,6 +108,11 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
     // End of variables declaration//GEN-END:variables
 
     @Override
+    public boolean isEditorWindow() {
+        return metadata.isEditorWindow();
+    }
+    
+    @Override
     public void run() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -147,6 +155,11 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
     @Override
     public void close() throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public EditorMetadata getMetadata() {
+        return metadata;
     }
 
     public CharSequence getSelectedText() {
