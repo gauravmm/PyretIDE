@@ -4,9 +4,7 @@
  */
 package edu.brown.cs.cutlass.parser.tokenizer.tokentypes;
 
-import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenType;
-import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
 import java.util.regex.Pattern;
 
 /**

@@ -17,20 +17,6 @@ import java.util.regex.Pattern;
  */
 public abstract class TokenType {
 
-    /*
-     Whitespace (but not newlines) --
-     Keywords, --
-     Keywords with colons --
-     colon : --
-     open and close {}[]() --
-     Punctuation --
-     Initial Operators --
-     Whitespace --
-     Strings (with ' and " quotes) --
-     Comments --
-     Default -- check regex
-     Null/Illegal token type
-     */
     public TokenType(Pattern pattern) {
         if (!pattern.pattern().startsWith("^")) {
             throw new IllegalArgumentException("All patterns must be anchored to the start of string.");
@@ -58,10 +44,14 @@ public abstract class TokenType {
             } else if (m.end() == 0) {
                 throw new IllegalStateException("The token parsed has length 0. " + this.getClass().getName() + " \"" + inLine + "\"");
             }
-            int size = m.end() - m.start();
+            int size = getMatchLength(m);
             return new Option<>(inLine.substring(0, size));
         }
         return new Option<>();
+    }
+    
+    protected int getMatchLength(Matcher m) {
+        return m.end();
     }
 
     /**

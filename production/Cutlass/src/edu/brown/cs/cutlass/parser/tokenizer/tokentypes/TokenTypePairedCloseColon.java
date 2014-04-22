@@ -26,7 +26,7 @@ public class TokenTypePairedCloseColon extends TokenTypePairedClose {
     private static final TokenTypePairedCloseColon instance = new TokenTypePairedCloseColon();
 
     private TokenTypePairedCloseColon() {
-        super(Pattern.compile("^((;)|(end)|(else))"));
+        super(Pattern.compile("^(;)"));
     }
 
     @Override

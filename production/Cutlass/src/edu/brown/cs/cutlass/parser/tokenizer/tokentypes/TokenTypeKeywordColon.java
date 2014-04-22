@@ -9,6 +9,7 @@ import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleKeyword;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -24,7 +25,7 @@ public class TokenTypeKeywordColon extends TokenType {
     private static final TokenTypeKeywordColon instance = new TokenTypeKeywordColon();
 
     private TokenTypeKeywordColon() {
-        super(Pattern.compile("^((try)|(ask)|(otherwise)|(then)|(with)|(sharing)|(where)|(check)|(graph)|(block))"));
+        super(Pattern.compile("^((try)|(ask)|(otherwise)|(then)|(with)|(sharing)|(where)|(check)|(graph)|(block))" + TokenTypeDefault.nonWordCharRegex));
     }
 
     @Override
@@ -37,6 +38,11 @@ public class TokenTypeKeywordColon extends TokenType {
     @Override
     public TokenStyle getStyle() {
         return TokenStyleKeyword.getInstance();
+    }
+    
+    @Override
+    protected int getMatchLength(Matcher m) {
+        return m.end(1);
     }
 
 }
