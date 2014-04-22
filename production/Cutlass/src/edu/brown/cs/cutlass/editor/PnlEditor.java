@@ -5,6 +5,11 @@
 
 package edu.brown.cs.cutlass.editor;
 
+import edu.brown.cs.cutlass.parser.tokenizer.Token;
+import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
+import edu.brown.cs.cutlass.util.Option;
+import javax.swing.JEditorPane;
+
 /**
  *
  * @author Gaurav Manek
@@ -37,6 +42,13 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
         jTextArea1 = new javax.swing.JTextArea();
         scrlCMD = new javax.swing.JScrollPane();
         jTextArea3 = new javax.swing.JTextArea();
+        jPanel1 = new javax.swing.JPanel();
+        JEditorPane jEditorPane1 = new StyledUndoPane("", new PyretHighlightedListener() {
+            @Override
+            public void highlighted(TokenParserOutput output, Option<Token> currentToken, EditorJumpToClient client) {
+            }
+        });
+        jPanel1.add(jEditorPane1);
 
         jSplitPane2.setDividerLocation(400);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -61,6 +73,19 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
 
         jSplitPane2.setRightComponent(scrlCMD);
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 472, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 441, Short.MAX_VALUE)
+        );
+
+        jSplitPane2.setTopComponent(jPanel1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -75,6 +100,7 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea3;
