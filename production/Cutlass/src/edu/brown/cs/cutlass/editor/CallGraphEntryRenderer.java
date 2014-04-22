@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
+import javax.swing.SwingConstants;
 
 /**
  *
@@ -31,7 +32,8 @@ public class CallGraphEntryRenderer implements ListCellRenderer<CallGraphEntry> 
         lbl.setLayout(new BorderLayout());
         lbl.add(new JLabel(value.name), BorderLayout.CENTER);
         if (value.dataOf.hasData()) {
-            JLabel lblDataOf = new JLabel(value.dataOf.getData());
+            JLabel lblDataOf = new JLabel(value.dataOf.getData() + " ");
+            lblDataOf.setHorizontalAlignment(SwingConstants.RIGHT);
             lblDataOf.setForeground(COL_DATAOFNAME);
             lbl.add(lblDataOf, BorderLayout.EAST);
         }

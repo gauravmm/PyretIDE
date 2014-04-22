@@ -93,7 +93,7 @@ public class Line implements Comparable<Integer> {
         // Starting token:
         if (ci.hasNext()) {
             Token tok = ci.next();
-            if (TokenTypes.isWhitespaceTokenType(tok.getType())) {
+            if (TokenTypes.isWhitespaceTokenType(tok.getType()) && !tok.getValue().equals(LINE_TERMINATOR)) {
                 // Swap token into linked list
                 //startingToken.setPreviousToken(tok.getPreviousToken());
                 //startingToken.setNextToken(tok.getNextToken());

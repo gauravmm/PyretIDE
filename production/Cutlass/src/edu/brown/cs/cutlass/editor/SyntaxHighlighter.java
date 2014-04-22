@@ -101,8 +101,8 @@ public class SyntaxHighlighter {
         while (it.hasNext()) {
             Line l = it.next();
             List<Token> line_tokens = l.getContents();
-            for (Token t : line_tokens) {
-                //Insert the string represented by each token with its appropriate color
+            for (Iterator<Token> it2 = line_tokens.iterator(); it2.hasNext();) {
+                Token t = it2.next();
                 sdoc.insertStringWithoutHighlight(sdoc.getLength(), t.getValue(), t.getTokenStyle().getStyle());
             }
         }
