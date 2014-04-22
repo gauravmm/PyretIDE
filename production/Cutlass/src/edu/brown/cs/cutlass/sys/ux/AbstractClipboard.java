@@ -4,11 +4,13 @@
  */
 package edu.brown.cs.cutlass.sys.ux;
 
+import java.awt.datatransfer.ClipboardOwner;
+
 /**
  *
  * @author Zachary Zagorski
  */
-public interface AbstractClipboard {
+public interface AbstractClipboard extends ClipboardOwner{
 
     public void put(CharSequence s);
 

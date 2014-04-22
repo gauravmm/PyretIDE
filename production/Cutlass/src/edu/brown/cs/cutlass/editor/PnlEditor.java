@@ -2,24 +2,51 @@
  * Cutlass - Pyret IDE
  * For CSCI 0320 Spring 2014, Term Project
  */
-
 package edu.brown.cs.cutlass.editor;
+
+import edu.brown.cs.cutlass.editor.callgraph.CallGraphEntry;
+import edu.brown.cs.cutlass.parser.PyretFeatureExtractor;
+import edu.brown.cs.cutlass.parser.PyretMetadata;
+import edu.brown.cs.cutlass.parser.tokenizer.Token;
+import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
+import edu.brown.cs.cutlass.util.Option;
+import java.util.List;
+import java.util.TreeSet;
 
 /**
  *
  * @author Gaurav Manek
  */
 public class PnlEditor extends javax.swing.JPanel implements Editor {
-    
-    private final EditorClient client;
-    
+
+    private final EditorClient editorClient;
+    private final StyledUndoPane editorPane;
+
     /**
      * Creates new form EditorPanel
+     *
+     * @param client
+     * @param initialContents The initial contents of the editor panel
      */
-    public PnlEditor(EditorClient client) {
+    public PnlEditor(EditorClient client, String initialContents) {
         initComponents();
-        
-        this.client = client;
+
+        this.editorClient = client;
+
+        // Prepare and add editor pane
+        this.editorPane = new StyledUndoPane(initialContents, new PyretHighlightedListener() {
+            @Override
+            public void highlighted(TokenParserOutput output, Option<Token> currentToken, EditorJumpToClient client) {
+                PyretMetadata extract = PyretFeatureExtractor.extract(output);
+                TreeSet<CallGraphEntry> callGraphEntries = new TreeSet<>(PyretFeatureExtractor.getCallGraphEntries(extract, currentToken, client));
+                editorClient.handleQuickNavigationChange(callGraphEntries);
+            }
+        });
+        scrlEditor.getViewport().removeAll();
+        scrlEditor.getViewport().add(editorPane);
+
+        // The output pane is outputPane
+        outputPane.setText("Hello! I am a placeholder.");
     }
 
     /**
@@ -35,7 +62,7 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
         scrlEditor = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         scrlCMD = new javax.swing.JScrollPane();
-        jTextArea3 = new javax.swing.JTextArea();
+        outputPane = new javax.swing.JEditorPane();
 
         jSplitPane2.setDividerLocation(400);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -52,11 +79,7 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
         jSplitPane2.setLeftComponent(scrlEditor);
 
         scrlCMD.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-        jTextArea3.setColumns(20);
-        jTextArea3.setRows(5);
-        jTextArea3.setText("\n\n\n\n> raco pyret test.arr\nAll 10 tests passed, mate!\n> _");
-        scrlCMD.setViewportView(jTextArea3);
+        scrlCMD.setViewportView(outputPane);
 
         jSplitPane2.setRightComponent(scrlCMD);
 
@@ -76,7 +99,7 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea3;
+    private javax.swing.JEditorPane outputPane;
     private javax.swing.JScrollPane scrlCMD;
     private javax.swing.JScrollPane scrlEditor;
     // End of variables declaration//GEN-END:variables
@@ -126,8 +149,31 @@ public class PnlEditor extends javax.swing.JPanel implements Editor {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public void handleJumpTo(long offset) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public CharSequence getSelectedText() {
+        return jTextArea1.getSelectedText();
+    }
+
+    public CharSequence getText() {
+        return jTextArea1.getText();
+    }
+
+    public void paste(String toPaste) {
+        int position = jTextArea1.getCaretPosition();
+        String current = jTextArea1.getText();
+        jTextArea1.setText(current.substring(0, position) + toPaste + current.substring(position));
+        jTextArea1.setCaretPosition(position + toPaste.length());
+    }
+
+    public void selectAll() {
+        jTextArea1.setSelectionStart(0);
+        jTextArea1.setSelectionEnd(jTextArea1.getText().length());
+    }
+
+    public void deleteSelection() {
+        String selected = jTextArea1.getSelectedText();
+        int position = jTextArea1.getCaretPosition();
+        String current = jTextArea1.getText();
+        jTextArea1.setText(current.substring(0, position - selected.length()) + current.substring(position));
+        jTextArea1.setCaretPosition(position - selected.length());
     }
 }

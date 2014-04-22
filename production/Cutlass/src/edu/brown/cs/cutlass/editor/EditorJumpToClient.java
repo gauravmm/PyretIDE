@@ -12,11 +12,20 @@ public interface EditorJumpToClient {
 
     /**
      * Request the client move the cursor position to a particular location.
-     * Temporarily, this uses offset.
      *
      * @param offset The number of characters to move to, counted from the start
      * of the file.
      */
-    public void handleJumpTo(long offset);
+    public void handleJumpTo(int offset);
+
+    /**
+     * Return an object representing a request to move the cursor position to a
+     * particular location.
+     *
+     * @param offset The number of characters to move to, counted from the start
+     * of the file.
+     * @return An object representing the above request.
+     */
+    public EditorJumpTo createJumpTo(int offset);
 
 }

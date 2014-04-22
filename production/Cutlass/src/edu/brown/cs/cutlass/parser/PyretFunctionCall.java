@@ -9,6 +9,17 @@ package edu.brown.cs.cutlass.parser;
  *
  * @author Gaurav Manek
  */
-class PyretFunctionCall {
+public class PyretFunctionCall extends PyretBlock {
+    
+    private final PyretFunction function;
+
+    public PyretFunctionCall(PyretLocation location, PyretFunction function) {
+        super(location, function.getName());
+        this.function = function;
+    }
+
+    public PyretFunction getFunction() {
+        return function;
+    }
     
 }
