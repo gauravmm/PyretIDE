@@ -22,8 +22,8 @@ public class CallGraphEntryRenderer implements ListCellRenderer<CallGraphEntry> 
 
     private static final Color COL_CURRENT = new Color(27, 161, 226);
     private static final Color COL_FUNCTION = Color.WHITE;
-    private static final Color COL_DATA = new Color(162, 193, 57);
-    private static final Color COL_DATAOFNAME = new Color(240, 150, 9);
+    private static final Color COL_DATA = new Color(192, 224, 255);
+    private static final Color COL_DATAOFNAME = Color.WHITE;
 
     @Override
     public Component getListCellRendererComponent(JList<? extends CallGraphEntry> list, final CallGraphEntry value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -60,15 +60,28 @@ public class CallGraphEntryRenderer implements ListCellRenderer<CallGraphEntry> 
                     super.setText("\u22C5");
                 }
             } else {
-                super.setText(String.format("%s.\u22C5%s", calledByCurrent ? "\u27A7" : "", callsCurrent ? "\u27A7" : ""));
+                super.setText(String.format("%s\u22C5%s", calledByCurrent ? "\u27A7" : "  ", callsCurrent ? "\u27A7" : "  "));
             }
+            
+            super.setHorizontalAlignment(CENTER);
 
-            sz = new Dimension(40, this.getPreferredSize().height);
+            sz = new Dimension(30, super.getPreferredSize().height);
 
             this.current = current;
             this.callsCurrent = callsCurrent;
             this.calledByCurrent = calledByCurrent;
         }
+
+        @Override
+        public Dimension getMinimumSize() {
+            return sz;
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            return sz;
+        }
+        
     }
 
 }
