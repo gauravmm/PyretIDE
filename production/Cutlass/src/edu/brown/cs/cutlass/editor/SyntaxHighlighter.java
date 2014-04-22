@@ -68,6 +68,14 @@ public class SyntaxHighlighter {
         //Clear the document of text
         sdoc.removeWithoutHighlight(0, sdoc.getLength());
 
+        // Format the Annotations
+        Collection<List<Token>> annotations = parseTokens.getTokenCollected().get(TokenTypeAnnotation.getInstance()).values();
+        for (List<Token> anntype : annotations) {
+            for (Token ann : anntype) {
+                processAnnotations(ann);
+            }
+        }
+        
         // Process document using current token
         // NOTE: MUST NOT CHANGE reindent here:
         Option<Token> opt = getCurrentToken(tokenLines, position);
@@ -88,13 +96,6 @@ public class SyntaxHighlighter {
                         similarTokens.setStyle(TokenStylePaired.getInstance());
                     }
                 }
-            }
-        }
-        // Format the Annotations
-        Collection<List<Token>> annotations = parseTokens.getTokenCollected().get(TokenTypeAnnotation.getInstance()).values();
-        for (List<Token> anntype : annotations) {
-            for (Token ann : anntype) {
-                processAnnotations(ann);
             }
         }
 
