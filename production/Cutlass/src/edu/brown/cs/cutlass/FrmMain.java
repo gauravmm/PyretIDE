@@ -10,11 +10,8 @@ import edu.brown.cs.cutlass.sys.SystemAbstraction;
 import edu.brown.cs.cutlass.sys.io.AbstractIO;
 import edu.brown.cs.cutlass.sys.io.AbstractIOException;
 import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
-import edu.brown.cs.cutlass.sys.io.disk.DiskIdentifier;
-import edu.brown.cs.cutlass.sys.io.disk.DiskIdentifierParser;
 import edu.brown.cs.cutlass.sys.pyret.AbstractPyretAccess;
-import edu.brown.cs.cutlass.sys.pyret.DiskPyretAccess;
-import edu.brown.cs.cutlass.sys.ux.AbstractClipboard;
+import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
 import java.awt.Color;
@@ -34,10 +31,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import static java.util.Collections.list;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -665,15 +659,27 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             if (destination.hasData()) {
                 io.setUserFile(destination.getData(), seq);
             }
+            throw new UnsupportedOperationException("Need to implement this.");
         } catch (AbstractIOException ex) {
-            Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+            Lumberjack.log(Lumberjack.Level.ERROR, ex);
         }
     }//GEN-LAST:event_mnuFileSaveAsActionPerformed
 
     private void mnuFileSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileSaveActionPerformed
-        // TODO add your handling code here:
-        //If previously saved, just save, otherwise, save as
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Editor<T> e = getCurrentEditor();
+        if (e.isEditorWindow()) {
+            if (e.isChangedSinceLastSave()) {
+                // TODO: Save the file
+                Option<T> id = e.getIdentifier();
+                if (id.hasData()) {
+                    // Save
+                    id.getData();
+                    throw new UnsupportedOperationException();
+                } else {
+                    mnuFileSaveAsActionPerformed(evt);
+                }
+            }
+        }
     }//GEN-LAST:event_mnuFileSaveActionPerformed
 
     private void mnuFileOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileOpenActionPerformed
@@ -684,7 +690,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
                 //Set editor text to chars
             }
         } catch (AbstractIOException ex) {
-            Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+            Lumberjack.log(Lumberjack.Level.ERROR, ex);
         }
     }//GEN-LAST:event_mnuFileOpenActionPerformed
 
@@ -715,22 +721,8 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     }//GEN-LAST:event_mnuSaveAllActionPerformed
 
     private void mnuCloseCurrentTabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCloseCurrentTabActionPerformed
-        Editor<T> e = getCurrentEditor();
-        if (e.isEditorWindow()) {
-            if (e.isChangedSinceLastSave()) {
-                // TODO: Save the file
-                Option<T> id = e.getIdentifier();
-                if (id.hasData()) {
-                    // Save
-                    id.getData();
-                    throw new UnsupportedOperationException();
-                } else {
-                    // Save as
-                    throw new UnsupportedOperationException();
-                }
-            }
-        }
-        e.close();
+        mnuFileSaveActionPerformed(evt);
+        this.getCurrentEditor().close();
         int selected = tabEditors.getSelectedIndex();
         if (selected >= 0) {
             tabEditors.remove(selected);
