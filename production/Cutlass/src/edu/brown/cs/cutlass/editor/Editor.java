@@ -22,6 +22,8 @@ public abstract class Editor<T extends AbstractIdentifier> extends javax.swing.J
     public Editor(boolean isEditorWindow) {
         super();
         this.isEditorWindow = isEditorWindow;
+        this.changedSinceLastSave = true;
+        this.identifier = new Option();
     }
 
     public boolean isEditorWindow() {
