@@ -661,7 +661,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame {
         int selected = tabEditors.getSelectedIndex();
         //Insert handling for "Do you want to save your changes to ______?"
         //mnuFileSaveActionPerformed(null);
-        tabEditors.remove(selected);
+        if (selected >= 0) tabEditors.remove(selected);
     }//GEN-LAST:event_mnuCloseCurrentTabActionPerformed
 
     private void mnuCloseAllTabsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCloseAllTabsActionPerformed
