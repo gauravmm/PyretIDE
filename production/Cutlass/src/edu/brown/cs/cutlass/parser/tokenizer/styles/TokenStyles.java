@@ -2,7 +2,6 @@
  * Cutlass - Pyret IDE
  * For CSCI 0320 Spring 2014, Term Project
  */
-
 package edu.brown.cs.cutlass.parser.tokenizer.styles;
 
 import java.util.Arrays;
@@ -13,7 +12,7 @@ import java.util.List;
  * @author Gaurav Manek
  */
 public final class TokenStyles {
-    
+
     private static final List<TokenStyle> list = Arrays.asList(
             TokenStyleDefault.getInstance(),
             TokenStyleComment.getInstance(),
@@ -22,18 +21,19 @@ public final class TokenStyles {
             TokenStylePunct.getInstance(),
             TokenStyleString.getInstance(),
             TokenStyleError.getInstance(),
-            TokenStylePaired.getInstance()
+            TokenStylePaired.getInstance(),
+            TokenStyleAnnotation.getInstance()
     );
-    
-    public static TokenStyle getDefaultStyle(){
+
+    public static TokenStyle getDefaultStyle() {
         return TokenStyleDefault.getInstance();
     }
-    
-    public static TokenStyle getErrorStyle(){
+
+    public static TokenStyle getErrorStyle() {
         return TokenStyleError.getInstance();
     }
-    
-    public static List<TokenStyle> getAllStyles(){
+
+    public static List<TokenStyle> getAllStyles() {
         return list;
     }
 }

@@ -25,6 +25,7 @@ public final class TokenTypes {
             TokenTypeComment.getInstance(),
             TokenTypeKeywordDoc.getInstance(),
             TokenTypeDoublePunct.getInstance(),
+            TokenTypeAnnotation.getInstance(),
             TokenTypePairedOpenCloseColon.getInstance(),
             TokenTypePairedOpenColon.getInstance(), 
             TokenTypePairedCloseColon.getInstance(), 

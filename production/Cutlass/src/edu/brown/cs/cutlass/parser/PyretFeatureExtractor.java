@@ -226,7 +226,7 @@ public class PyretFeatureExtractor {
         return new PyretMetadata(functions, data, functionCallGraphFrom, functionCallGraphTo, functionCalls);
     }
 
-    private static Option<Token> getNextToken(Token start, TokenType type) {
+    public static Option<Token> getNextToken(Token start, TokenType type) {
         return getNextToken(start, type, true);
     }
 

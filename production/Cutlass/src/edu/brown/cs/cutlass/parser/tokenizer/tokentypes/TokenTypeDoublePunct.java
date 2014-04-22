@@ -23,7 +23,7 @@ public class TokenTypeDoublePunct extends TokenType {
     private static final TokenTypeDoublePunct instance = new TokenTypeDoublePunct();
     
     private TokenTypeDoublePunct(){
-        super(Pattern.compile("^((::)|(==)|(>=)|(<=)|(=>)|(->)|(:=)|(<>))"));
+        super(Pattern.compile("^((==)|(>=)|(<=)|(=>)|(:=)|(<>))"));
     }
     
     @Override

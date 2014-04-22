@@ -4,22 +4,30 @@
  */
 package edu.brown.cs.cutlass.editor;
 
+import edu.brown.cs.cutlass.parser.PyretFeatureExtractor;
 import edu.brown.cs.cutlass.parser.tokenizer.Line;
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenPaired;
+import edu.brown.cs.cutlass.parser.tokenizer.TokenPairedOpening;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenParser;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenTypePaired;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
+import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleAnnotation;
+import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleError;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStylePaired;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyles;
+import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.TokenTypeAnnotation;
 import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.TokenTypeDefault;
+import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.TokenTypePairedOpenParen;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import javax.swing.text.BadLocationException;
 
 /**
@@ -82,6 +90,13 @@ public class SyntaxHighlighter {
                 }
             }
         }
+        // Format the Annotations
+        Collection<List<Token>> annotations = parseTokens.getTokenCollected().get(TokenTypeAnnotation.getInstance()).values();
+        for (List<Token> anntype : annotations) {
+            for (Token ann : anntype) {
+                processAnnotations(ann);
+            }
+        }
 
         List<Line> indentedLines = new ArrayList<>();
         // Handle reindent here:
@@ -98,11 +113,11 @@ public class SyntaxHighlighter {
         }
 
         Iterator<Line> it = tokenLines.iterator();
+
         while (it.hasNext()) {
             Line l = it.next();
             List<Token> line_tokens = l.getContents();
-            for (Iterator<Token> it2 = line_tokens.iterator(); it2.hasNext();) {
-                Token t = it2.next();
+            for (Token t : line_tokens) {
                 sdoc.insertStringWithoutHighlight(sdoc.getLength(), t.getValue(), t.getTokenStyle().getStyle());
             }
         }
@@ -119,6 +134,33 @@ public class SyntaxHighlighter {
             ts.applyTo(d);
         }
         return d;
+    }
+
+    private void processAnnotations(Token ann) {
+        Option<Token> wordToken = PyretFeatureExtractor.getNextToken(ann, TokenTypeDefault.getInstance());
+        if (wordToken.hasData()) {
+            ann = wordToken.getData();
+            ann.setStyle(TokenStyleAnnotation.getInstance());
+        }
+
+        Option<Token> openParenToken = PyretFeatureExtractor.getNextToken(ann, TokenTypePairedOpenParen.getInstance());
+        if (openParenToken.hasData()) {
+            TokenPairedOpening opParen = (TokenPairedOpening) openParenToken.getData();
+            opParen.setStyle(TokenStyleAnnotation.getInstance());
+            if (opParen.other != null) {
+                Token currTok = opParen;
+                // Set the entire parenthesis range to be of style Annotation:
+                while(currTok != opParen.other){
+                    currTok = currTok.getNextToken();
+                    currTok.setStyle(TokenStyleAnnotation.getInstance());
+                }
+            }
+        }
+
+        // If no annotation is found:
+        if (!(wordToken.hasData() || openParenToken.hasData())) {
+            ann.setStyle(TokenStyleError.getInstance());
+        }
     }
 
     private Option<Token> getCurrentToken(List<Line> lines, int pos) {
