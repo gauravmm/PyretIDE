@@ -678,7 +678,6 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
     private void mnuFileOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileOpenActionPerformed
         try {
-            // TODO add your handling code here:
             Option<T> destination = io.requestUserFileSource();
             if (destination.hasData()) {
                 List<CharSequence> chars = io.getUserFile(destination.getData());
@@ -690,21 +689,49 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     }//GEN-LAST:event_mnuFileOpenActionPerformed
 
     private void mnuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuExitActionPerformed
-        //The null value is a placeholder which seems to work - if at some point another value is needed, feel free to change.
-        //Prompt to save unsaved changes??
-        this.formWindowClosed(null);
+        mnuCloseAllTabsActionPerformed(evt);
+        this.dispose();
     }//GEN-LAST:event_mnuExitActionPerformed
 
     private void mnuSaveAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSaveAllActionPerformed
-        // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int tabs = tabEditors.getTabCount();
+        for (int i = tabs - 1; i >= 0; i--) {
+            Editor<T> ed = (Editor<T>) tabEditors.getTabComponentAt(i);
+            if (ed.isEditorWindow()) {
+                if (ed.isChangedSinceLastSave()) {
+                    // TODO: Save the file
+                    Option<T> id = ed.getIdentifier();
+                    if (id.hasData()) {
+                        // Save
+                        id.getData();
+                        throw new UnsupportedOperationException();
+                    } else {
+                        // Save as
+                        throw new UnsupportedOperationException();
+                    }
+                }
+            }
+        }
     }//GEN-LAST:event_mnuSaveAllActionPerformed
 
     private void mnuCloseCurrentTabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCloseCurrentTabActionPerformed
-        // TODO add your handling code here:
+        Editor<T> e = getCurrentEditor();
+        if (e.isEditorWindow()) {
+            if (e.isChangedSinceLastSave()) {
+                // TODO: Save the file
+                Option<T> id = e.getIdentifier();
+                if (id.hasData()) {
+                    // Save
+                    id.getData();
+                    throw new UnsupportedOperationException();
+                } else {
+                    // Save as
+                    throw new UnsupportedOperationException();
+                }
+            }
+        }
+        e.close();
         int selected = tabEditors.getSelectedIndex();
-        //Insert handling for "Do you want to save your changes to ______?"
-        //mnuFileSaveActionPerformed(null);
         if (selected >= 0) {
             tabEditors.remove(selected);
         }
@@ -713,6 +740,22 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     private void mnuCloseAllTabsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCloseAllTabsActionPerformed
         int tabs = tabEditors.getTabCount();
         for (int i = tabs - 1; i >= 0; i--) {
+            Editor<T> ed = (Editor<T>) tabEditors.getTabComponentAt(i);
+            if (ed.isEditorWindow()) {
+                if (ed.isChangedSinceLastSave()) {
+                    // TODO: Save the file
+                    Option<T> id = ed.getIdentifier();
+                    if (id.hasData()) {
+                        // Save
+                        id.getData();
+                        throw new UnsupportedOperationException();
+                    } else {
+                        // Save as
+                        throw new UnsupportedOperationException();
+                    }
+                }
+            }
+            ed.close();
             tabEditors.remove(i);
         }
     }//GEN-LAST:event_mnuCloseAllTabsActionPerformed
@@ -728,38 +771,37 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     }//GEN-LAST:event_mnuRedoActionPerformed
 
     private void mnuCutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCutActionPerformed
-        Editor e = getCurrentEditor();
-        if(e.isEditorWindow()){
+        Editor<T> e = getCurrentEditor();
+        if (e.isEditorWindow()) {
             systemAbstraction.getClipboard().put(e.getSelection());
             e.deleteSelection();
         }
     }//GEN-LAST:event_mnuCutActionPerformed
 
     private void mnuCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCopyActionPerformed
-        Editor e = getCurrentEditor();
-        if(e.isEditorWindow()){
+        Editor<T> e = getCurrentEditor();
+        if (e.isEditorWindow()) {
             systemAbstraction.getClipboard().put(e.getSelection());
         }
     }//GEN-LAST:event_mnuCopyActionPerformed
 
     private void mnuPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPasteActionPerformed
-        // TODO add your handling code here:
-        Editor e = getCurrentEditor();
-        if(e.isEditorWindow()){
+        Editor<T> e = getCurrentEditor();
+        if (e.isEditorWindow()) {
             e.clipboardPaste(systemAbstraction.getClipboard().get());
         }
     }//GEN-LAST:event_mnuPasteActionPerformed
 
     private void mnuDeleteSelectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuDeleteSelectedActionPerformed
-        Editor e = getCurrentEditor();
-        if(e.isEditorWindow()){
+        Editor<T> e = getCurrentEditor();
+        if (e.isEditorWindow()) {
             e.deleteSelection();
         }
     }//GEN-LAST:event_mnuDeleteSelectedActionPerformed
 
     private void mnuSelectAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSelectAllActionPerformed
-        Editor e = getCurrentEditor();
-        if(e.isEditorWindow()){
+        Editor<T> e = getCurrentEditor();
+        if (e.isEditorWindow()) {
             e.selectAll();
         }
     }//GEN-LAST:event_mnuSelectAllActionPerformed
@@ -781,8 +823,8 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     public void closeTab(JComponent c) {
         this.tabEditors.remove(c);
     }
-    
-    public Editor<T> getCurrentEditor(){
+
+    public Editor<T> getCurrentEditor() {
         return (Editor<T>) tabEditors.getSelectedComponent();
     }
 

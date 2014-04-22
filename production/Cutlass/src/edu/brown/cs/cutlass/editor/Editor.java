@@ -70,6 +70,7 @@ public abstract class Editor<T extends AbstractIdentifier> extends javax.swing.J
 
     /**
      * Copy the clipboard contents to the current cursor position in the buffer.
+     *
      * @param paste
      */
     public void clipboardPaste(String paste) {
@@ -114,7 +115,7 @@ public abstract class Editor<T extends AbstractIdentifier> extends javax.swing.J
             return new UnsupportedOperationException("Not supported yet.");
         }
     }
-    
+
     public void deleteSelection() {
         throw defaultResponse();
     }
@@ -149,5 +150,10 @@ public abstract class Editor<T extends AbstractIdentifier> extends javax.swing.J
             throw new IllegalStateException("This is not a valid editor window.");
         }
         this.changedSinceLastSave = changedSinceLastSave;
+    }
+
+    @Override
+    public void close() throws RuntimeException {
+
     }
 }
