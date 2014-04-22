@@ -24,11 +24,6 @@ public class Token implements Comparable<Integer> {
     private Token previous = null;
     private TokenStyle style = TokenStyles.getDefaultStyle();
 
-    @Deprecated
-    private Token(String value, int offset, int length, TokenType type) {
-        this(value, offset, length, new TokenScope(), type);
-    }
-
     public Token(String value, int offset, int length, TokenScope scope, TokenType type) {
         this.value = value;
         this.length = length;

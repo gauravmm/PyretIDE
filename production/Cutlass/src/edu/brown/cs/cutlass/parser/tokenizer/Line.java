@@ -40,7 +40,7 @@ public class Line implements Comparable<Integer> {
 
     @Override
     public String toString() {
-        return String.format("%d\t%d\t%s%s", number, expectedIndentation, contents.toString(), LINE_TERMINATOR);
+        return String.format("%d\t%d\t%s%n", number, expectedIndentation, contents.toString());
     }
 
     public List<Token> getContents() {
@@ -112,8 +112,8 @@ public class Line implements Comparable<Integer> {
 
             while (ci.hasNext()) {
                 tok = ci.next();
-                if (TokenTypes.isWhitespaceTokenType(tok.getType())) {
-                    nCont.add(TokenTypeWhitespace.getInstance().constructToken(LINE_SPACING, offset, indent.length(), tok.getScope()));
+                if (TokenTypes.isWhitespaceTokenType(tok.getType()) && !tok.getValue().equals(LINE_TERMINATOR)) {
+                    nCont.add(TokenTypeWhitespace.getInstance().constructToken(LINE_SPACING, offset, LINE_SPACING.length(), tok.getScope()));
                 } else {
                     nCont.add(tok);
                 }
@@ -129,7 +129,7 @@ public class Line implements Comparable<Integer> {
     public int compareTo(Integer o) {
         if (o < offset) {
             return 1;
-        } else if (o > offset + length) {
+        } else if (o >= offset + length) {
             return -1;
         } else {
             return 0;

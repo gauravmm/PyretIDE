@@ -30,7 +30,7 @@ public class SyntaxHighlighter {
 
     private PyretStyledDocument sdoc;
     private final StyledUndoPane listener;
-    
+
     SyntaxHighlighter(PyretStyledDocument d, StyledUndoPane l) {
         this.sdoc = addAllStyles(d);
         this.listener = l;
@@ -98,23 +98,15 @@ public class SyntaxHighlighter {
         }
 
         Iterator<Line> it = tokenLines.iterator();
-        if (it.hasNext()) {
-            while (true) {
-                Line l = it.next();
-                List<Token> line_tokens = l.getContents();
-                for (Token t : line_tokens) {
-                    //Insert the string represented by each token with its appropriate color
-                    sdoc.insertStringWithoutHighlight(sdoc.getLength(), t.getValue(), t.getTokenStyle().getStyle());
-                }
-
-                if (it.hasNext()) {
-                    sdoc.insertStringWithoutHighlight(sdoc.getLength(), Line.LINE_TERMINATOR, null);
-                } else {
-                    break;
-                }
+        while (it.hasNext()) {
+            Line l = it.next();
+            List<Token> line_tokens = l.getContents();
+            for (Token t : line_tokens) {
+                //Insert the string represented by each token with its appropriate color
+                sdoc.insertStringWithoutHighlight(sdoc.getLength(), t.getValue(), t.getTokenStyle().getStyle());
             }
         }
-        
+
         listener.highlighted(parseTokens, opt, listener);
     }
 

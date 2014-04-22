@@ -6,6 +6,7 @@
 package edu.brown.cs.cutlass.parser.tokenizer;
 
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyles;
+import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.TokenTypeWhitespace;
 import edu.brown.cs.cutlass.util.Pair;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +36,7 @@ public final class TokenParser {
     public static TokenParserOutput parseTokens(List<String> input) {
         Stack<TokenPairedOpening> pairOpenStart = new Stack<>();
         TokenScope scope = new TokenScope();
-        Stack<Pair<Token,TokenType>> expectedFutureToken = new Stack<>();
+        Stack<Pair<Token, TokenType>> expectedFutureToken = new Stack<>();
         List<ParsingError> parsingErrors = new LinkedList<>();
 
         List<TokenType> types = TokenTypes.getTypes();
@@ -178,7 +179,10 @@ public final class TokenParser {
             }
 
             // Line is over
-            offset += Line.LINE_TERMINATOR.length();
+            if (itr.hasNext()) {
+                lineContents.add(TokenTypeWhitespace.getInstance().constructToken(Line.LINE_TERMINATOR, offset, Line.LINE_TERMINATOR.length(), scope));
+                offset += Line.LINE_TERMINATOR.length();
+            }
             outLine.add(new Line(lineNumber++, lineOffset, offset - lineOffset, lineIndent, lineContents));
         }
 
@@ -206,5 +210,5 @@ public final class TokenParser {
 
         return new TokenParserOutput(outLine, aggregator, parsingErrors);
     }
-    
+
 }
