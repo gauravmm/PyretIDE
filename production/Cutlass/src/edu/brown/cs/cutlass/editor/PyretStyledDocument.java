@@ -61,16 +61,14 @@ public class PyretStyledDocument extends DefaultStyledDocument {
 
     public void highlightAndIndent() {
         int posDot = parent.getCaret().getDot();
-        int posMark = parent.getCaret().getMark();
-
+        
         undoer.setIsHighlighting(true);
-
-        highlighter.highlight(posMark == posDot ? posDot : -1, true);
+        
+        int newDot = highlighter.highlight(posDot, true);
 
         undoer.setIsHighlighting(false);
 
-        parent.getCaret().setDot(posMark);
-        parent.getCaret().moveDot(posDot);
+        parent.getCaret().setDot(newDot);
     }
 
     public void removeWithoutHighlight(int offSet, int amt) {

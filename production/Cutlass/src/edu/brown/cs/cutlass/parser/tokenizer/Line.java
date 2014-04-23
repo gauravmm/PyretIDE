@@ -5,6 +5,7 @@
 package edu.brown.cs.cutlass.parser.tokenizer;
 
 import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.TokenTypeWhitespace;
+import edu.brown.cs.cutlass.util.Pair;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -72,9 +73,11 @@ public class Line implements Comparable<Integer> {
      * NOTE: This function returns token offsets, lengths and links between
      * tokens in an inconsistent state.
      *
-     * @return
+     * @param charsBefore
+     * @param charsAfter
+     * @return A Pair containing the new line and the updated cursor position.
      */
-    public Line toIndentedLine() {
+    public Pair<Line, Pair<Integer, Integer>> toIndentedLine(int charsBefore, int charsAfter) {
         ArrayList<Token> nCont = new ArrayList<>();
         nCont.ensureCapacity(contents.size());
 
@@ -86,6 +89,9 @@ public class Line implements Comparable<Integer> {
         String indent = sb.toString();
 
         Token startingToken = TokenTypeWhitespace.getInstance().constructToken(indent, offset, indent.length(), new TokenScope());
+        if (charsAfter > 0) {
+            charsBefore += startingToken.getLength();
+        }
         nCont.add(startingToken); // Add the leading whitespace
 
         Iterator<Token> ci = contents.iterator();
@@ -94,6 +100,9 @@ public class Line implements Comparable<Integer> {
         if (ci.hasNext()) {
             Token tok = ci.next();
             if (TokenTypes.isWhitespaceTokenType(tok.getType()) && !tok.getValue().equals(LINE_TERMINATOR)) {
+                if (charsAfter > 0) {
+                    charsAfter -= tok.getLength();
+                }
                 // Swap token into linked list
                 //startingToken.setPreviousToken(tok.getPreviousToken());
                 //startingToken.setNextToken(tok.getNextToken());
@@ -108,21 +117,33 @@ public class Line implements Comparable<Integer> {
                  tok.setPreviousToken(startingToken);
                  */
                 nCont.add(tok); // Add the first token if its not whitespace:    
+                if (charsAfter > 0) {
+                    charsBefore += tok.getLength();
+                    charsAfter -= tok.getLength();
+                }
             }
 
             while (ci.hasNext()) {
                 tok = ci.next();
                 if (TokenTypes.isWhitespaceTokenType(tok.getType()) && !tok.getValue().equals(LINE_TERMINATOR)) {
                     nCont.add(TokenTypeWhitespace.getInstance().constructToken(LINE_SPACING, offset, LINE_SPACING.length(), tok.getScope()));
+                    if (charsAfter > 0) {
+                        charsBefore += LINE_SPACING.length();
+                        charsAfter -= tok.getLength();
+                    }
                 } else {
                     nCont.add(tok);
+                    if (charsAfter > 0) {
+                        charsBefore += tok.getLength();
+                        charsAfter -= tok.getLength();
+                    }
                 }
             }
         } else {
             // This line is empty, return it with just the leading spaces.
         }
 
-        return new Line(this.number, this.offset, this.length, this.expectedIndentation, nCont);
+        return new Pair<>(new Line(this.number, this.offset, this.length, this.expectedIndentation, nCont), new Pair<>(charsBefore, charsAfter));
     }
 
     @Override

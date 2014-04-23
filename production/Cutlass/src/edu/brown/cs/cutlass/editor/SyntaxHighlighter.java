@@ -22,6 +22,7 @@ import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.TokenTypeDefault;
 import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.TokenTypePairedOpenParen;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
+import edu.brown.cs.cutlass.util.Pair;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -53,7 +54,14 @@ public class SyntaxHighlighter {
         highlight(-1, false);
     }
 
-    public void highlight(int position, boolean reindent) {
+    /**
+     *
+     * @param position The position of the dot
+     * @param reindent If true, reindent the code while you're at it.
+     * @return The position of the dot, if reindenting is requested. 0
+     * otherwise.
+     */
+    public int highlight(int position, boolean reindent) {
 
         //Convert entire contents of document into Lines
         TokenParserOutput parseTokens;
@@ -61,7 +69,7 @@ public class SyntaxHighlighter {
             parseTokens = TokenParser.parseTokens(sdoc.getText(0, sdoc.getLength()));
         } catch (BadLocationException ex) {
             Lumberjack.log(Lumberjack.Level.ERROR, ex);
-            return;
+            return 0;
         }
         List<Line> tokenLines = parseTokens.getTokenLines();
 
@@ -75,40 +83,39 @@ public class SyntaxHighlighter {
                 processAnnotations(ann);
             }
         }
-        
+
         // Process document using current token
         // NOTE: MUST NOT CHANGE reindent here:
         Option<Token> opt = getCurrentToken(tokenLines, position);
-
-        if (opt.hasData()) {
-            Token t = opt.getData();
-            if (t.getType() instanceof TokenTypePaired) {
-                TokenPaired ttp = (TokenPaired) t;
-                if (ttp.other != null) {
-                    ttp.setStyle(TokenStylePaired.getInstance());
-                    ttp.other.setStyle(TokenStylePaired.getInstance());
-                }
-            } else if (t.getType() instanceof TokenTypeDefault) {
-                // Highlight each type of TokenTypeDefault with the same value
-                List<Token> get = parseTokens.getTokenCollected().get(TokenTypeDefault.getInstance()).get(t.getValue());
-                if (get != null) {
-                    for (Token similarTokens : get) {
-                        similarTokens.setStyle(TokenStylePaired.getInstance());
+        if (!reindent) {
+            if (opt.hasData()) {
+                Token t = opt.getData();
+                if (t.getType() instanceof TokenTypePaired) {
+                    TokenPaired ttp = (TokenPaired) t;
+                    if (ttp.other != null) {
+                        ttp.setStyle(TokenStylePaired.getInstance());
+                        ttp.other.setStyle(TokenStylePaired.getInstance());
+                    }
+                } else if (t.getType() instanceof TokenTypeDefault) {
+                    // Highlight each type of TokenTypeDefault with the same value
+                    List<Token> get = parseTokens.getTokenCollected().get(TokenTypeDefault.getInstance()).get(t.getValue());
+                    if (get != null) {
+                        for (Token similarTokens : get) {
+                            similarTokens.setStyle(TokenStylePaired.getInstance());
+                        }
                     }
                 }
             }
         }
 
-        List<Line> indentedLines = new ArrayList<>();
         // Handle reindent here:
+        Pair<Integer, Integer> charsBeforeAfter = new Pair(0, position);
         if (reindent) {
-            /*
-             We expect a bug in which, after reindenting, the position of
-             the cursor is not adjusted. Ill fix that after you're done with
-             this.
-             */
+            List<Line> indentedLines = new ArrayList<>();
             for (Line l : tokenLines) {
-                indentedLines.add(l.toIndentedLine());
+                Pair<Line, Pair<Integer, Integer>> toIndentedLine = l.toIndentedLine(charsBeforeAfter.getX(), charsBeforeAfter.getY());
+                indentedLines.add(toIndentedLine.getX());
+                charsBeforeAfter = toIndentedLine.getY();
             }
             tokenLines = indentedLines;
         }
@@ -124,6 +131,7 @@ public class SyntaxHighlighter {
         }
 
         listener.highlighted(parseTokens, opt, listener);
+        return charsBeforeAfter.getX() + charsBeforeAfter.getY();
     }
 
     public void updateDocument(PyretStyledDocument newdoc) {
@@ -151,7 +159,7 @@ public class SyntaxHighlighter {
             if (opParen.other != null) {
                 Token currTok = opParen;
                 // Set the entire parenthesis range to be of style Annotation:
-                while(currTok != opParen.other){
+                while (currTok != opParen.other) {
                     currTok = currTok.getNextToken();
                     currTok.setStyle(TokenStyleAnnotation.getInstance());
                 }
