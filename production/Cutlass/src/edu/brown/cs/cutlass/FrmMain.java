@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -654,27 +656,36 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     private void mnuFileSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileSaveAsActionPerformed
         try {
             //get the contents of their editor and store as seq - either CharSequence or List<CharSequence>
-            String seq = ""; //placeholder to allow the code to compile
+            Editor editor = getCurrentEditor();
+            String seq = editor.getBuffer();
             Option<T> destination = io.requestUserFileDestination();
             if (destination.hasData()) {
                 io.setUserFile(destination.getData(), seq);
+                editor.setIdentifier(destination.getData());
+                tabEditors.remove(tabEditors.getSelectedIndex());
+                String[] fileNameParts = destination.getData().toString().split("\\\\|\\.");
+                addClosableTab(tabEditors, editor, fileNameParts[fileNameParts.length - 2]);
             }
-            throw new UnsupportedOperationException("Need to implement this.");
         } catch (AbstractIOException ex) {
             Lumberjack.log(Lumberjack.Level.ERROR, ex);
         }
     }//GEN-LAST:event_mnuFileSaveAsActionPerformed
 
     private void mnuFileSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileSaveActionPerformed
-        Editor<T> e = getCurrentEditor();
+        Editor e = getCurrentEditor();
         if (e.isEditorWindow()) {
             if (e.isChangedSinceLastSave()) {
                 // TODO: Save the file
                 Option<T> id = e.getIdentifier();
                 if (id.hasData()) {
-                    // Save
-                    id.getData();
-                    throw new UnsupportedOperationException();
+                    try {
+                        //Save
+                        id.getData();
+                        io.setUserFile(id.getData(), e.getBuffer());
+                        //e.setChangedSinceLastSave(false);
+                    } catch (AbstractIOException ex) {
+                        Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 } else {
                     mnuFileSaveAsActionPerformed(evt);
                 }
@@ -687,7 +698,18 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             Option<T> destination = io.requestUserFileSource();
             if (destination.hasData()) {
                 List<String> chars = io.getUserFile(destination.getData());
-                //Set editor text to chars
+                CharSequence contents = "";
+                if (!chars.isEmpty()) {
+                    contents = chars.get(0);
+
+                    for (int i = 1; i < chars.size(); i++) {
+                        contents += "\n" + chars.get(i);
+                    }
+                }
+                String[] fileNameParts = destination.getData().toString().split("\\\\|\\.");
+                addClosableTab(tabEditors, new PnlEditor(this, contents.toString()), fileNameParts[fileNameParts.length - 2]);
+                Editor e = getCurrentEditor();
+                e.setIdentifier(destination.getData());
             }
         } catch (AbstractIOException ex) {
             Lumberjack.log(Lumberjack.Level.ERROR, ex);
