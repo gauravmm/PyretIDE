@@ -8,7 +8,11 @@ import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import javax.swing.AbstractAction;
 import javax.swing.JEditorPane;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -29,16 +33,22 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
     public StyledUndoPane(CharSequence fileContent, PyretHighlightedListener listener) {
         super();
         this.listener = listener;
-        
+
         // Document setup
         document = new PyretStyledDocument(this);
         this.setEditorKit(new StyledEditorKit());
         this.setDocument(document);
         document.insertString(0, fileContent.toString(), null);
-        
+
         // Add listeners after content is updated.
         this.addKeyListener(new EditorKeyListener(document));
         this.addCaretListener(new CaretListenerImpl());
+        // Absorb the tab keypress
+        this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
     }
 
     /**
