@@ -15,4 +15,8 @@ public class PyretTerminationValue {
     public PyretTerminationValue(int errorCode) {
         this.errorCode = errorCode;
     }    
+
+    PyretTerminationValue() {
+        this.errorCode = -1;
+    }
 }

@@ -7,6 +7,7 @@ package edu.brown.cs.cutlass.sys.ux;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
@@ -17,7 +18,7 @@ import java.io.IOException;
  *
  * @author Gaurav Manek, Zachary Zagorski
  */
-public class DefaultClipboard implements AbstractClipboard {
+public class DefaultClipboard implements AbstractClipboard, ClipboardOwner {
 
     @Override
     public void put(CharSequence s) {

@@ -5,12 +5,10 @@
 package edu.brown.cs.cutlass.sys;
 
 import edu.brown.cs.cutlass.sys.io.AbstractIO;
-import edu.brown.cs.cutlass.sys.io.disk.DiskIO;
-import edu.brown.cs.cutlass.sys.io.disk.DiskIdentifier;
 import edu.brown.cs.cutlass.sys.io.laskura.LaskuraIO;
 import edu.brown.cs.cutlass.sys.io.laskura.LaskuraIdentifier;
+import edu.brown.cs.cutlass.sys.pyret.AbstractDummyPyretAccess;
 import edu.brown.cs.cutlass.sys.pyret.AbstractPyretAccess;
-import edu.brown.cs.cutlass.sys.pyret.DiskPyretAccess;
 import edu.brown.cs.cutlass.sys.ux.AbstractClipboard;
 import edu.brown.cs.cutlass.sys.ux.DefaultClipboard;
 
@@ -40,7 +38,7 @@ public class LaskuraSystemAbstraction implements SystemAbstraction<LaskuraIdenti
 
     @Override
     public AbstractPyretAccess<LaskuraIdentifier> getPyretAccess(LaskuraIdentifier identifier) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new AbstractDummyPyretAccess<>();
     }
 
 }
