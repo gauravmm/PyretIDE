@@ -22,8 +22,7 @@ import javax.swing.SwingConstants;
 public class CallGraphEntryRenderer implements ListCellRenderer<CallGraphEntry> {
 
     private static final Color COL_CURRENT = new Color(27, 161, 226);
-    private static final Color COL_FUNCTION = Color.WHITE;
-    private static final Color COL_DATA = new Color(192, 224, 255);
+    private static final Color COL_DEFAULT = Color.WHITE;
     private static final Color COL_DATAOFNAME = Color.WHITE;
 
     @Override
@@ -39,7 +38,7 @@ public class CallGraphEntryRenderer implements ListCellRenderer<CallGraphEntry> 
         }
         lbl.add(new CallGraphIcon(value.isCurrent, value.callsCurrent, value.isCalledByCurrent), BorderLayout.WEST);
         lbl.setOpaque(true);
-        lbl.setBackground(value.dataOf.hasData() ? COL_DATA : COL_FUNCTION);
+        lbl.setBackground(value.backgroundColor.hasData() ? value.backgroundColor.getData() : COL_DEFAULT);
         if (value.isCurrent) {
             lbl.setBackground(COL_CURRENT);
         }
@@ -64,7 +63,7 @@ public class CallGraphEntryRenderer implements ListCellRenderer<CallGraphEntry> 
             } else {
                 super.setText(String.format("%s\u25C6%s", calledByCurrent ? "\u25BA" : "   ", callsCurrent ? "\u25BA" : "   "));
             }
-            
+
             super.setHorizontalAlignment(CENTER);
 
             sz = new Dimension(48, super.getPreferredSize().height);
@@ -83,7 +82,7 @@ public class CallGraphEntryRenderer implements ListCellRenderer<CallGraphEntry> 
         public Dimension getPreferredSize() {
             return sz;
         }
-        
+
     }
 
 }

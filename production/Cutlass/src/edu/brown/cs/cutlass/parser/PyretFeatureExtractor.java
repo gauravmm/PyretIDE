@@ -4,14 +4,14 @@
  */
 package edu.brown.cs.cutlass.parser;
 
+import edu.brown.cs.cutlass.editor.EditorJumpTo;
 import edu.brown.cs.cutlass.editor.EditorJumpToClient;
 import edu.brown.cs.cutlass.editor.callgraph.CallGraphEntry;
 import edu.brown.cs.cutlass.parser.tokenizer.*;
-import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleAnnotation;
-import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleError;
 import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.*;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,10 +43,18 @@ public class PyretFeatureExtractor {
             }
         }
 
+        ArrayList<PyretData> pyretData = new ArrayList<>(meta.data);
+        Collections.sort(pyretData);
+
         // Now tokenFunction contains the most specific scope of the current token, or null if no such scope can be located.
         if (tokenFunction == null) {
             for (PyretFunction fun : meta.functions.values()) {
-                rv.add(new CallGraphEntry(fun.getName(), false, false, false, fun.isDataVariant() ? new Option<>(fun.getConstructorOf().getData().name) : new Option<String>(), client.createJumpTo(fun.getLocation().token.getOffset())));
+                Option<String> constructorOf = new Option<>();
+                Option<Color> backgroundColor = new Option<>();
+                if (fun.isDataVariant()) {
+                    constructorOf = new Option<>(fun.getConstructorOf().getData().name);
+                }
+                rv.add(makeCGE(fun, false, false, false, client.createJumpTo(fun.getLocation().token.getOffset()), pyretData));
             }
         } else {
             Set<PyretFunction> callsFrom = meta.functionCallGraphFrom.get(tokenFunction);
@@ -59,16 +67,31 @@ public class PyretFeatureExtractor {
             }
 
             for (PyretFunction fun : meta.functions.values()) {
-                rv.add(new CallGraphEntry(
-                        fun.getName(),
+                rv.add(makeCGE(fun,
                         tokenFunction.equals(fun),
                         callsFrom.contains(fun),
                         callsTo.contains(fun),
-                        fun.isDataVariant() ? new Option<>(fun.getConstructorOf().getData().name) : new Option<String>(), client.createJumpTo(fun.getLocation().token.getOffset())));
+                        client.createJumpTo(fun.getLocation().token.getOffset()),
+                        pyretData));
             }
         }
 
         return rv;
+    }
+
+    private static final Color[] dataColors = new Color[]{new Color(147, 223, 184), new Color(255, 200, 186), new Color(227, 170, 214), new Color(181, 216, 235), new Color(255, 189, 216), new Color(238, 221, 153), new Color(238, 170, 136)};
+
+    public static CallGraphEntry makeCGE(PyretFunction fun, boolean isCurrent, boolean isCalledFrom, boolean calls, EditorJumpTo jump, ArrayList<PyretData> pyretData) {
+        Option<String> constructorOf = new Option<>();
+        Option<Color> backgroundColor = new Option<>();
+        if (fun.isDataVariant()) {
+            constructorOf = new Option<>(fun.getConstructorOf().getData().name);
+            int indexOf = pyretData.indexOf(fun.getConstructorOf().getData());
+            if(indexOf >= 0){
+                backgroundColor = new Option<>(dataColors[indexOf % dataColors.length]);
+            }
+        }
+        return new CallGraphEntry(fun.getName(), isCurrent, isCalledFrom, calls, constructorOf, jump, backgroundColor);
     }
 
     public static PyretMetadata extract(TokenParserOutput tpo) {
@@ -252,7 +275,7 @@ public class PyretFeatureExtractor {
         Option<Token> annToken = PyretFeatureExtractor.getNextToken(start, TokenTypeAnnotation.getInstance());
         if (annToken.hasData()) {
             start = annToken.getData();
-            
+
             Option<Token> wordToken = PyretFeatureExtractor.getNextToken(start, TokenTypeDefault.getInstance());
             if (wordToken.hasData()) {
                 start = wordToken.getData();

@@ -6,6 +6,7 @@ package edu.brown.cs.cutlass.editor.callgraph;
 
 import edu.brown.cs.cutlass.editor.EditorJumpTo;
 import edu.brown.cs.cutlass.util.Option;
+import java.awt.Color;
 import java.util.Objects;
 
 /**
@@ -21,14 +22,16 @@ public class CallGraphEntry implements Comparable<CallGraphEntry> {
     public final boolean isCalledByCurrent;
     public final Option<String> dataOf;
     public final EditorJumpTo jumpTo;
+    public final Option<Color> backgroundColor;
 
-    public CallGraphEntry(String name, boolean isCurrent, boolean callsCurrent, boolean isCalledByCurrent, Option<String> dataOf, EditorJumpTo jumpTo) {
+    public CallGraphEntry(String name, boolean isCurrent, boolean callsCurrent, boolean isCalledByCurrent, Option<String> dataOf, EditorJumpTo jumpTo, Option<Color> backgroundColor) {
         this.name = name;
         this.isCurrent = isCurrent;
         this.callsCurrent = callsCurrent;
         this.isCalledByCurrent = isCalledByCurrent;
         this.dataOf = dataOf;
         this.jumpTo = jumpTo;
+        this.backgroundColor = backgroundColor;
     }
 
     @Override
@@ -84,6 +87,4 @@ public class CallGraphEntry implements Comparable<CallGraphEntry> {
         return true;
     }
     
-    
-
 }

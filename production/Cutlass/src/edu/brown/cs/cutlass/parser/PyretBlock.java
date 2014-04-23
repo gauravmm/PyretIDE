@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author Gaurav Manek
  */
-abstract class PyretBlock {
+abstract class PyretBlock implements Comparable<PyretBlock> {
     
     protected final PyretLocation location;
     protected final String name;
@@ -58,5 +58,10 @@ abstract class PyretBlock {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public int compareTo(PyretBlock o) {
+        return location.compareTo(o.location);
     }
 }

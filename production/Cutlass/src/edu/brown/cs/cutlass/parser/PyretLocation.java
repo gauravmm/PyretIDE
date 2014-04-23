@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author Gaurav Manek
  */
-public class PyretLocation {
+public class PyretLocation implements Comparable<PyretLocation> {
 
     /**
      * The number of characters from the start of file that this location points
@@ -43,6 +43,15 @@ public class PyretLocation {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public int compareTo(PyretLocation o) {
+        int rv = Integer.compare(token.getOffset(), o.token.getOffset());
+        if(rv == 0){
+            rv = Integer.compare(token.getLength(), o.token.getLength());
+        }
+        return rv;
     }
     
 }
