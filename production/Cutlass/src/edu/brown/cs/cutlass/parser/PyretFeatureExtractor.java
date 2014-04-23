@@ -49,11 +49,6 @@ public class PyretFeatureExtractor {
         // Now tokenFunction contains the most specific scope of the current token, or null if no such scope can be located.
         if (tokenFunction == null) {
             for (PyretFunction fun : meta.functions.values()) {
-                Option<String> constructorOf = new Option<>();
-                Option<Color> backgroundColor = new Option<>();
-                if (fun.isDataVariant()) {
-                    constructorOf = new Option<>(fun.getConstructorOf().getData().name);
-                }
                 rv.add(makeCGE(fun, false, false, false, client.createJumpTo(fun.getLocation().token.getOffset()), pyretData));
             }
         } else {
@@ -87,7 +82,7 @@ public class PyretFeatureExtractor {
         if (fun.isDataVariant()) {
             constructorOf = new Option<>(fun.getConstructorOf().getData().name);
             int indexOf = pyretData.indexOf(fun.getConstructorOf().getData());
-            if(indexOf >= 0){
+            if (indexOf >= 0) {
                 backgroundColor = new Option<>(dataColors[indexOf % dataColors.length]);
             }
         }
@@ -300,11 +295,15 @@ public class PyretFeatureExtractor {
         StringBuilder sb = new StringBuilder();
         Option<Token> checkOpenBracket = getNextToken(starting, TokenTypePairedOpenParen.getInstance());
         if (!checkOpenBracket.hasData()) {
-            Option<Token> checkPipe = getNextToken(starting, TokenTypeSinglePunct.getInstance());
-            if (checkPipe.hasData() && checkPipe.getData().getValue().equals("|")) {
-                return new Option<>("");
-            }
-            return new Option<>();
+            /*
+            // Disable the pipe check.
+             Option<Token> checkPipe = getNextToken(starting, TokenTypeSinglePunct.getInstance());
+             if (checkPipe.hasData() && checkPipe.getData().getValue().equals("|")) {
+             return new Option<>("");
+             }
+             return new Option<>();
+             */
+            return new Option<>("");
         }
         TokenPairedOpening openBracket = (TokenPairedOpening) checkOpenBracket.getData();
         if (openBracket.other == null) {
