@@ -22,7 +22,7 @@ public class TokenTypeNumber extends TokenType {
     private static final TokenTypeNumber instance = new TokenTypeNumber();
 
     private TokenTypeNumber() {
-        super(Pattern.compile("^[0-9]+(\\.[0-9]+)?"));
+        super(Pattern.compile("^-?[0-9]+(\\.[0-9]+)?"));
     }
 
 

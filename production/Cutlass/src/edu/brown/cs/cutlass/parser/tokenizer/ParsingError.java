@@ -25,5 +25,10 @@ public class ParsingError {
     public String getErrorString() {
         return errorString;
     }
+
+    @Override
+    public String toString() {
+        return "ParsingError{" + "token=" + token + ", errorString=" + errorString + '}';
+    }
     
 }

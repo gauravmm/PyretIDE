@@ -33,9 +33,9 @@ public final class TokenTypes {
             TokenTypeKeywordAggregate.getInstance(),
             TokenTypeKeyword.getInstance(),
             TokenTypeKeywordColon.getInstance(),
-            TokenTypeSinglePunct.getInstance(),
             TokenTypeString.getInstance(),
             TokenTypeNumber.getInstance(),
+            TokenTypeSinglePunct.getInstance(),
             TokenTypeWhitespace.getInstance(),
             TokenTypeDefault.getInstance(),
             TokenTypeError.getInstance()
