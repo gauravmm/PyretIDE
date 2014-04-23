@@ -32,4 +32,10 @@ public class DiskIdentifier implements AbstractIdentifier {
     public String toString() {
         return id.toString();
     }
+
+    @Override
+    public String getDisplayName() {
+        return id.getFileName().toString();
+    }
+    
 }

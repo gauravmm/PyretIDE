@@ -14,4 +14,6 @@ public interface AbstractIdentifier {
     @Override
     public String toString();
     
+    public String getDisplayName();
+    
 }

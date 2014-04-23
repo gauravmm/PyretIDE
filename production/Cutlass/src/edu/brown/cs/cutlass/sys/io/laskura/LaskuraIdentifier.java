@@ -29,4 +29,9 @@ public class LaskuraIdentifier implements AbstractIdentifier {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String getDisplayName() {
+        return name;
+    }
 }

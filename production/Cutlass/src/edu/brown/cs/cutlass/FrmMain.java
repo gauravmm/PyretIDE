@@ -31,6 +31,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -660,11 +661,11 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             String seq = editor.getBuffer();
             Option<T> destination = io.requestUserFileDestination();
             if (destination.hasData()) {
-                io.setUserFile(destination.getData(), seq);
-                editor.setIdentifier(destination.getData());
+                T destId = destination.getData();
+                io.setUserFile(destId, seq);
+                editor.setIdentifier(destId);
                 tabEditors.remove(tabEditors.getSelectedIndex());
-                String[] fileNameParts = destination.getData().toString().split("\\\\|\\.");
-                addClosableTab(tabEditors, editor, fileNameParts[fileNameParts.length - 2]);
+                addClosableTab(tabEditors, editor, destId.getDisplayName());
             }
         } catch (AbstractIOException ex) {
             Lumberjack.log(Lumberjack.Level.ERROR, ex);
@@ -697,19 +698,21 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         try {
             Option<T> destination = io.requestUserFileSource();
             if (destination.hasData()) {
-                List<String> chars = io.getUserFile(destination.getData());
-                CharSequence contents = "";
-                if (!chars.isEmpty()) {
-                    contents = chars.get(0);
-
-                    for (int i = 1; i < chars.size(); i++) {
-                        contents += "\n" + chars.get(i);
+                T destId = destination.getData();
+                StringBuilder contents = new StringBuilder();
+                Iterator<String> it = io.getUserFile(destId).iterator(); 
+                while(true) {
+                    contents.append(it.next());
+                    if(it.hasNext()){
+                        contents.append("\n");
+                    } else {
+                        break;
                     }
                 }
-                String[] fileNameParts = destination.getData().toString().split("\\\\|\\.");
-                addClosableTab(tabEditors, new PnlEditor(this, contents.toString()), fileNameParts[fileNameParts.length - 2]);
-                Editor e = getCurrentEditor();
+                
+                Editor e = new PnlEditor(this, contents.toString());
                 e.setIdentifier(destination.getData());
+                addClosableTab(tabEditors, e, destId.getDisplayName());
             }
         } catch (AbstractIOException ex) {
             Lumberjack.log(Lumberjack.Level.ERROR, ex);
