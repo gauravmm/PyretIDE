@@ -7,7 +7,9 @@ package edu.brown.cs.cutlass.editor;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultCaret;
 import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Position;
 
 /**
  *
@@ -26,7 +28,7 @@ public class PyretStyledDocument extends DefaultStyledDocument {
             throw new IllegalArgumentException("parent must not be null!");
         }
         this.parent = parent;
-        
+
         undoer = new ControlledUndoManager();
         this.addUndoableEditListener(undoer);
     }
@@ -44,31 +46,31 @@ public class PyretStyledDocument extends DefaultStyledDocument {
     }
 
     public void highlight() {
-        int posSt = parent.getSelectionStart();
-        int posEnd = parent.getSelectionEnd();
-        
+        int posDot = parent.getCaret().getDot();
+        int posMark = parent.getCaret().getMark();
+
         undoer.setIsHighlighting(true);
-        
-        highlighter.highlight(posEnd == posSt ? posSt : -1, false);
-        
+
+        highlighter.highlight(posMark == posDot ? posDot : -1, false);
+
         undoer.setIsHighlighting(false);
-        
-        parent.setSelectionStart(posSt);
-        parent.setSelectionEnd(posEnd);
+
+        parent.getCaret().setDot(posMark);
+        parent.getCaret().moveDot(posDot);
     }
-    
+
     public void highlightAndIndent() {
-        int posSt = parent.getSelectionStart();
-        int posEnd = parent.getSelectionEnd();
-        
+        int posDot = parent.getCaret().getDot();
+        int posMark = parent.getCaret().getMark();
+
         undoer.setIsHighlighting(true);
-        
-        highlighter.highlight(posEnd == posSt ? posSt : -1, true);
-        
+
+        highlighter.highlight(posMark == posDot ? posDot : -1, true);
+
         undoer.setIsHighlighting(false);
-        
-        parent.setSelectionStart(posSt);
-        parent.setSelectionEnd(posEnd);
+
+        parent.getCaret().setDot(posMark);
+        parent.getCaret().moveDot(posDot);
     }
 
     public void removeWithoutHighlight(int offSet, int amt) {
