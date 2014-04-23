@@ -57,12 +57,12 @@ import javax.swing.SwingConstants;
  * @author Gaurav Manek
  * @param <T>
  */
-public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame implements EditorClient {
+public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame implements EditorClient<T> {
 
     private final Launcher launcher;
     private final ConfigEngine config;
-    private final AbstractIO io;
-    private final SystemAbstraction systemAbstraction;
+    private final AbstractIO<T> io;
+    private final SystemAbstraction<T> systemAbstraction;
     private boolean isSK = false;
 
     /**
@@ -686,7 +686,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         try {
             Option<T> destination = io.requestUserFileSource();
             if (destination.hasData()) {
-                List<CharSequence> chars = io.getUserFile(destination.getData());
+                List<String> chars = io.getUserFile(destination.getData());
                 //Set editor text to chars
             }
         } catch (AbstractIOException ex) {
@@ -989,16 +989,26 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public AbstractPyretAccess getPyretAccess() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public void handleQuickNavigationChange(Collection<CallGraphEntry> quickNav) {
         DefaultListModel<CallGraphEntry> defaultListModel = new DefaultListModel<>();
         for (CallGraphEntry q : quickNav) {
             defaultListModel.addElement(q);
         }
         lstCallGraph.setModel(defaultListModel);
+    }
+
+    @Override
+    public AbstractPyretAccess<T> getPyretAccess(Editor<T> ed) throws AbstractIOException {
+        if (ed.isEditorWindow()) {
+            // Check if it is saved...
+            if (ed.getIdentifier().hasData()) {
+                return systemAbstraction.getPyretAccess(ed.getIdentifier().getData());
+            } else {
+                // Ask users to save
+                throw new AbstractIOException("User needs to select a place to store the file.");
+            }
+        } else {
+            throw new IllegalStateException();
+        }
     }
 }
