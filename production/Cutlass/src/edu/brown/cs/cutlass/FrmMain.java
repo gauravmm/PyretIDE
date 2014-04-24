@@ -17,6 +17,7 @@ import edu.brown.cs.cutlass.util.Pair;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -27,6 +28,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -845,8 +850,13 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     }//GEN-LAST:event_mnuDeleteLineActionPerformed
 
     private void mnuPyretDocsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPyretDocsActionPerformed
-        // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (Desktop.isDesktopSupported()) {
+            try {
+                Desktop.getDesktop().browse(new File("docs/index.html").toURI());
+            } catch (IOException ex) {
+                Lumberjack.log(Lumberjack.Level.WARN, ex);
+            }
+        }
     }//GEN-LAST:event_mnuPyretDocsActionPerformed
 
     private void mnuPyretStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPyretStopActionPerformed

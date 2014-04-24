@@ -221,6 +221,7 @@ public class Launcher {
     /**
      * Handle program termination. Save current program state to disk and quit.
      * If necessary, write log files to disk.
+     * @param lState The current program state
      */
     public void quit(LaunchState lState) {
 
