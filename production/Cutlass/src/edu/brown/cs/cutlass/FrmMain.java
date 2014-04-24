@@ -110,7 +110,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         //<editor-fold defaultstate="collapsed" desc="Load Toolbar Icons">
         // Load this dimension from configEngine:
         Dimension toolbarIconSize = config.getDimension("ui.toolbar.iconsize");
-        List<Pair<JLabel, String>> labelIcons = Arrays.asList(new Pair<>(tbSave, "document-save-5.png"), new Pair<>(tbRun, "arrow-right-3.png"), new Pair<>(tbAutoIndent, "format-indent-more-3.png"), new Pair<>(tbBookmarkStop, "dialog-cancel-5.png"), new Pair<>(tbRedo, "edit-redo-3.png"), new Pair<>(tbUndo, "edit-undo-3.png"), new Pair<>(tbBookmarkBack, "arrow-up-double.png"), new Pair<>(tbBookmarkSet, "bookmark-2.png"), new Pair<>(tbBookmarkNext, "arrow-down-double.png"));
+        List<Pair<JLabel, String>> labelIcons = Arrays.asList(new Pair<>(tbSave, "document-save-5.png"), new Pair<>(tbRun, "arrow-right-3.png"), new Pair<>(tbAutoIndent, "format-indent-more-3.png"), new Pair<>(tbBookmarkStop, "dialog-cancel-5.png"), new Pair<>(tbRedo, "edit-redo-3.png"), new Pair<>(tbUndo, "edit-undo-3.png"));
         for (Pair<JLabel, String> p : labelIcons) {
             JLabel lbl = p.getX();
             lbl.setText("");
@@ -192,10 +192,6 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         jSeparator2 = new javax.swing.JToolBar.Separator();
         tbAutoIndent = new javax.swing.JLabel();
         jSeparator4 = new javax.swing.JToolBar.Separator();
-        tbBookmarkBack = new javax.swing.JLabel();
-        tbBookmarkSet = new javax.swing.JLabel();
-        tbBookmarkNext = new javax.swing.JLabel();
-        jSeparator5 = new javax.swing.JToolBar.Separator();
         jMenuBar1 = new javax.swing.JMenuBar();
         mnuFile = new javax.swing.JMenu();
         mnuFileNew = new javax.swing.JMenuItem();
@@ -224,6 +220,11 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         mnuBlockComment = new javax.swing.JMenuItem();
         jSeparator12 = new javax.swing.JPopupMenu.Separator();
         mnuSelectAll = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        mnuPyretRun = new javax.swing.JMenuItem();
+        mnuPyretStop = new javax.swing.JMenuItem();
+        jSeparator5 = new javax.swing.JPopupMenu.Separator();
+        mnuPyretDocs = new javax.swing.JMenuItem();
         mnuHelp = new javax.swing.JMenu();
         mnuHelpAbout = new javax.swing.JMenuItem();
 
@@ -295,6 +296,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
         tbRun.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tbRun.setText("[Icon]");
+        tbRun.setToolTipText("Run");
         tbRun.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tbRunMouseClicked(evt);
@@ -304,6 +306,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
         tbBookmarkStop.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tbBookmarkStop.setText("[Icon]");
+        tbBookmarkStop.setToolTipText("Stop Current Execution");
         tbBookmarkStop.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tbBookmarkStopMouseClicked(evt);
@@ -314,6 +317,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
         tbUndo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tbUndo.setText("[Icon]");
+        tbUndo.setToolTipText("Undo");
         tbUndo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tbUndoMouseClicked(evt);
@@ -323,6 +327,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
         tbRedo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tbRedo.setText("[Icon]");
+        tbRedo.setToolTipText("Redo");
         tbRedo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tbRedoMouseClicked(evt);
@@ -333,6 +338,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
         tbAutoIndent.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tbAutoIndent.setText("[Icon]");
+        tbAutoIndent.setToolTipText("Auto-Indent");
         tbAutoIndent.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tbAutoIndentMouseClicked(evt);
@@ -341,36 +347,9 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         jToolBar1.add(tbAutoIndent);
         jToolBar1.add(jSeparator4);
 
-        tbBookmarkBack.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        tbBookmarkBack.setText("[Icon]");
-        tbBookmarkBack.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbBookmarkBackMouseClicked(evt);
-            }
-        });
-        jToolBar1.add(tbBookmarkBack);
-
-        tbBookmarkSet.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        tbBookmarkSet.setText("[Icon]");
-        tbBookmarkSet.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbBookmarkSetMouseClicked(evt);
-            }
-        });
-        jToolBar1.add(tbBookmarkSet);
-
-        tbBookmarkNext.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        tbBookmarkNext.setText("[Icon]");
-        tbBookmarkNext.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbBookmarkNextMouseClicked(evt);
-            }
-        });
-        jToolBar1.add(tbBookmarkNext);
-        jToolBar1.add(jSeparator5);
-
         getContentPane().add(jToolBar1, java.awt.BorderLayout.NORTH);
 
+        mnuFile.setMnemonic('F');
         mnuFile.setText("File");
 
         mnuFileNew.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
@@ -468,6 +447,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
         jMenuBar1.add(mnuFile);
 
+        mnuEdit.setMnemonic('E');
         mnuEdit.setText("Edit");
 
         mnuUndo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
@@ -568,6 +548,39 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
         jMenuBar1.add(mnuEdit);
 
+        jMenu1.setMnemonic('y');
+        jMenu1.setText("Pyret");
+
+        mnuPyretRun.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        mnuPyretRun.setText("Run");
+        mnuPyretRun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuPyretRunActionPerformed(evt);
+            }
+        });
+        jMenu1.add(mnuPyretRun);
+
+        mnuPyretStop.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        mnuPyretStop.setText("Stop Current Execution");
+        mnuPyretStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuPyretStopActionPerformed(evt);
+            }
+        });
+        jMenu1.add(mnuPyretStop);
+        jMenu1.add(jSeparator5);
+
+        mnuPyretDocs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
+        mnuPyretDocs.setText("View Pyret Documentation");
+        mnuPyretDocs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuPyretDocsActionPerformed(evt);
+            }
+        });
+        jMenu1.add(mnuPyretDocs);
+
+        jMenuBar1.add(jMenu1);
+
         mnuHelp.setMnemonic('H');
         mnuHelp.setText("Help");
         mnuHelp.setToolTipText("");
@@ -618,21 +631,6 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         // TODO add your handling code here:
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_tbAutoIndentMouseClicked
-
-    private void tbBookmarkBackMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbBookmarkBackMouseClicked
-        // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }//GEN-LAST:event_tbBookmarkBackMouseClicked
-
-    private void tbBookmarkSetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbBookmarkSetMouseClicked
-        // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }//GEN-LAST:event_tbBookmarkSetMouseClicked
-
-    private void tbBookmarkNextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbBookmarkNextMouseClicked
-        // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }//GEN-LAST:event_tbBookmarkNextMouseClicked
 
     private void mnuHelpAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpAboutActionPerformed
         JOptionPane.showMessageDialog(this,
@@ -699,16 +697,16 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             if (destination.hasData()) {
                 T destId = destination.getData();
                 StringBuilder contents = new StringBuilder();
-                Iterator<String> it = io.getUserFile(destId).iterator(); 
-                while(true) {
+                Iterator<String> it = io.getUserFile(destId).iterator();
+                while (true) {
                     contents.append(it.next());
-                    if(it.hasNext()){
+                    if (it.hasNext()) {
                         contents.append("\n");
                     } else {
                         break;
                     }
                 }
-                
+
                 Editor e = new PnlEditor(this, contents.toString());
                 e.setIdentifier(destination.getData());
                 addClosableTab(tabEditors, e, destId.getDisplayName());
@@ -832,13 +830,28 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_mnuDeleteLineActionPerformed
 
+    private void mnuPyretDocsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPyretDocsActionPerformed
+        // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }//GEN-LAST:event_mnuPyretDocsActionPerformed
+
+    private void mnuPyretStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPyretStopActionPerformed
+        // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }//GEN-LAST:event_mnuPyretStopActionPerformed
+
+    private void mnuPyretRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPyretRunActionPerformed
+        // TODO add your handling code here:
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }//GEN-LAST:event_mnuPyretRunActionPerformed
+
     public void newTab() {
         this.mnuFileNewActionPerformed(null);
     }
 
     public void closeTab(JComponent c) {
         this.tabEditors.remove(c);
-        if(this.tabEditors.getTabCount() == 0){
+        if (this.tabEditors.getTabCount() == 0) {
             addClosableTab(tabEditors, new PnlDefaultEditor(this), "Default");
         }
     }
@@ -963,6 +976,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -974,7 +988,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
-    private javax.swing.JToolBar.Separator jSeparator5;
+    private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
     private javax.swing.JPopupMenu.Separator jSeparator8;
@@ -998,6 +1012,9 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     private javax.swing.JMenu mnuHelp;
     private javax.swing.JMenuItem mnuHelpAbout;
     private javax.swing.JMenuItem mnuPaste;
+    private javax.swing.JMenuItem mnuPyretDocs;
+    private javax.swing.JMenuItem mnuPyretRun;
+    private javax.swing.JMenuItem mnuPyretStop;
     private javax.swing.JMenuItem mnuRedo;
     private javax.swing.JMenuItem mnuSaveAll;
     private javax.swing.JMenuItem mnuSelectAll;
@@ -1005,9 +1022,6 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     private javax.swing.JSplitPane spltPrimary;
     private javax.swing.JTabbedPane tabEditors;
     private javax.swing.JLabel tbAutoIndent;
-    private javax.swing.JLabel tbBookmarkBack;
-    private javax.swing.JLabel tbBookmarkNext;
-    private javax.swing.JLabel tbBookmarkSet;
     private javax.swing.JLabel tbBookmarkStop;
     private javax.swing.JLabel tbRedo;
     private javax.swing.JLabel tbRun;
