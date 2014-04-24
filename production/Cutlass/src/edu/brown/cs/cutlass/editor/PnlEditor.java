@@ -22,6 +22,7 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
 
     private final EditorClient editorClient;
     private final StyledUndoPane editorPane;
+    private final PnlLineNumbers pnlLineNumber;
 
     /**
      * Creates new form EditorPanel
@@ -44,8 +45,11 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
                 editorClient.handleQuickNavigationChange(callGraphEntries);
             }
         });
+        pnlLineNumber = new PnlLineNumbers(editorPane);
+        pnlLineNumberContainer.add(pnlLineNumber);
         scrlEditor.getViewport().removeAll();
         scrlEditor.getViewport().add(editorPane);
+        scrlEditor.getViewport().addChangeListener(pnlLineNumber);
 
         // The output pane is outputPane
         outputPane.setText("Hello! I am a placeholder.");
@@ -60,15 +64,20 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jSplitPane2 = new javax.swing.JSplitPane();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        pnlEditArea = new javax.swing.JPanel();
         scrlEditor = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        pnlLineNumberContainer = new javax.swing.JPanel();
+        pnlOut = new javax.swing.JPanel();
         scrlCMD = new javax.swing.JScrollPane();
         outputPane = new javax.swing.JEditorPane();
 
-        jSplitPane2.setDividerLocation(400);
-        jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane2.setResizeWeight(1.0);
+        setLayout(new java.awt.CardLayout());
+
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        pnlEditArea.setLayout(new java.awt.BorderLayout());
 
         scrlEditor.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrlEditor.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -78,30 +87,36 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
         jTextArea1.setText("\ndata BinaryTree:\n  | mt\n  | node(value :: Number, left :: BinaryTree, right :: BinaryTree)\nend\n\nfun tree-to-list(tree :: BinaryTree) -> List:\n  doc: \"tree-to-list converts a binary tree into a list, preserving the order of the stored values.\"\n  cases(BinaryTree) tree:\n    | mt => []\n    | node(v, l, r) => tree-to-list(l) + [v] + tree-to-list(r)\n  end\nwhere:\n  tree-to-list(mt) is []\n  tree-to-list(node(4, node(2, mt, mt), node(6, mt, mt))) is [2, 4, 6]\nend\n\nfun is-sorted(lst :: List) -> Bool:\n  doc: \"is-sorted returns true if the list is sorted in ascending order.\"\n   cases(List) lst:\n    | empty => true\n    | link(f, r) => \n      min-rest = for fold(min from f+1, elt from r):\n          if (elt < min):\n            elt\n          else:\n            min\n          end\n      end\n      ((f < min-rest) and is-sorted(r))\n  end\nwhere:\n  is-sorted([]) is true\n  is-sorted([1]) is true\n  is-sorted([1, 2, 3]) is true\n  is-sorted([1, 3, 2]) is false\nend\nfun is-bst(tree :: BinaryTree) -> Bool:\n  doc: \"is-bst returns true if tree is a Binary Search Tree and false otherwise.\"\n  is-sorted(tree-to-list(tree))\nwhere:\n  is-bst(mt) is true\n  is-bst(node(4, node(2, mt, mt), node(6, mt, mt))) is true\n  is-bst(node(1, node(2, mt, mt), node(6, mt, mt))) is false\n  is-bst(node(4, node(5, mt, mt), node(6, mt, mt))) is false\nend\n\n");
         scrlEditor.setViewportView(jTextArea1);
 
-        jSplitPane2.setLeftComponent(scrlEditor);
+        pnlEditArea.add(scrlEditor, java.awt.BorderLayout.CENTER);
+
+        pnlLineNumberContainer.setMaximumSize(new java.awt.Dimension(80, 32767));
+        pnlLineNumberContainer.setMinimumSize(new java.awt.Dimension(60, 100));
+        pnlLineNumberContainer.setPreferredSize(new java.awt.Dimension(60, 399));
+        pnlLineNumberContainer.setLayout(new java.awt.CardLayout());
+        pnlEditArea.add(pnlLineNumberContainer, java.awt.BorderLayout.LINE_START);
+
+        jSplitPane1.setLeftComponent(pnlEditArea);
+
+        pnlOut.setLayout(new java.awt.CardLayout());
 
         scrlCMD.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrlCMD.setViewportView(outputPane);
 
-        jSplitPane2.setRightComponent(scrlCMD);
+        pnlOut.add(scrlCMD, "card2");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE)
-        );
+        jSplitPane1.setRightComponent(pnlOut);
+
+        add(jSplitPane1, "card2");
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JSplitPane jSplitPane2;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JEditorPane outputPane;
+    private javax.swing.JPanel pnlEditArea;
+    private javax.swing.JPanel pnlLineNumberContainer;
+    private javax.swing.JPanel pnlOut;
     private javax.swing.JScrollPane scrlCMD;
     private javax.swing.JScrollPane scrlEditor;
     // End of variables declaration//GEN-END:variables
@@ -157,5 +172,4 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
     public void close() throws RuntimeException {
         this.removeAll();
     }
-
 }
