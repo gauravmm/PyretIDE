@@ -10,6 +10,7 @@ import edu.brown.cs.cutlass.parser.PyretMetadata;
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
 import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
+import edu.brown.cs.cutlass.ui.FrmFinder;
 import edu.brown.cs.cutlass.util.Option;
 import java.util.TreeSet;
 
@@ -187,6 +188,21 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
     @Override
     public void reindent() {
         editorPane.reindent();
+    }
+
+    @Override
+    public boolean replaceAll(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
+        return super.replaceAll(type, matchCase, forwards, wholeWords, find, replace); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean replaceNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
+        return super.replaceNext(type, matchCase, forwards, wholeWords, find, replace); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean findNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
+        return super.findNext(type, matchCase, forwards, wholeWords, find); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

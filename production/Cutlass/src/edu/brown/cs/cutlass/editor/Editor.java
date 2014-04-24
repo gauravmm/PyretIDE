@@ -5,6 +5,8 @@
 package edu.brown.cs.cutlass.editor;
 
 import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
+import edu.brown.cs.cutlass.ui.FindClient;
+import edu.brown.cs.cutlass.ui.FrmFinder;
 import edu.brown.cs.cutlass.util.Option;
 
 /**
@@ -13,7 +15,7 @@ import edu.brown.cs.cutlass.util.Option;
  * @author Gaurav Manek
  * @param <T>
  */
-public abstract class Editor<T extends AbstractIdentifier> extends javax.swing.JPanel implements AutoCloseable {
+public abstract class Editor<T extends AbstractIdentifier> extends javax.swing.JPanel implements AutoCloseable, FindClient {
 
     private Option<T> identifier;
     private boolean changedSinceLastSave;
@@ -160,5 +162,20 @@ public abstract class Editor<T extends AbstractIdentifier> extends javax.swing.J
     @Override
     public void close() throws RuntimeException {
 
+    }
+
+    @Override
+    public boolean findNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
+        throw defaultResponse();
+    }
+
+    @Override
+    public boolean replaceNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
+        throw defaultResponse();
+    }
+
+    @Override
+    public boolean replaceAll(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
+        throw defaultResponse();
     }
 }

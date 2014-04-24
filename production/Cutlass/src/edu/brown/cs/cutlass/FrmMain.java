@@ -11,6 +11,8 @@ import edu.brown.cs.cutlass.sys.io.AbstractIO;
 import edu.brown.cs.cutlass.sys.io.AbstractIOException;
 import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
 import edu.brown.cs.cutlass.sys.pyret.AbstractPyretAccess;
+import edu.brown.cs.cutlass.ui.FindClient;
+import edu.brown.cs.cutlass.ui.FrmFinder;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
@@ -65,7 +67,7 @@ import javax.swing.SwingConstants;
  * @author Gaurav Manek
  * @param <T>
  */
-public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame implements EditorClient<T> {
+public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame implements EditorClient<T>, FindClient {
 
     private final Launcher launcher;
     private final ConfigEngine config;
@@ -155,6 +157,9 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             // Load default
             addClosableTab(tabEditors, new PnlDefaultEditor(this), "Default");
         }
+        
+        // Prepare find and replace window
+        FrmFinder finder = new FrmFinder(this);
 
         // SK Easter egg
         String username = System.getProperty("user.name").toLowerCase();
@@ -1113,6 +1118,36 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             }
         } else {
             throw new IllegalStateException();
+        }
+    }
+
+    @Override
+    public boolean findNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
+        Editor<T> ed = getCurrentEditor();
+        if(ed.isEditorWindow()){
+            return ed.findNext(type, matchCase, forwards, wholeWords, find);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean replaceNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
+        Editor<T> ed = getCurrentEditor();
+        if(ed.isEditorWindow()){
+            return ed.replaceNext(type, matchCase, forwards, wholeWords, find, replace);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean replaceAll(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
+        Editor<T> ed = getCurrentEditor();
+        if(ed.isEditorWindow()){
+            return ed.replaceAll(type, matchCase, forwards, wholeWords, find, replace);
+        } else {
+            return false;
         }
     }
 }
