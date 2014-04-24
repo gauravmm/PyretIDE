@@ -643,7 +643,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
     private void tbAutoIndentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbAutoIndentMouseClicked
         // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.mnuAutoIndentActionPerformed(null);
     }//GEN-LAST:event_tbAutoIndentMouseClicked
 
     private void mnuHelpAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpAboutActionPerformed
@@ -720,7 +720,6 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
                         break;
                     }
                 }
-
                 Editor e = new PnlEditor(this, contents.toString());
                 e.setIdentifier(destination.getData());
                 addClosableTab(tabEditors, e, destId.getDisplayName());
@@ -790,12 +789,12 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
     private void mnuUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuUndoActionPerformed
         // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.getCurrentEditor().undo();
     }//GEN-LAST:event_mnuUndoActionPerformed
 
     private void mnuRedoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuRedoActionPerformed
         // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.getCurrentEditor().redo();
     }//GEN-LAST:event_mnuRedoActionPerformed
 
     private void mnuCutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCutActionPerformed
@@ -861,6 +860,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
     private void mnuAutoIndentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAutoIndentActionPerformed
         // TODO add your handling code here:
+        this.getCurrentEditor().reindent();
     }//GEN-LAST:event_mnuAutoIndentActionPerformed
 
     public void newTab() {
@@ -874,7 +874,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         }
     }
 
-    public Editor<T> getCurrentEditor() {
+    private Editor<T> getCurrentEditor() {
         return (Editor<T>) tabEditors.getSelectedComponent();
     }
 
@@ -886,7 +886,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
      * @param c An Editor
      * @param title the title for the tab
      */
-    public void addClosableTab(final JTabbedPane tabbedPane, final Editor c, final String title) {
+    private void addClosableTab(final JTabbedPane tabbedPane, final Editor c, final String title) {
         // Add the tab to the pane without any label
         tabbedPane.addTab(null, c);
         int pos = tabbedPane.indexOfComponent(c);
