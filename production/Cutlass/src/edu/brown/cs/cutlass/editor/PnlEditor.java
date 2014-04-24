@@ -244,18 +244,18 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
     }
 
     @Override
-    public boolean replaceAll(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
-        return super.replaceAll(type, matchCase, forwards, wholeWords, find, replace); //To change body of generated methods, choose Tools | Templates.
+    public boolean findNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
+        return editorPane.findNext(type, matchCase, forwards, wholeWords, find);
     }
 
     @Override
     public boolean replaceNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
-        return super.replaceNext(type, matchCase, forwards, wholeWords, find, replace); //To change body of generated methods, choose Tools | Templates.
+        return editorPane.replaceNext(type, matchCase, forwards, wholeWords, find, replace);
     }
 
     @Override
-    public boolean findNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
-        return super.findNext(type, matchCase, forwards, wholeWords, find); //To change body of generated methods, choose Tools | Templates.
+    public boolean replaceAll(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
+        return editorPane.replaceAll(type, matchCase, forwards, wholeWords, find, replace);
     }
 
     @Override
