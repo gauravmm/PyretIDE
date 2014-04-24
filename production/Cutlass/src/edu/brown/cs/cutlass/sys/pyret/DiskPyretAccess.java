@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
 
-    private static final List<String> raco = new ArrayList<>(Arrays.asList("/home/dilip/Racket/bin/raco", "pyret"));
+    private static final List<String> raco = new ArrayList<>(Arrays.asList("C:/Program Files (x86)/Racket/raco", "pyret"));
     private static final ProcessBuilder run_build = new ProcessBuilder(raco);
     private static DiskIdentifier identifier;
     private static String temp_file;
@@ -101,7 +101,7 @@ public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
             run_build.directory(user_file.getParentFile());
             String usr_file_name = user_file.getName();
             Date date = new Date();
-            temp_file = usr_file_name.substring(0, usr_file_name.length() - 4) + "_" + date.toString().replaceAll(" ", "_") + ".arr";
+            temp_file = usr_file_name.substring(0, usr_file_name.length() - 4) + "_" + date.toString().replaceAll(" ", "_").replaceAll(":", "-") + ".arr";
 
             Files.copy(identifier.getId(), Paths.get(user_file.getParent(), temp_file));
             raco.add(temp_file);

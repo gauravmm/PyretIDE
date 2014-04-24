@@ -70,8 +70,8 @@ public class PnlDefaultEditor<T extends AbstractIdentifier> extends Editor<T> {
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
         // TODO add your handling code here:
         if (evt.getClickCount() >= 2){
-            owner.newTab();
-            owner.closeTab(this);
+            owner.newTab(this);
+//            owner.closeTab(this);
         }
     }//GEN-LAST:event_formMouseClicked
 
