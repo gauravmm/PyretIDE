@@ -22,7 +22,7 @@ public class TokenTypeSinglePunct extends TokenType {
     private static final TokenTypeSinglePunct instance = new TokenTypeSinglePunct();
 
     private TokenTypeSinglePunct() {
-        super(Pattern.compile("^([\\.<>,^|=+*/\\-])"));
+        super(Pattern.compile("^([\\.<>,^|=+*/\\-:])"));
     }
 
 

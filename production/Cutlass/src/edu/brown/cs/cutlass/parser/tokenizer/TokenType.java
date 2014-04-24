@@ -90,7 +90,7 @@ public abstract class TokenType {
     @Override
     @Deprecated
     public boolean equals(Object obj) {
-        throw new UnsupportedOperationException("Use pointer equality (==) to check for equality.");
+        return this == obj;
     }
 
     public TokenStyle getStyle() {

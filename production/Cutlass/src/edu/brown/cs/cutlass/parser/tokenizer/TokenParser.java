@@ -39,7 +39,7 @@ public final class TokenParser {
         Stack<Pair<Token, TokenType>> expectedFutureToken = new Stack<>();
         List<ParsingError> parsingErrors = new LinkedList<>();
 
-        List<TokenType> types = TokenTypes.getTypes();
+        List<TokenType> types = new LinkedList<>(TokenTypes.getTypes());
         LinkedList<Line> outLine = new LinkedList<>();
 
         // Prepare aggregator
@@ -117,6 +117,8 @@ public final class TokenParser {
                 if (tt instanceof TokenTypePairedOpen) {
                     pairOpenStart.add((TokenPairedOpening) token);
                     scope = scope.push(token);
+                    // Update the token types to ignore.
+                    types.removeAll(((TokenTypePairedOpen) tt).getIgnoreTokenTypes());
                 } else if (tt instanceof TokenTypePairedClose) {
                     if (!(token instanceof TokenPairedClosing)) {
                         throw new IllegalStateException("Illegal state in parser.");
@@ -139,6 +141,12 @@ public final class TokenParser {
                     } else {
                         parsingErrors.add(new ParsingError(token, "This doesn't close anything."));
                         token.setStyle(TokenStyles.getErrorStyle());
+                    }
+
+                    // Reset the token types to ignore:
+                    types = new LinkedList<>(TokenTypes.getTypes());
+                    for (TokenPairedOpening st : pairOpenStart) {
+                        types.removeAll(st.getType().getIgnoreTokenTypes());
                     }
                 }
 
