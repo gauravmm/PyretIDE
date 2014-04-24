@@ -47,7 +47,6 @@ public class FrmFinder extends javax.swing.JFrame {
         btnReplace = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         tglMatchCase = new javax.swing.JToggleButton();
-        tglDirection = new javax.swing.JToggleButton();
         tglWholeWords = new javax.swing.JToggleButton();
         cmbType = new javax.swing.JComboBox();
         btnReplaceAll = new javax.swing.JButton();
@@ -78,13 +77,6 @@ public class FrmFinder extends javax.swing.JFrame {
 
         tglMatchCase.setText("Match Case");
 
-        tglDirection.setText("Forwards");
-        tglDirection.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tglDirectionActionPerformed(evt);
-            }
-        });
-
         tglWholeWords.setText("Whole Words");
 
         cmbType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Literal", "Wildcards (*?)", "Regular Expressions" }));
@@ -107,11 +99,9 @@ public class FrmFinder extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(tglMatchCase)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tglDirection)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tglWholeWords)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmbType, 0, 110, Short.MAX_VALUE))
+                        .addComponent(cmbType, 0, 196, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -125,9 +115,8 @@ public class FrmFinder extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnReplaceAll, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(btnFind, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnReplace, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)))))
+                            .addComponent(btnFind, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnReplace, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -151,7 +140,6 @@ public class FrmFinder extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tglMatchCase)
-                    .addComponent(tglDirection)
                     .addComponent(tglWholeWords)
                     .addComponent(cmbType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
@@ -160,24 +148,16 @@ public class FrmFinder extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tglDirectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tglDirectionActionPerformed
-        if (tglDirection.isSelected()) {
-            tglDirection.setText("Backwards");
-        } else {
-            tglDirection.setText("Forwards");
-        }
-    }//GEN-LAST:event_tglDirectionActionPerformed
-
     private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
-        client.findNext(getFindType(), tglMatchCase.isSelected(), !tglDirection.isSelected(), tglWholeWords.isSelected(), txtFind.getText());
+        client.findNext(getFindType(), tglMatchCase.isSelected(), true, tglWholeWords.isSelected(), txtFind.getText());
     }//GEN-LAST:event_btnFindActionPerformed
 
     private void btnReplaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReplaceActionPerformed
-        client.replaceNext(getFindType(), tglMatchCase.isSelected(), !tglDirection.isSelected(), tglWholeWords.isSelected(), txtFind.getText(), txtReplace.getText());
+        client.replaceNext(getFindType(), tglMatchCase.isSelected(), true, tglWholeWords.isSelected(), txtFind.getText(), txtReplace.getText());
     }//GEN-LAST:event_btnReplaceActionPerformed
 
     private void btnReplaceAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReplaceAllActionPerformed
-        client.replaceAll(getFindType(), tglMatchCase.isSelected(), !tglDirection.isSelected(), tglWholeWords.isSelected(), txtFind.getText(), txtReplace.getText());
+        client.replaceAll(getFindType(), tglMatchCase.isSelected(), true, tglWholeWords.isSelected(), txtFind.getText(), txtReplace.getText());
     }//GEN-LAST:event_btnReplaceAllActionPerformed
 
     private FindType getFindType() {
@@ -197,7 +177,6 @@ public class FrmFinder extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JToggleButton tglDirection;
     private javax.swing.JToggleButton tglMatchCase;
     private javax.swing.JToggleButton tglWholeWords;
     private javax.swing.JTextField txtFind;

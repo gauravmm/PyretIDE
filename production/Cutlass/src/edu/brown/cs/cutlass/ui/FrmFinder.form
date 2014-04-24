@@ -31,11 +31,9 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="tglMatchCase" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="tglDirection" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="tglWholeWords" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="cmbType" pref="110" max="32767" attributes="0"/>
+                      <Component id="cmbType" pref="196" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -53,10 +51,8 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="btnReplaceAll" pref="99" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="btnFind" max="32767" attributes="0"/>
-                              <Component id="btnReplace" alignment="1" pref="99" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="btnFind" alignment="1" max="32767" attributes="0"/>
+                          <Component id="btnReplace" alignment="1" pref="99" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -88,7 +84,6 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="tglMatchCase" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="tglDirection" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="tglWholeWords" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="cmbType" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -138,14 +133,6 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Match Case"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JToggleButton" name="tglDirection">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Forwards"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tglDirectionActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JToggleButton" name="tglWholeWords">
       <Properties>
