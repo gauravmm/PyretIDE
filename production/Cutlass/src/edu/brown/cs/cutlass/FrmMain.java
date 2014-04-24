@@ -839,6 +839,9 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
     public void closeTab(JComponent c) {
         this.tabEditors.remove(c);
+        if(this.tabEditors.getTabCount() == 0){
+            addClosableTab(tabEditors, new PnlDefaultEditor(this), "Default");
+        }
     }
 
     public Editor<T> getCurrentEditor() {
@@ -853,7 +856,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
      * @param c An Editor
      * @param title the title for the tab
      */
-    public static void addClosableTab(final JTabbedPane tabbedPane, final Editor c, final String title) {
+    public void addClosableTab(final JTabbedPane tabbedPane, final Editor c, final String title) {
         // Add the tab to the pane without any label
         tabbedPane.addTab(null, c);
         int pos = tabbedPane.indexOfComponent(c);
@@ -905,7 +908,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             public void actionPerformed(ActionEvent e) {
                 // The component parameter must be declared "final" so that it can be
                 // referenced in the anonymous listener class like this.
-                tabbedPane.remove(c);
+                closeTab(c);
             }
         };
         btnClose.addActionListener(listener);
@@ -941,7 +944,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         AbstractAction closeTabAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                tabbedPane.remove(c);
+                closeTab(c);
             }
         };
 
