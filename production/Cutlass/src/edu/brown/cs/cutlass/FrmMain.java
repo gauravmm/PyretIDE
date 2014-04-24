@@ -230,14 +230,14 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cutlass - Your Weapon of Choice");
         setMinimumSize(new java.awt.Dimension(400, 120));
-        setPreferredSize(new java.awt.Dimension(500, 700));
+        setPreferredSize(new java.awt.Dimension(900, 700));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
             }
         });
 
-        spltPrimary.setDividerLocation(300);
+        spltPrimary.setDividerLocation(700);
         spltPrimary.setResizeWeight(1.0);
 
         jPanel2.setMinimumSize(new java.awt.Dimension(250, 100));
@@ -267,7 +267,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 576, Short.MAX_VALUE)
                 .addContainerGap())
         );
 

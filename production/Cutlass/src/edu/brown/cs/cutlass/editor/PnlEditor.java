@@ -78,6 +78,7 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
 
         setLayout(new java.awt.CardLayout());
 
+        jSplitPane1.setDividerLocation(400);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setResizeWeight(1.0);
 
@@ -95,12 +96,13 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
 
         pnlLineNumberContainer.setMaximumSize(new java.awt.Dimension(80, 32767));
         pnlLineNumberContainer.setMinimumSize(new java.awt.Dimension(60, 100));
-        pnlLineNumberContainer.setPreferredSize(new java.awt.Dimension(60, 399));
+        pnlLineNumberContainer.setPreferredSize(new java.awt.Dimension(40, 399));
         pnlLineNumberContainer.setLayout(new java.awt.CardLayout());
         pnlEditArea.add(pnlLineNumberContainer, java.awt.BorderLayout.LINE_START);
 
         jSplitPane1.setLeftComponent(pnlEditArea);
 
+        pnlOut.setPreferredSize(new java.awt.Dimension(108, 200));
         pnlOut.setLayout(new java.awt.CardLayout());
 
         scrlCMD.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
