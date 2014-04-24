@@ -32,8 +32,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,6 +65,8 @@ import javax.swing.SwingConstants;
  * @author Gaurav Manek
  * @param <T>
  */
+
+
 public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame implements EditorClient<T>, FindClient {
 
     private final Launcher launcher;
@@ -157,7 +157,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             // Load default
             addClosableTab(tabEditors, new PnlDefaultEditor(this), "Default");
         }
-        
+
         // Prepare find and replace window
         FrmFinder finder = new FrmFinder(this);
 
@@ -648,14 +648,53 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    private void fileSaveAsAction() {
+        try {
+            //get the contents of their editor and store as seq - either CharSequence or List<CharSequence>
+            Editor editor = getCurrentEditor();
+            String seq = editor.getBuffer();
+            Option<T> destination = io.requestUserFileDestination();
+            if (destination.hasData()) {
+                T destId = destination.getData();
+                io.setUserFile(destId, seq);
+                editor.setIdentifier(destId);
+                tabEditors.remove(tabEditors.getSelectedIndex());
+                addClosableTab(tabEditors, editor, destId.getDisplayName());
+            }
+        } catch (AbstractIOException ex) {
+            Lumberjack.log(Lumberjack.Level.ERROR, ex);
+        }
+    }
 
+    private void fileSaveAction() {
+        Editor e = getCurrentEditor();
+        if (e.isEditorWindow()) {
+            if (e.isChangedSinceLastSave()) {
+                // TODO: Save the file
+                Option<T> id = e.getIdentifier();
+                if (id.hasData()) {
+                    try {
+                        //Save
+                        id.getData();
+                        io.setUserFile(id.getData(), e.getBuffer());
+                        //e.setChangedSinceLastSave(false);
+                    } catch (AbstractIOException ex) {
+                        Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    fileSaveAsAction();
+                }
+            }
+        }
+    }
     private void tbSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbSaveMouseClicked
         this.mnuFileSaveActionPerformed(null);
     }//GEN-LAST:event_tbSaveMouseClicked
 
     private void tbRunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbRunMouseClicked
-        // TODO add your handling code here:
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         this.mnuPyretRunActionPerformed(null);
+        //getCurrentEditor().close();
     }//GEN-LAST:event_tbRunMouseClicked
 
     private void tbBookmarkStopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbBookmarkStopMouseClicked
@@ -720,19 +759,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         if (e.isEditorWindow()) {
             if (e.isChangedSinceLastSave()) {
                 // TODO: Save the file
-                Option<T> id = e.getIdentifier();
-                if (id.hasData()) {
-                    try {
-                        //Save
-                        id.getData();
-                        io.setUserFile(id.getData(), e.getBuffer());
-                        //e.setChangedSinceLastSave(false);
-                    } catch (AbstractIOException ex) {
-                        Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else {
-                    mnuFileSaveAsActionPerformed(evt);
-                }
+                this.save(e);
             }
         }
     }//GEN-LAST:event_mnuFileSaveActionPerformed
@@ -762,6 +789,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     }//GEN-LAST:event_mnuFileOpenActionPerformed
 
     private void mnuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuExitActionPerformed
+        //save launch state!
         mnuCloseAllTabsActionPerformed(evt);
         this.dispose();
     }//GEN-LAST:event_mnuExitActionPerformed
@@ -788,34 +816,27 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     }//GEN-LAST:event_mnuSaveAllActionPerformed
 
     private void mnuCloseCurrentTabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCloseCurrentTabActionPerformed
-        mnuFileSaveActionPerformed(evt);
-        this.getCurrentEditor().close();
-        int selected = tabEditors.getSelectedIndex();
-        if (selected >= 0) {
-            tabEditors.remove(selected);
-        }
+//        mnuFileSaveActionPerformed(evt);
+        closeTab(this.getCurrentEditor());
+//        int selected = tabEditors.getSelectedIndex();
+//        if (selected >= 0) {
+//            tabEditors.remove(selected);
+//        }
     }//GEN-LAST:event_mnuCloseCurrentTabActionPerformed
 
     private void mnuCloseAllTabsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCloseAllTabsActionPerformed
         int tabs = tabEditors.getTabCount();
         for (int i = tabs - 1; i >= 0; i--) {
-            Editor<T> ed = (Editor<T>) tabEditors.getTabComponentAt(i);
+            Editor<T> ed = (Editor<T>) tabEditors.getComponentAt(i);
             if (ed.isEditorWindow()) {
                 if (ed.isChangedSinceLastSave()) {
                     // TODO: Save the file
-                    Option<T> id = ed.getIdentifier();
-                    if (id.hasData()) {
-                        // Save
-                        id.getData();
-                        throw new UnsupportedOperationException();
-                    } else {
-                        // Save as
-                        throw new UnsupportedOperationException();
-                    }
+                    closeTab(ed);
+
                 }
             }
             ed.close();
-            tabEditors.remove(i);
+//            tabEditors.remove(i);
         }
     }//GEN-LAST:event_mnuCloseAllTabsActionPerformed
 
@@ -887,12 +908,14 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
     private void mnuPyretStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPyretStopActionPerformed
         // TODO add your handling code here:
+        this.closeTabMessagePrompt(getCurrentEditor());
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_mnuPyretStopActionPerformed
 
     private void mnuPyretRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPyretRunActionPerformed
         // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        fileSaveAction();
+        getCurrentEditor().run();
     }//GEN-LAST:event_mnuPyretRunActionPerformed
 
     private void mnuAutoIndentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAutoIndentActionPerformed
@@ -910,14 +933,39 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         this.tabEditors.setSelectedIndex((this.tabEditors.getSelectedIndex() + 1) % this.tabEditors.getTabCount());
     }//GEN-LAST:event_mnuFileNextTabActionPerformed
 
-    public void newTab() {
+    public void newTab(Editor<T> def) {
         this.mnuFileNewActionPerformed(null);
+        this.closeTab(def);
     }
 
-    public void closeTab(JComponent c) {
-        this.tabEditors.remove(c);
+    public void closeTab(Editor<T> e) {
+        this.closeTabMessagePrompt(e);
+    }
+
+    public void closeTabAndSave(Editor<T> e, boolean save) {
+        if (e.isEditorWindow() && save) {
+            this.save(e);
+        }
+        e.close();
+        this.tabEditors.remove(e);
         if (this.tabEditors.getTabCount() == 0) {
             addClosableTab(tabEditors, new PnlDefaultEditor(this), "Default");
+        }
+    }
+
+    private void save(Editor e) {
+        Option<T> id = e.getIdentifier();
+        if (id.hasData()) {
+            try {
+                //Save
+                id.getData();
+                io.setUserFile(id.getData(), e.getBuffer());
+                //e.setChangedSinceLastSave(false);
+            } catch (AbstractIOException ex) {
+                Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            mnuFileSaveAsActionPerformed(null);
         }
     }
 
@@ -1021,7 +1069,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         AbstractAction closeTabAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                closeTab(c);
+                mnuCloseCurrentTabActionPerformed(e);
             }
         };
 
@@ -1124,7 +1172,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     @Override
     public boolean findNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
         Editor<T> ed = getCurrentEditor();
-        if(ed.isEditorWindow()){
+        if (ed.isEditorWindow()) {
             return ed.findNext(type, matchCase, forwards, wholeWords, find);
         } else {
             return false;
@@ -1134,7 +1182,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     @Override
     public boolean replaceNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
         Editor<T> ed = getCurrentEditor();
-        if(ed.isEditorWindow()){
+        if (ed.isEditorWindow()) {
             return ed.replaceNext(type, matchCase, forwards, wholeWords, find, replace);
         } else {
             return false;
@@ -1144,10 +1192,34 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     @Override
     public boolean replaceAll(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
         Editor<T> ed = getCurrentEditor();
-        if(ed.isEditorWindow()){
+        if (ed.isEditorWindow()) {
             return ed.replaceAll(type, matchCase, forwards, wholeWords, find, replace);
         } else {
             return false;
+        }
+    }
+
+    private void closeTabMessagePrompt(Editor<T> editor) {
+        if (!editor.isEditorWindow()) {
+            this.closeTabAndSave(editor, false);
+            return;
+        }
+        Option<T> currentID = editor.getIdentifier();
+        int selection = JOptionPane.showConfirmDialog(this,
+                "Would you like to save your unsaved work" + (currentID.hasData() ? " in " + currentID.getData().getDisplayName() + "?" : "?"),
+                "Cutlass",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        switch (selection) {
+            case JOptionPane.YES_OPTION:
+                this.closeTabAndSave(editor, true);
+                break;
+            case JOptionPane.NO_OPTION:
+                this.closeTabAndSave(editor, false);
+                break;
+            default:
+                break;
         }
     }
 }

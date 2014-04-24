@@ -21,6 +21,7 @@ public abstract class AbstractPyretAccess<T extends AbstractIdentifier> extends 
     protected void done() {
         try {
             this.firePyretAccessListener(get());
+            this.close();
         } catch (InterruptedException ex) {
             // The code was interrupted. Return nothing.
         } catch (ExecutionException ex) {
