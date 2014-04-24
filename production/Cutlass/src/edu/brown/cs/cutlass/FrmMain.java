@@ -230,14 +230,14 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cutlass - Your Weapon of Choice");
         setMinimumSize(new java.awt.Dimension(400, 120));
-        setPreferredSize(new java.awt.Dimension(500, 700));
+        setPreferredSize(new java.awt.Dimension(900, 700));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
             }
         });
 
-        spltPrimary.setDividerLocation(300);
+        spltPrimary.setDividerLocation(700);
         spltPrimary.setResizeWeight(1.0);
 
         jPanel2.setMinimumSize(new java.awt.Dimension(250, 100));
@@ -267,7 +267,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 576, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -838,6 +838,9 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
     public void closeTab(JComponent c) {
         this.tabEditors.remove(c);
+        if(this.tabEditors.getTabCount() == 0){
+            addClosableTab(tabEditors, new PnlDefaultEditor(this), "Default");
+        }
     }
 
     public Editor<T> getCurrentEditor() {
@@ -852,7 +855,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
      * @param c An Editor
      * @param title the title for the tab
      */
-    public static void addClosableTab(final JTabbedPane tabbedPane, final Editor c, final String title) {
+    public void addClosableTab(final JTabbedPane tabbedPane, final Editor c, final String title) {
         // Add the tab to the pane without any label
         tabbedPane.addTab(null, c);
         int pos = tabbedPane.indexOfComponent(c);
@@ -904,7 +907,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             public void actionPerformed(ActionEvent e) {
                 // The component parameter must be declared "final" so that it can be
                 // referenced in the anonymous listener class like this.
-                tabbedPane.remove(c);
+                closeTab(c);
             }
         };
         btnClose.addActionListener(listener);
@@ -940,7 +943,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         AbstractAction closeTabAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                tabbedPane.remove(c);
+                closeTab(c);
             }
         };
 
