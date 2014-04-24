@@ -283,6 +283,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
         tbSave.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tbSave.setText("[Icon]");
+        tbSave.setToolTipText("Save");
         tbSave.setName(""); // NOI18N
         tbSave.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -590,9 +591,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     }// </editor-fold>//GEN-END:initComponents
 
     private void tbSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbSaveMouseClicked
-        // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
+        this.mnuFileSaveActionPerformed(null);
     }//GEN-LAST:event_tbSaveMouseClicked
 
     private void tbRunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbRunMouseClicked

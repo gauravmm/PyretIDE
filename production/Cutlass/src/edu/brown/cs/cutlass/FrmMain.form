@@ -255,6 +255,9 @@
             <Property name="text" type="java.lang.String" value="Help"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="FrmMain_mnuHelp"/>
+          </AuxValues>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mnuHelpAbout">
               <Properties>
@@ -428,6 +431,7 @@
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="[Icon]"/>
+            <Property name="toolTipText" type="java.lang.String" value="Save"/>
             <Property name="name" type="java.lang.String" value="" noResource="true"/>
           </Properties>
           <Events>
