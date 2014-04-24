@@ -207,6 +207,8 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         mnuFileSaveAs = new javax.swing.JMenuItem();
         mnuSaveAll = new javax.swing.JMenuItem();
         jSeparator9 = new javax.swing.JPopupMenu.Separator();
+        mnuFileNextTab = new javax.swing.JMenuItem();
+        mnuFilePrevTab = new javax.swing.JMenuItem();
         mnuCloseCurrentTab = new javax.swing.JMenuItem();
         mnuCloseAllTabs = new javax.swing.JMenuItem();
         jSeparator10 = new javax.swing.JPopupMenu.Separator();
@@ -415,6 +417,26 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         });
         mnuFile.add(mnuSaveAll);
         mnuFile.add(jSeparator9);
+
+        mnuFileNextTab.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.CTRL_MASK));
+        mnuFileNextTab.setMnemonic('T');
+        mnuFileNextTab.setText("Next Tab");
+        mnuFileNextTab.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuFileNextTabActionPerformed(evt);
+            }
+        });
+        mnuFile.add(mnuFileNextTab);
+
+        mnuFilePrevTab.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.CTRL_MASK));
+        mnuFilePrevTab.setMnemonic('v');
+        mnuFilePrevTab.setText("Previous Tab");
+        mnuFilePrevTab.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuFilePrevTabActionPerformed(evt);
+            }
+        });
+        mnuFile.add(mnuFilePrevTab);
 
         mnuCloseCurrentTab.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.CTRL_MASK));
         mnuCloseCurrentTab.setMnemonic('C');
@@ -648,7 +670,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
     private void tbAutoIndentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbAutoIndentMouseClicked
         // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.mnuAutoIndentActionPerformed(null);
     }//GEN-LAST:event_tbAutoIndentMouseClicked
 
     private void mnuHelpAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHelpAboutActionPerformed
@@ -725,7 +747,6 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
                         break;
                     }
                 }
-
                 Editor e = new PnlEditor(this, contents.toString());
                 e.setIdentifier(destination.getData());
                 addClosableTab(tabEditors, e, destId.getDisplayName());
@@ -795,12 +816,12 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
     private void mnuUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuUndoActionPerformed
         // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.getCurrentEditor().undo();
     }//GEN-LAST:event_mnuUndoActionPerformed
 
     private void mnuRedoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuRedoActionPerformed
         // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.getCurrentEditor().redo();
     }//GEN-LAST:event_mnuRedoActionPerformed
 
     private void mnuCutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCutActionPerformed
@@ -871,7 +892,18 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
     private void mnuAutoIndentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAutoIndentActionPerformed
         // TODO add your handling code here:
+        this.getCurrentEditor().reindent();
     }//GEN-LAST:event_mnuAutoIndentActionPerformed
+
+    private void mnuFilePrevTabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFilePrevTabActionPerformed
+        // TODO add your handling code here:
+        this.tabEditors.setSelectedIndex((this.tabEditors.getSelectedIndex() - 1 + this.tabEditors.getTabCount()) % this.tabEditors.getTabCount());
+    }//GEN-LAST:event_mnuFilePrevTabActionPerformed
+
+    private void mnuFileNextTabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileNextTabActionPerformed
+        // TODO add your handling code here:
+        this.tabEditors.setSelectedIndex((this.tabEditors.getSelectedIndex() + 1) % this.tabEditors.getTabCount());
+    }//GEN-LAST:event_mnuFileNextTabActionPerformed
 
     public void newTab() {
         this.mnuFileNewActionPerformed(null);
@@ -884,7 +916,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         }
     }
 
-    public Editor<T> getCurrentEditor() {
+    private Editor<T> getCurrentEditor() {
         return (Editor<T>) tabEditors.getSelectedComponent();
     }
 
@@ -896,7 +928,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
      * @param c An Editor
      * @param title the title for the tab
      */
-    public void addClosableTab(final JTabbedPane tabbedPane, final Editor c, final String title) {
+    private void addClosableTab(final JTabbedPane tabbedPane, final Editor c, final String title) {
         // Add the tab to the pane without any label
         tabbedPane.addTab(null, c);
         int pos = tabbedPane.indexOfComponent(c);
@@ -1035,7 +1067,9 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     private javax.swing.JMenuItem mnuExit;
     private javax.swing.JMenu mnuFile;
     private javax.swing.JMenuItem mnuFileNew;
+    private javax.swing.JMenuItem mnuFileNextTab;
     private javax.swing.JMenuItem mnuFileOpen;
+    private javax.swing.JMenuItem mnuFilePrevTab;
     private javax.swing.JMenuItem mnuFileSave;
     private javax.swing.JMenuItem mnuFileSaveAs;
     private javax.swing.JMenu mnuHelp;
