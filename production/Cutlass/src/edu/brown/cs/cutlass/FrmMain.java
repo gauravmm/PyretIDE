@@ -202,6 +202,8 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         mnuFileSaveAs = new javax.swing.JMenuItem();
         mnuSaveAll = new javax.swing.JMenuItem();
         jSeparator9 = new javax.swing.JPopupMenu.Separator();
+        mnuFileNextTab = new javax.swing.JMenuItem();
+        mnuFilePrevTab = new javax.swing.JMenuItem();
         mnuCloseCurrentTab = new javax.swing.JMenuItem();
         mnuCloseAllTabs = new javax.swing.JMenuItem();
         jSeparator10 = new javax.swing.JPopupMenu.Separator();
@@ -410,6 +412,26 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         });
         mnuFile.add(mnuSaveAll);
         mnuFile.add(jSeparator9);
+
+        mnuFileNextTab.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.CTRL_MASK));
+        mnuFileNextTab.setMnemonic('T');
+        mnuFileNextTab.setText("Next Tab");
+        mnuFileNextTab.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuFileNextTabActionPerformed(evt);
+            }
+        });
+        mnuFile.add(mnuFileNextTab);
+
+        mnuFilePrevTab.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.CTRL_MASK));
+        mnuFilePrevTab.setMnemonic('v');
+        mnuFilePrevTab.setText("Previous Tab");
+        mnuFilePrevTab.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuFilePrevTabActionPerformed(evt);
+            }
+        });
+        mnuFile.add(mnuFilePrevTab);
 
         mnuCloseCurrentTab.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.CTRL_MASK));
         mnuCloseCurrentTab.setMnemonic('C');
@@ -863,6 +885,16 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         this.getCurrentEditor().reindent();
     }//GEN-LAST:event_mnuAutoIndentActionPerformed
 
+    private void mnuFilePrevTabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFilePrevTabActionPerformed
+        // TODO add your handling code here:
+        this.tabEditors.setSelectedIndex((this.tabEditors.getSelectedIndex() - 1 + this.tabEditors.getTabCount()) % this.tabEditors.getTabCount());
+    }//GEN-LAST:event_mnuFilePrevTabActionPerformed
+
+    private void mnuFileNextTabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileNextTabActionPerformed
+        // TODO add your handling code here:
+        this.tabEditors.setSelectedIndex((this.tabEditors.getSelectedIndex() + 1) % this.tabEditors.getTabCount());
+    }//GEN-LAST:event_mnuFileNextTabActionPerformed
+
     public void newTab() {
         this.mnuFileNewActionPerformed(null);
     }
@@ -1025,7 +1057,9 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     private javax.swing.JMenuItem mnuExit;
     private javax.swing.JMenu mnuFile;
     private javax.swing.JMenuItem mnuFileNew;
+    private javax.swing.JMenuItem mnuFileNextTab;
     private javax.swing.JMenuItem mnuFileOpen;
+    private javax.swing.JMenuItem mnuFilePrevTab;
     private javax.swing.JMenuItem mnuFileSave;
     private javax.swing.JMenuItem mnuFileSaveAs;
     private javax.swing.JMenu mnuHelp;
