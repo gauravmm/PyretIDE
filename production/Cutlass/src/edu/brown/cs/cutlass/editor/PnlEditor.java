@@ -40,6 +40,9 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
         this.editorPane = new StyledUndoPane(initialContents, new PyretHighlightedListener() {
             @Override
             public void highlighted(TokenParserOutput output, Option<Token> currentToken, EditorJumpToClient client) {
+                if (pnlLineNumber != null) {
+                    pnlLineNumber.stateChanged(null);
+                }
                 PyretMetadata extract = PyretFeatureExtractor.extract(output);
                 TreeSet<CallGraphEntry> callGraphEntries = new TreeSet<>(PyretFeatureExtractor.getCallGraphEntries(extract, currentToken, client));
                 editorClient.handleQuickNavigationChange(callGraphEntries);
@@ -76,6 +79,7 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
         setLayout(new java.awt.CardLayout());
 
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane1.setResizeWeight(1.0);
 
         pnlEditArea.setLayout(new java.awt.BorderLayout());
 
