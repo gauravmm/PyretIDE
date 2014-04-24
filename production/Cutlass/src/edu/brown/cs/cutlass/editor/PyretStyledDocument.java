@@ -5,11 +5,10 @@
 package edu.brown.cs.cutlass.editor;
 
 import edu.brown.cs.cutlass.util.Lumberjack;
+import java.util.List;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultCaret;
 import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Position;
 
 /**
  *
@@ -61,9 +60,9 @@ public class PyretStyledDocument extends DefaultStyledDocument {
 
     public void highlightAndIndent() {
         int posDot = parent.getCaret().getDot();
-        
+
         undoer.setIsHighlighting(true);
-        
+
         int newDot = highlighter.highlight(posDot, true);
 
         undoer.setIsHighlighting(false);
@@ -85,6 +84,10 @@ public class PyretStyledDocument extends DefaultStyledDocument {
         } catch (BadLocationException ex) {
             Lumberjack.log(Lumberjack.Level.ERROR, ex);
         }
+    }
+
+    public List<Integer> getLineStartOffsets() {
+        return highlighter.getLastLineStartOffsets();
     }
 
 }

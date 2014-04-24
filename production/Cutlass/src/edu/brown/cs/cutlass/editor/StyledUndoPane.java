@@ -10,6 +10,7 @@ import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JEditorPane;
 import javax.swing.KeyStroke;
@@ -88,6 +89,10 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
     @Override
     public void highlighted(TokenParserOutput output, Option<Token> currentToken, EditorJumpToClient client) {
         listener.highlighted(output, currentToken, client);
+    }
+
+    public List<Integer> getLineStartOffsets() {
+        return document.getLineStartOffsets();
     }
 
     private class CaretListenerImpl implements CaretListener {

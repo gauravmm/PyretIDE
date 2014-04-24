@@ -20,15 +20,16 @@ import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyles;
 import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.TokenTypeAnnotation;
 import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.TokenTypeDefault;
 import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.TokenTypePairedOpenParen;
+import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.TokenTypeWhitespace;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import javax.swing.text.BadLocationException;
 
 /**
@@ -39,6 +40,7 @@ public class SyntaxHighlighter {
 
     private PyretStyledDocument sdoc;
     private final StyledUndoPane listener;
+    private List<Integer>  lastLineStartOffsets = Arrays.asList(0);
 
     SyntaxHighlighter(PyretStyledDocument d, StyledUndoPane l) {
         this.sdoc = addAllStyles(d);
@@ -120,15 +122,20 @@ public class SyntaxHighlighter {
             tokenLines = indentedLines;
         }
 
+        List<Integer> newLineStartOffsets = new ArrayList<>();
+        newLineStartOffsets.add(0);
         Iterator<Line> it = tokenLines.iterator();
-
         while (it.hasNext()) {
             Line l = it.next();
             List<Token> line_tokens = l.getContents();
             for (Token t : line_tokens) {
                 sdoc.insertStringWithoutHighlight(sdoc.getLength(), t.getValue(), t.getTokenStyle().getStyle());
+                if(t.getType() instanceof TokenTypeWhitespace && t.getValue().endsWith(Line.LINE_TERMINATOR)){
+                    newLineStartOffsets.add(sdoc.getLength());
+                }
             }
         }
+        lastLineStartOffsets = Collections.unmodifiableList(newLineStartOffsets);
 
         listener.highlighted(parseTokens, opt, listener);
         return charsBeforeAfter.getX() + charsBeforeAfter.getY();
@@ -196,5 +203,9 @@ public class SyntaxHighlighter {
             //System.out.format("%d\t%d\t%d\t%s%n", t.getOffset(), t.getLength(), pos, t.getValue());
             throw new IllegalStateException("This should not be possible");
         }
+    }
+
+    public List<Integer>  getLastLineStartOffsets() {
+        return lastLineStartOffsets;
     }
 }
