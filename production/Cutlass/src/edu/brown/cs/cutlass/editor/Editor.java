@@ -83,6 +83,27 @@ public abstract class Editor<T extends AbstractIdentifier> extends javax.swing.J
     }
 
     /**
+     * Reindent the code.
+     */
+    public void reindent() {
+        throw defaultResponse();
+    }
+
+    /**
+     * Perform and undo if possible.
+     */
+    public void undo() {
+        throw defaultResponse();
+    }
+
+    /**
+     * Perform a redo if possible.
+     */
+    public void redo() {
+        throw defaultResponse();
+    }
+
+    /**
      * Get the current selection.
      *
      * @return The currently selected text as a String, or an empty String if

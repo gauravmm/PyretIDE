@@ -175,6 +175,21 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
     }
 
     @Override
+    public void redo() {
+        editorPane.redo();
+    }
+
+    @Override
+    public void undo() {
+        editorPane.undo();
+    }
+
+    @Override
+    public void reindent() {
+        editorPane.reindent();
+    }
+
+    @Override
     public void close() throws RuntimeException {
         this.removeAll();
     }

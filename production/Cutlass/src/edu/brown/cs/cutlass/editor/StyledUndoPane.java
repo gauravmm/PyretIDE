@@ -95,6 +95,10 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
         return document.getLineStartOffsets();
     }
 
+    public void reindent() {
+        document.highlightAndIndent();
+    }
+
     private class CaretListenerImpl implements CaretListener {
 
         public CaretListenerImpl() {
