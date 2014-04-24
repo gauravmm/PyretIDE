@@ -10,7 +10,10 @@ import edu.brown.cs.cutlass.sys.SystemAbstraction;
 import edu.brown.cs.cutlass.sys.io.AbstractIO;
 import edu.brown.cs.cutlass.sys.io.AbstractIOException;
 import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
+import edu.brown.cs.cutlass.sys.io.disk.DiskIdentifier;
 import edu.brown.cs.cutlass.sys.pyret.AbstractPyretAccess;
+import edu.brown.cs.cutlass.sys.pyret.DiskPyretAccess;
+import edu.brown.cs.cutlass.sys.pyret.PyretOutputValue;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
@@ -643,14 +646,55 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    private void fileSaveAsAction() {
+        try {
+            //get the contents of their editor and store as seq - either CharSequence or List<CharSequence>
+            Editor editor = getCurrentEditor();
+            String seq = editor.getBuffer();
+            Option<T> destination = io.requestUserFileDestination();
+            if (destination.hasData()) {
+                T destId = destination.getData();
+                io.setUserFile(destId, seq);
+                editor.setIdentifier(destId);
+                tabEditors.remove(tabEditors.getSelectedIndex());
+                addClosableTab(tabEditors, editor, destId.getDisplayName());
+            }
+        } catch (AbstractIOException ex) {
+            Lumberjack.log(Lumberjack.Level.ERROR, ex);
+        }
+    }
 
+    private void fileSaveAction() {
+        Editor e = getCurrentEditor();
+        if (e.isEditorWindow()) {
+            if (e.isChangedSinceLastSave()) {
+                // TODO: Save the file
+                Option<T> id = e.getIdentifier();
+                if (id.hasData()) {
+                    try {
+                        //Save
+                        id.getData();
+                        io.setUserFile(id.getData(), e.getBuffer());
+                        //e.setChangedSinceLastSave(false);
+                    } catch (AbstractIOException ex) {
+                        Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    fileSaveAsAction();
+                }
+            }
+        }
+    }
     private void tbSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbSaveMouseClicked
         this.mnuFileSaveActionPerformed(null);
     }//GEN-LAST:event_tbSaveMouseClicked
 
     private void tbRunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbRunMouseClicked
-        // TODO add your handling code here:
-        this.mnuPyretRunActionPerformed(null);
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //First must save file
+        fileSaveAction();
+        getCurrentEditor().run();
+        //getCurrentEditor().close();
     }//GEN-LAST:event_tbRunMouseClicked
 
     private void tbBookmarkStopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbBookmarkStopMouseClicked

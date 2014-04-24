@@ -9,9 +9,24 @@ import edu.brown.cs.cutlass.parser.PyretFeatureExtractor;
 import edu.brown.cs.cutlass.parser.PyretMetadata;
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
+import edu.brown.cs.cutlass.sys.io.AbstractIOException;
 import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
+import edu.brown.cs.cutlass.sys.pyret.AbstractPyretAccess;
+import edu.brown.cs.cutlass.sys.pyret.PyretAccessListener;
+import edu.brown.cs.cutlass.sys.pyret.PyretOutputValue;
+import edu.brown.cs.cutlass.sys.pyret.PyretTerminationValue;
+import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
+import java.awt.Color;
+import java.util.List;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+import javax.swing.text.StyledEditorKit;
 
 /**
  *
@@ -129,7 +144,48 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
 
     @Override
     public void run() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            AbstractPyretAccess<T> pyret_instance = editorClient.getPyretAccess(this);
+            outputPane.setEditorKit(new StyledEditorKit());
+            final StyledDocument sdoc = (StyledDocument) outputPane.getDocument();
+            
+            final Style output_style = sdoc.addStyle("OUTPUT STYLE", null);
+            StyleConstants.setForeground(output_style, Color.green);
+            
+            final Style error_style = sdoc.addStyle("ERROR STYLE", null);
+            StyleConstants.setForeground(error_style, Color.red);
+            
+            pyret_instance.addPyretAccessListener(new PyretAccessListener() {
+                
+                @Override
+                public void handlePyretAccessOutput(final PyretOutputValue output) {
+                    javax.swing.SwingUtilities.invokeLater(new Runnable() {
+                        
+                        @Override
+                        public void run() {
+                            try {
+                                if (output.getStream().equals(AbstractPyretAccess.Stream.STDOUT)) {
+                                    sdoc.insertString(sdoc.getLength(), output.getData() + "\n", output_style);
+                                }
+                                if (output.getStream().equals(AbstractPyretAccess.Stream.STDERR)) {
+                                    sdoc.insertString(sdoc.getLength(), output.getData() + "\n", error_style);
+                                }
+                            } catch (BadLocationException e) {
+                                Lumberjack.log(Lumberjack.Level.ERROR, e);
+                            }
+                        }
+                    });
+                }
+
+                @Override
+                public void handlePyretAccessEnds(PyretTerminationValue output) {
+                }
+            });
+            pyret_instance.execute();
+        } catch (AbstractIOException ex) {
+            Lumberjack.log(Lumberjack.Level.ERROR,ex);
+        }
     }
 
     @Override
