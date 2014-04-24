@@ -731,7 +731,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
     private void mnuFileNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileNewActionPerformed
         //Open a new empty tab
-        addClosableTab(tabEditors, new PnlEditor(this, isSK ? "# I'm sorry, Dave. I'm afraid I can't do that." : "# Avast!"), "New Tab");
+        addClosableTab(tabEditors, new PnlEditor(this, isSK ? "# I'm sorry, Dave. I'm afraid I can't do that." : "#lang pyret"), "New Tab");
     }//GEN-LAST:event_mnuFileNewActionPerformed
 
     private void mnuFileSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileSaveAsActionPerformed
