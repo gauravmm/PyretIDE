@@ -217,6 +217,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         mnuDeleteSelected = new javax.swing.JMenuItem();
         mnuDeleteLine = new javax.swing.JMenuItem();
         jSeparator13 = new javax.swing.JPopupMenu.Separator();
+        mnuAutoIndent = new javax.swing.JMenuItem();
         mnuBlockComment = new javax.swing.JMenuItem();
         jSeparator12 = new javax.swing.JPopupMenu.Separator();
         mnuSelectAll = new javax.swing.JMenuItem();
@@ -524,6 +525,16 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         mnuEdit.add(mnuDeleteLine);
         mnuEdit.add(jSeparator13);
 
+        mnuAutoIndent.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
+        mnuAutoIndent.setMnemonic('I');
+        mnuAutoIndent.setText("Auto-Indent");
+        mnuAutoIndent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuAutoIndentActionPerformed(evt);
+            }
+        });
+        mnuEdit.add(mnuAutoIndent);
+
         mnuBlockComment.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_7, java.awt.event.InputEvent.CTRL_MASK));
         mnuBlockComment.setMnemonic('B');
         mnuBlockComment.setText("Block Comment Selected");
@@ -552,6 +563,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         jMenu1.setText("Pyret");
 
         mnuPyretRun.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        mnuPyretRun.setMnemonic('R');
         mnuPyretRun.setText("Run");
         mnuPyretRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -561,6 +573,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         jMenu1.add(mnuPyretRun);
 
         mnuPyretStop.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        mnuPyretStop.setMnemonic('S');
         mnuPyretStop.setText("Stop Current Execution");
         mnuPyretStop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -571,6 +584,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         jMenu1.add(jSeparator5);
 
         mnuPyretDocs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
+        mnuPyretDocs.setMnemonic('D');
         mnuPyretDocs.setText("View Pyret Documentation");
         mnuPyretDocs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -609,22 +623,22 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
     private void tbRunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbRunMouseClicked
         // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.mnuPyretRunActionPerformed(null);
     }//GEN-LAST:event_tbRunMouseClicked
 
     private void tbBookmarkStopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbBookmarkStopMouseClicked
         // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.mnuPyretStopActionPerformed(null);
     }//GEN-LAST:event_tbBookmarkStopMouseClicked
 
     private void tbUndoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbUndoMouseClicked
         // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.mnuUndoActionPerformed(null);
     }//GEN-LAST:event_tbUndoMouseClicked
 
     private void tbRedoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbRedoMouseClicked
         // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.mnuRedoActionPerformed(null);
     }//GEN-LAST:event_tbRedoMouseClicked
 
     private void tbAutoIndentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbAutoIndentMouseClicked
@@ -845,6 +859,10 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }//GEN-LAST:event_mnuPyretRunActionPerformed
 
+    private void mnuAutoIndentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAutoIndentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mnuAutoIndentActionPerformed
+
     public void newTab() {
         this.mnuFileNewActionPerformed(null);
     }
@@ -995,6 +1013,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     private javax.swing.JPopupMenu.Separator jSeparator9;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JList<CallGraphEntry> lstCallGraph;
+    private javax.swing.JMenuItem mnuAutoIndent;
     private javax.swing.JMenuItem mnuBlockComment;
     private javax.swing.JMenuItem mnuCloseAllTabs;
     private javax.swing.JMenuItem mnuCloseCurrentTab;
