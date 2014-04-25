@@ -8,6 +8,7 @@ import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenPairedOpening;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenScope;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenType;
+import edu.brown.cs.cutlass.parser.tokenizer.TokenTypePaired;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenTypePairedOpen;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyle;
 import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStylePunct;
@@ -45,8 +46,8 @@ public class TokenTypePairedOpenBrace extends TokenTypePairedOpen {
     }
 
     @Override
-    public List<TokenTypePairedOpenColon> getIgnoreTokenTypes() {
-        return Arrays.asList(TokenTypePairedOpenColon.getInstance());
+    public List<TokenTypePaired> getIgnoreTokenTypes() {
+        return Arrays.asList(TokenTypePairedOpenColon.getInstance(), TokenTypePairedOpenCloseColon.getInstance(), TokenTypePairedCloseColonWords.getInstance(), TokenTypePairedCloseColon.getInstance());
     }
     
     
