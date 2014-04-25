@@ -207,10 +207,13 @@ public class PyretFeatureExtractor {
                 }
             } else {
                 for (Token funCall : possibleFunctionCalls) {
+                    /*
+                    // By omitting this check, we catch all function references.
                     Option<Token> checkParenToken = getNextToken(funCall, TokenTypePairedOpenParen.getInstance());
                     if (!checkParenToken.hasData()) { // If there is no open paren, skip it.
                         continue;
                     }
+                    */
                     // Check if the function call is the same as the original function definition:
                     if (funCall != fun.location.token) {
                         functionCallsSingle.add(new PyretFunctionCall(new PyretLocation(funCall), fun));

@@ -207,7 +207,7 @@ public class SyntaxHighlighter {
                         }
                     } else {
                         // Error! set the angle bracket as unclosed and return
-                        currToken.setStyle(TokenStyleError.getInstance());
+                        opAngle.setStyle(TokenStyleError.getInstance());
                         return;
                     }
                     currToken = nextToken.getData();
