@@ -39,9 +39,11 @@ public class DefaultSystemAbstraction implements SystemAbstraction<DiskIdentifie
     public String getRacoPath() {
         File user_home = new File(System.getProperty("user.home"));
         final List<String> raco_path = new ArrayList<>();
-        if (System.getProperty("os.name").contains("win")) {
-            File raco1 = new File(user_home.getAbsolutePath() + "\\Program Files\\Racket\\raco.exe");
-            File raco2 = new File(user_home.getAbsolutePath() + "\\Program Files (x86)\\Racket\\raco.exe");
+        System.out.println(System.getProperty("os.name"));
+        if (System.getProperty("os.name").contains("Windows")) {
+            String c_drive = user_home.getAbsolutePath().substring(0,2);
+            File raco1 = new File(c_drive + "\\Program Files\\Racket\\raco.exe");
+            File raco2 = new File(c_drive + "\\Program Files (x86)\\Racket\\raco.exe");
             System.out.println("1 -- " + raco1.getAbsolutePath());
             System.out.println("2 -- " + raco2.getAbsolutePath());
             if (raco1.exists() && raco1.isFile() && raco1.canExecute()) {
