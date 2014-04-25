@@ -6,17 +6,28 @@ package edu.brown.cs.cutlass.editor;
 
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
+import edu.brown.cs.cutlass.ui.FindClient;
+import edu.brown.cs.cutlass.ui.FrmFinder;
+import edu.brown.cs.cutlass.ui.FrmFinder.FindType;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
+import edu.brown.cs.cutlass.util.Pair;
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import javax.swing.AbstractAction;
 import javax.swing.JEditorPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledEditorKit;
 
 /**
@@ -26,7 +37,7 @@ import javax.swing.text.StyledEditorKit;
  *
  * @author miles
  */
-public class StyledUndoPane extends JEditorPane implements PyretHighlightedListener, EditorJumpToClient {
+public class StyledUndoPane extends JEditorPane implements PyretHighlightedListener, EditorJumpToClient, FindClient {
 
     private final PyretStyledDocument document;
     private final PyretHighlightedListener listener;
@@ -99,6 +110,152 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
         document.highlightAndIndent();
     }
 
+    private Option<Pair<Integer, Integer>> locateNextMatch(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
+        // Find current cursor pos:
+        int startPos = this.getCaret().getDot();
+        Option<Pattern> p = this.createPattern(type, matchCase, forwards, wholeWords, find);
+        if (p.hasData()) {
+            try {
+                return locateNextMatchHelper(p.getData(), forwards, startPos, true);
+            } catch (BadLocationException ex) {
+                Lumberjack.log(Lumberjack.Level.ERROR, ex);
+            }
+        }
+
+        return new Option<>();
+    }
+
+    private Option<Pattern> createPattern(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
+        Pattern toMatch = null;
+        switch (type) {
+            case LITERAL:
+                find = Pattern.quote(find);
+                if (wholeWords) {
+                    find = "\\b" + find + "\\b";
+                }
+                try {
+                    if (matchCase) {
+                        toMatch = Pattern.compile(find);
+                    } else {
+                        toMatch = Pattern.compile(find, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+                    }
+                } catch (PatternSyntaxException ex) {
+                    Lumberjack.log(Lumberjack.Level.ERROR, ex);
+                }
+                break;
+            case WILDCARD:
+                break;
+            case REGEXP:
+                try {
+                    if (matchCase) {
+                        toMatch = Pattern.compile(find);
+                    } else {
+                        toMatch = Pattern.compile(find, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+                    }
+                } catch (PatternSyntaxException ex) {
+                    return new Option<>();
+                }
+                break;
+            default:
+                throw new AssertionError(type.name());
+        }
+
+        if (toMatch == null) {
+            return new Option<>();
+        }
+
+        return new Option<>(toMatch);
+    }
+
+    private Option<Pair<Integer, Integer>> locateNextMatchHelper(Pattern p, boolean forwards, int cursorPos, boolean notYetWrapped) throws BadLocationException {
+        if (!forwards) {
+            throw new UnsupportedOperationException("Only forward matches supported.");
+        }
+        int length = document.getLength();
+        int startPos = -1;
+        int endPos = -1;
+
+        // This is the obvious, not the quick way to do this:
+        if (notYetWrapped) {
+            startPos = cursorPos;
+            endPos = length;
+        } else {
+            startPos = 0;
+            endPos = cursorPos;
+        }
+
+        assert startPos >= 0;
+        assert endPos >= 0;
+
+        if (startPos >= endPos) {
+            if (notYetWrapped) {
+                return locateNextMatchHelper(p, forwards, cursorPos, false);
+            } else {
+                return new Option<>();
+            }
+        } else {
+            Matcher m = p.matcher(document.getText(0, document.getLength()));
+            m.region(startPos, endPos);
+
+            if (m.find(startPos)) {
+                return new Option<>(new Pair<>(m.start(), m.end()));
+            } else {
+                if (notYetWrapped) {
+                    return locateNextMatchHelper(p, forwards, cursorPos, false);
+                } else {
+                    return new Option<>();
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean findNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
+        Option<Pair<Integer, Integer>> locateNextMatch = this.locateNextMatch(type, matchCase, forwards, wholeWords, find);
+        if (locateNextMatch.hasData()) {
+            Pair<Integer, Integer> nextMatch = locateNextMatch.getData();
+            this.getCaret().setDot(nextMatch.getX());
+            this.getCaret().moveDot(nextMatch.getY());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean replaceNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
+        Option<Pair<Integer, Integer>> locateNextMatch = this.locateNextMatch(type, matchCase, forwards, wholeWords, find);
+        if (locateNextMatch.hasData()) {
+            try {
+                Pair<Integer, Integer> nextMatch = locateNextMatch.getData();
+                String text = document.getText(0, document.getLength());
+                this.setText(text.substring(0, nextMatch.getX()) + replace + text.substring(nextMatch.getY()));
+                this.getCaret().setDot(nextMatch.getX());
+                this.getCaret().moveDot(nextMatch.getX() + replace.length());
+                return true;
+            } catch (BadLocationException ex) {
+                Lumberjack.log(Lumberjack.Level.ERROR, ex);
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean replaceAll(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
+        Option<Pattern> createPattern = this.createPattern(type, matchCase, forwards, wholeWords, find);
+        if (createPattern.hasData()) {
+            try {
+                this.setText(document.getText(0, document.getLength()).replaceAll(createPattern.getData().pattern(), type == FindType.REGEXP ? Matcher.quoteReplacement(replace) : replace));
+                return true;
+            } catch (BadLocationException ex) {
+                Lumberjack.log(Lumberjack.Level.ERROR, ex);
+            }
+        }
+        return false;
+    }
+
     private class CaretListenerImpl implements CaretListener {
 
         public CaretListenerImpl() {
@@ -125,7 +282,6 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
                         try {
                             document.highlight();
                         } catch (Exception e) {
-                            e.printStackTrace();
                             Lumberjack.log(Lumberjack.Level.WARN, e);
                         } finally {
                             // We don't need to bother locking the release

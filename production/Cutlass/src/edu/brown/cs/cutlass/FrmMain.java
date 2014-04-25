@@ -10,10 +10,9 @@ import edu.brown.cs.cutlass.sys.SystemAbstraction;
 import edu.brown.cs.cutlass.sys.io.AbstractIO;
 import edu.brown.cs.cutlass.sys.io.AbstractIOException;
 import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
-import edu.brown.cs.cutlass.sys.io.disk.DiskIdentifier;
 import edu.brown.cs.cutlass.sys.pyret.AbstractPyretAccess;
-import edu.brown.cs.cutlass.sys.pyret.DiskPyretAccess;
-import edu.brown.cs.cutlass.sys.pyret.PyretOutputValue;
+import edu.brown.cs.cutlass.ui.FindClient;
+import edu.brown.cs.cutlass.ui.FrmFinder;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
@@ -33,8 +32,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,13 +65,16 @@ import javax.swing.SwingConstants;
  * @author Gaurav Manek
  * @param <T>
  */
-public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame implements EditorClient<T> {
+
+
+public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame implements EditorClient<T>, FindClient {
 
     private final Launcher launcher;
     private final ConfigEngine config;
     private final AbstractIO<T> io;
     private final SystemAbstraction<T> systemAbstraction;
     private boolean isSK = false;
+    private final FrmFinder finder;
 
     /**
      * Creates new main form.
@@ -158,6 +158,9 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             // Load default
             addClosableTab(tabEditors, new PnlDefaultEditor(this), "Default");
         }
+        // Prepare find and replace window
+        finder = new FrmFinder(this);
+        finder.setLocationRelativeTo(this);
 
         // SK Easter egg
         String username = System.getProperty("user.name").toLowerCase();
@@ -230,6 +233,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         mnuAutoIndent = new javax.swing.JMenuItem();
         mnuBlockComment = new javax.swing.JMenuItem();
         jSeparator12 = new javax.swing.JPopupMenu.Separator();
+        mnuFindAndReplace = new javax.swing.JMenuItem();
         mnuSelectAll = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         mnuPyretRun = new javax.swing.JMenuItem();
@@ -577,6 +581,15 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         mnuEdit.add(mnuBlockComment);
         mnuEdit.add(jSeparator12);
 
+        mnuFindAndReplace.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_MASK));
+        mnuFindAndReplace.setText("Find And Replace");
+        mnuFindAndReplace.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuFindAndReplaceActionPerformed(evt);
+            }
+        });
+        mnuEdit.add(mnuFindAndReplace);
+
         mnuSelectAll.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
         mnuSelectAll.setMnemonic('S');
         mnuSelectAll.setText("Select All");
@@ -830,7 +843,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
                 if (ed.isChangedSinceLastSave()) {
                     // TODO: Save the file
                     closeTab(ed);
-                    
+
                 }
             }
             ed.close();
@@ -930,15 +943,20 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         this.tabEditors.setSelectedIndex((this.tabEditors.getSelectedIndex() + 1) % this.tabEditors.getTabCount());
     }//GEN-LAST:event_mnuFileNextTabActionPerformed
 
+    private void mnuFindAndReplaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFindAndReplaceActionPerformed
+       finder.setVisible(true);
+       finder.requestFocus();
+    }//GEN-LAST:event_mnuFindAndReplaceActionPerformed
+
     public void newTab(Editor<T> def) {
         this.mnuFileNewActionPerformed(null);
         this.closeTab(def);
     }
 
-    public void closeTab(Editor<T> e){
+    public void closeTab(Editor<T> e) {
         this.closeTabMessagePrompt(e);
     }
-    
+
     public void closeTabAndSave(Editor<T> e, boolean save) {
         if (e.isEditorWindow() && save) {
             this.save(e);
@@ -1122,6 +1140,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     private javax.swing.JMenuItem mnuFilePrevTab;
     private javax.swing.JMenuItem mnuFileSave;
     private javax.swing.JMenuItem mnuFileSaveAs;
+    private javax.swing.JMenuItem mnuFindAndReplace;
     private javax.swing.JMenu mnuHelp;
     private javax.swing.JMenuItem mnuHelpAbout;
     private javax.swing.JMenuItem mnuPaste;
@@ -1165,9 +1184,39 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             throw new IllegalStateException();
         }
     }
-    
+
+    @Override
+    public boolean findNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
+        Editor<T> ed = getCurrentEditor();
+        if (ed.isEditorWindow()) {
+            return ed.findNext(type, matchCase, forwards, wholeWords, find);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean replaceNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
+        Editor<T> ed = getCurrentEditor();
+        if (ed.isEditorWindow()) {
+            return ed.replaceNext(type, matchCase, forwards, wholeWords, find, replace);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean replaceAll(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
+        Editor<T> ed = getCurrentEditor();
+        if (ed.isEditorWindow()) {
+            return ed.replaceAll(type, matchCase, forwards, wholeWords, find, replace);
+        } else {
+            return false;
+        }
+    }
+
     private void closeTabMessagePrompt(Editor<T> editor) {
-        if (!editor.isEditorWindow()){
+        if (!editor.isEditorWindow()) {
             this.closeTabAndSave(editor, false);
             return;
         }
@@ -1177,8 +1226,8 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
                 "Cutlass",
                 JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.WARNING_MESSAGE);
-        
-        switch (selection){
+
+        switch (selection) {
             case JOptionPane.YES_OPTION:
                 this.closeTabAndSave(editor, true);
                 break;

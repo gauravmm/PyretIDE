@@ -11,6 +11,7 @@ import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
 import edu.brown.cs.cutlass.sys.io.AbstractIOException;
 import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
+import edu.brown.cs.cutlass.ui.FrmFinder;
 import edu.brown.cs.cutlass.sys.pyret.AbstractPyretAccess;
 import edu.brown.cs.cutlass.sys.pyret.PyretAccessListener;
 import edu.brown.cs.cutlass.sys.pyret.PyretOutputValue;
@@ -18,10 +19,7 @@ import edu.brown.cs.cutlass.sys.pyret.PyretTerminationValue;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import java.awt.Color;
-import java.util.List;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -242,6 +240,21 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
     @Override
     public void reindent() {
         editorPane.reindent();
+    }
+
+    @Override
+    public boolean findNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
+        return editorPane.findNext(type, matchCase, forwards, wholeWords, find);
+    }
+
+    @Override
+    public boolean replaceNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
+        return editorPane.replaceNext(type, matchCase, forwards, wholeWords, find, replace);
+    }
+
+    @Override
+    public boolean replaceAll(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
+        return editorPane.replaceAll(type, matchCase, forwards, wholeWords, find, replace);
     }
 
     @Override
