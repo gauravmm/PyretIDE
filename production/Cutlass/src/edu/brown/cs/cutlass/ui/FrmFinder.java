@@ -46,10 +46,10 @@ public class FrmFinder extends javax.swing.JFrame {
         txtReplace = new javax.swing.JTextField();
         btnReplace = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
-        tglMatchCase = new javax.swing.JToggleButton();
-        tglWholeWords = new javax.swing.JToggleButton();
         cmbType = new javax.swing.JComboBox();
         btnReplaceAll = new javax.swing.JButton();
+        tglMatchCase = new javax.swing.JCheckBox();
+        tglWholeWords = new javax.swing.JCheckBox();
 
         setTitle("Find");
         setAlwaysOnTop(true);
@@ -61,7 +61,7 @@ public class FrmFinder extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel1.setText("Find:");
 
         jLabel2.setText("Replace:");
@@ -82,11 +82,6 @@ public class FrmFinder extends javax.swing.JFrame {
             }
         });
 
-        tglMatchCase.setSelected(true);
-        tglMatchCase.setText("Match Case");
-
-        tglWholeWords.setText("Whole Words");
-
         cmbType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Literal", "Wildcards (*?)", "Regular Expressions" }));
 
         btnReplaceAll.setText("Replace All");
@@ -95,6 +90,11 @@ public class FrmFinder extends javax.swing.JFrame {
                 btnReplaceAllActionPerformed(evt);
             }
         });
+
+        tglMatchCase.setSelected(true);
+        tglMatchCase.setText("Match Case");
+
+        tglWholeWords.setText("Whole Words");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -106,20 +106,18 @@ public class FrmFinder extends javax.swing.JFrame {
                     .addComponent(jSeparator1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(tglMatchCase)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(10, 10, 10)
                         .addComponent(tglWholeWords)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmbType, 0, 254, Short.MAX_VALUE))
+                        .addGap(26, 26, 26)
+                        .addComponent(cmbType, 0, 246, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtFind))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtReplace)))
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtFind)
+                            .addComponent(txtReplace))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnReplaceAll, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
@@ -147,9 +145,9 @@ public class FrmFinder extends javax.swing.JFrame {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tglMatchCase)
-                    .addComponent(tglWholeWords)
-                    .addComponent(cmbType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tglWholeWords))
                 .addContainerGap())
         );
 
@@ -189,8 +187,8 @@ public class FrmFinder extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JToggleButton tglMatchCase;
-    private javax.swing.JToggleButton tglWholeWords;
+    private javax.swing.JCheckBox tglMatchCase;
+    private javax.swing.JCheckBox tglWholeWords;
     private javax.swing.JTextField txtFind;
     private javax.swing.JTextField txtReplace;
     // End of variables declaration//GEN-END:variables

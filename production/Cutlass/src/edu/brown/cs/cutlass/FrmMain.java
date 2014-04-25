@@ -1003,7 +1003,8 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     }
 
     public void closeTab(Editor<T> e) {
-        this.closeTabMessagePrompt(e);
+        if (e.isEditorWindow() && e.isChangedSinceLastSave()) this.closeTabMessagePrompt(e);
+        else closeTabAndSave(e, false);
     }
 
     public void closeTabAndSave(Editor<T> e, boolean save) {
@@ -1251,6 +1252,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     public boolean findNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
         Editor<T> ed = getCurrentEditor();
         if (ed.isEditorWindow()) {
+            ed.requestFocus();
             return ed.findNext(type, matchCase, forwards, wholeWords, find);
         } else {
             return false;
