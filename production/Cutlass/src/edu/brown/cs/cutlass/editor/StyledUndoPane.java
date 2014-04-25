@@ -8,6 +8,7 @@ import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
 import edu.brown.cs.cutlass.ui.FindClient;
 import edu.brown.cs.cutlass.ui.FrmFinder;
+import edu.brown.cs.cutlass.ui.FrmFinder.FindType;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
@@ -112,6 +113,19 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
     private Option<Pair<Integer, Integer>> locateNextMatch(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
         // Find current cursor pos:
         int startPos = this.getCaret().getDot();
+        Option<Pattern> p = this.createPattern(type, matchCase, forwards, wholeWords, find);
+        if (p.hasData()) {
+            try {
+                return locateNextMatchHelper(p.getData(), forwards, startPos, true);
+            } catch (BadLocationException ex) {
+                Lumberjack.log(Lumberjack.Level.ERROR, ex);
+            }
+        }
+
+        return new Option<>();
+    }
+
+    private Option<Pattern> createPattern(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
         Pattern toMatch = null;
         switch (type) {
             case LITERAL:
@@ -150,13 +164,7 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
             return new Option<>();
         }
 
-        try {
-            return locateNextMatchHelper(toMatch, forwards, startPos, true);
-        } catch (BadLocationException ex) {
-            Logger.getLogger(StyledUndoPane.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return new Option<>();
+        return new Option<>(toMatch);
     }
 
     private Option<Pair<Integer, Integer>> locateNextMatchHelper(Pattern p, boolean forwards, int cursorPos, boolean notYetWrapped) throws BadLocationException {
@@ -176,31 +184,76 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
             endPos = cursorPos;
         }
 
-        Matcher m = p.matcher(document.getText(cursorPos, document.getLength()));
-        m.region(startPos, endPos);
+        assert startPos >= 0;
+        assert endPos >= 0;
 
-        if (m.find(cursorPos)) {
-            return new Option<>(new Pair<>(m.start(), m.end() - m.start()));
+        if (startPos >= endPos) {
+            if (notYetWrapped) {
+                return locateNextMatchHelper(p, forwards, cursorPos, false);
+            } else {
+                return new Option<>();
+            }
         } else {
+            Matcher m = p.matcher(document.getText(0, document.getLength()));
+            m.region(startPos, endPos);
 
+            if (m.find(startPos)) {
+                return new Option<>(new Pair<>(m.start(), m.end()));
+            } else {
+                if (notYetWrapped) {
+                    return locateNextMatchHelper(p, forwards, cursorPos, false);
+                } else {
+                    return new Option<>();
+                }
+            }
         }
-        return null;
     }
 
     @Override
     public boolean findNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Option<Pair<Integer, Integer>> locateNextMatch = this.locateNextMatch(type, matchCase, forwards, wholeWords, find);
+        if (locateNextMatch.hasData()) {
+            Pair<Integer, Integer> nextMatch = locateNextMatch.getData();
+            this.getCaret().setDot(nextMatch.getX());
+            this.getCaret().moveDot(nextMatch.getY());
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public boolean replaceNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Option<Pair<Integer, Integer>> locateNextMatch = this.locateNextMatch(type, matchCase, forwards, wholeWords, find);
+        if (locateNextMatch.hasData()) {
+            try {
+                Pair<Integer, Integer> nextMatch = locateNextMatch.getData();
+                String text = document.getText(0, document.getLength());
+                this.setText(text.substring(0, nextMatch.getX()) + replace + text.substring(nextMatch.getY()));
+                this.getCaret().setDot(nextMatch.getX());
+                this.getCaret().moveDot(nextMatch.getX() + replace.length());
+                return true;
+            } catch (BadLocationException ex) {
+                Lumberjack.log(Lumberjack.Level.ERROR, ex);
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     @Override
     public boolean replaceAll(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
+        Option<Pattern> createPattern = this.createPattern(type, matchCase, forwards, wholeWords, find);
+        if (createPattern.hasData()) {
+            try {
+                this.setText(document.getText(0, document.getLength()).replaceAll(createPattern.getData().pattern(), type == FindType.REGEXP ? Matcher.quoteReplacement(replace) : replace));
+                return true;
+            } catch (BadLocationException ex) {
+                Lumberjack.log(Lumberjack.Level.ERROR, ex);
+            }
+        }
+        return false;
     }
 
     private class CaretListenerImpl implements CaretListener {
@@ -229,7 +282,6 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
                         try {
                             document.highlight();
                         } catch (Exception e) {
-                            e.printStackTrace();
                             Lumberjack.log(Lumberjack.Level.WARN, e);
                         } finally {
                             // We don't need to bother locking the release

@@ -53,6 +53,13 @@ public class FrmFinder extends javax.swing.JFrame {
 
         setTitle("Find");
         setAlwaysOnTop(true);
+        setResizable(false);
+        setType(java.awt.Window.Type.UTILITY);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Find:");
@@ -75,6 +82,7 @@ public class FrmFinder extends javax.swing.JFrame {
             }
         });
 
+        tglMatchCase.setSelected(true);
         tglMatchCase.setText("Match Case");
 
         tglWholeWords.setText("Whole Words");
@@ -101,7 +109,7 @@ public class FrmFinder extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tglWholeWords)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmbType, 0, 196, Short.MAX_VALUE))
+                        .addComponent(cmbType, 0, 254, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -159,6 +167,10 @@ public class FrmFinder extends javax.swing.JFrame {
     private void btnReplaceAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReplaceAllActionPerformed
         client.replaceAll(getFindType(), tglMatchCase.isSelected(), true, tglWholeWords.isSelected(), txtFind.getText(), txtReplace.getText());
     }//GEN-LAST:event_btnReplaceAllActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        txtFind.requestFocusInWindow();
+    }//GEN-LAST:event_formWindowOpened
 
     private FindType getFindType() {
         int i = cmbType.getSelectedIndex();

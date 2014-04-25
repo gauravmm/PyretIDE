@@ -74,6 +74,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     private final AbstractIO<T> io;
     private final SystemAbstraction<T> systemAbstraction;
     private boolean isSK = false;
+    private final FrmFinder finder;
 
     /**
      * Creates new main form.
@@ -157,9 +158,9 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             // Load default
             addClosableTab(tabEditors, new PnlDefaultEditor(this), "Default");
         }
-
         // Prepare find and replace window
-        FrmFinder finder = new FrmFinder(this);
+        finder = new FrmFinder(this);
+        finder.setLocationRelativeTo(this);
 
         // SK Easter egg
         String username = System.getProperty("user.name").toLowerCase();
@@ -232,6 +233,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         mnuAutoIndent = new javax.swing.JMenuItem();
         mnuBlockComment = new javax.swing.JMenuItem();
         jSeparator12 = new javax.swing.JPopupMenu.Separator();
+        mnuFindAndReplace = new javax.swing.JMenuItem();
         mnuSelectAll = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         mnuPyretRun = new javax.swing.JMenuItem();
@@ -578,6 +580,15 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         });
         mnuEdit.add(mnuBlockComment);
         mnuEdit.add(jSeparator12);
+
+        mnuFindAndReplace.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_MASK));
+        mnuFindAndReplace.setText("Find And Replace");
+        mnuFindAndReplace.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuFindAndReplaceActionPerformed(evt);
+            }
+        });
+        mnuEdit.add(mnuFindAndReplace);
 
         mnuSelectAll.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
         mnuSelectAll.setMnemonic('S');
@@ -932,6 +943,11 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         this.tabEditors.setSelectedIndex((this.tabEditors.getSelectedIndex() + 1) % this.tabEditors.getTabCount());
     }//GEN-LAST:event_mnuFileNextTabActionPerformed
 
+    private void mnuFindAndReplaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFindAndReplaceActionPerformed
+       finder.setVisible(true);
+       finder.requestFocus();
+    }//GEN-LAST:event_mnuFindAndReplaceActionPerformed
+
     public void newTab(Editor<T> def) {
         this.mnuFileNewActionPerformed(null);
         this.closeTab(def);
@@ -1124,6 +1140,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     private javax.swing.JMenuItem mnuFilePrevTab;
     private javax.swing.JMenuItem mnuFileSave;
     private javax.swing.JMenuItem mnuFileSaveAs;
+    private javax.swing.JMenuItem mnuFindAndReplace;
     private javax.swing.JMenu mnuHelp;
     private javax.swing.JMenuItem mnuHelpAbout;
     private javax.swing.JMenuItem mnuPaste;
