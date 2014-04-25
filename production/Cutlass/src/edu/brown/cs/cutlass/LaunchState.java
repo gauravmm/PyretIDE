@@ -66,6 +66,10 @@ public class LaunchState<T extends AbstractIdentifier> {
         return Collections.unmodifiableList(openFiles);
     }
 
+    public int getCurrentTabId() {
+        return currentTabId;
+    }
+
     /**
      * Provides the serialized output of the current LaunchState as a List of
      * String, such that each String corresponds to one line in the output file.

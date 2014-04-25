@@ -33,10 +33,10 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,8 +65,6 @@ import javax.swing.SwingConstants;
  * @author Gaurav Manek
  * @param <T>
  */
-
-
 public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame implements EditorClient<T>, FindClient {
 
     private final Launcher launcher;
@@ -154,10 +152,33 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         if (optLaunchState.hasData()) {
             LaunchState launchState = optLaunchState.getData();
             // Load data from the launchState
-        } else {
+            List<T> openFiles = launchState.getOpenFiles();
+            int cTabId = launchState.getCurrentTabId();
+            int tabCount = 0;
+            
+            for (T id : openFiles) {
+                if(this.openTab(id)){
+                    tabCount++;
+                } else {
+                    if(tabCount < cTabId){
+                        cTabId--;
+                    }
+                }
+            }
+            if(cTabId >= tabEditors.getTabCount()){
+                cTabId = tabEditors.getTabCount() - 1;
+            } else if (cTabId < 0){
+                cTabId = 0; // This should not be possible.
+            }
+            
+            tabEditors.setSelectedIndex(cTabId);
+        }
+
+        if (tabEditors.getTabCount() == 0) {
             // Load default
             addClosableTab(tabEditors, new PnlDefaultEditor(this), "Default");
         }
+
         // Prepare find and replace window
         finder = new FrmFinder(this);
         finder.setLocationRelativeTo(this);
@@ -243,13 +264,13 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         mnuHelp = new javax.swing.JMenu();
         mnuHelpAbout = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Cutlass - Your Weapon of Choice");
         setMinimumSize(new java.awt.Dimension(400, 120));
         setPreferredSize(new java.awt.Dimension(900, 700));
         addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosed(java.awt.event.WindowEvent evt) {
-                formWindowClosed(evt);
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
@@ -738,10 +759,6 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
     }//GEN-LAST:event_mnuHelpAboutActionPerformed
 
-    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        launcher.quit(LaunchState.toState(new ArrayList<AbstractIdentifier>(), 0));
-    }//GEN-LAST:event_formWindowClosed
-
     private void mnuFileNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileNewActionPerformed
         //Open a new empty tab
         addClosableTab(tabEditors, new PnlEditor(this, isSK ? "# I'm sorry, Dave. I'm afraid I can't do that." : "#lang pyret"), "New Tab");
@@ -779,20 +796,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         try {
             Option<T> destination = io.requestUserFileSource();
             if (destination.hasData()) {
-                T destId = destination.getData();
-                StringBuilder contents = new StringBuilder();
-                Iterator<String> it = io.getUserFile(destId).iterator();
-                while (true) {
-                    contents.append(it.next());
-                    if (it.hasNext()) {
-                        contents.append("\n");
-                    } else {
-                        break;
-                    }
-                }
-                Editor e = new PnlEditor(this, contents.toString());
-                e.setIdentifier(destination.getData());
-                addClosableTab(tabEditors, e, destId.getDisplayName());
+                openTab(destination.getData());
             }
         } catch (AbstractIOException ex) {
             Lumberjack.log(Lumberjack.Level.ERROR, ex);
@@ -944,9 +948,53 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     }//GEN-LAST:event_mnuFileNextTabActionPerformed
 
     private void mnuFindAndReplaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFindAndReplaceActionPerformed
-       finder.setVisible(true);
-       finder.requestFocus();
+        finder.setVisible(true);
+        finder.requestFocus();
     }//GEN-LAST:event_mnuFindAndReplaceActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        LinkedList<T> closingList = new LinkedList<>();
+        Editor<T> currEditor = getCurrentEditor();
+        int openTabIndex = 0;
+        boolean countTabIndex = false;
+        for (int i = tabEditors.getTabCount() - 1; i >= 0; --i) {
+            Editor<T> ed = (Editor<T>) tabEditors.getComponentAt(i);
+            if (ed.isEditorWindow()) {
+                if (ed.isChangedSinceLastSave()) {
+                    int selection = this.showCloseConfirmDialog(ed.getIdentifier());
+                    switch (selection) {
+                        case JOptionPane.YES_OPTION:
+                            // Save this
+                            this.save(ed);
+                        // NO BREAK HERE!
+                        case JOptionPane.NO_OPTION:
+                            tabEditors.removeTabAt(i);
+                            ed.close();
+                            break;
+                        default:
+                            return; // Abort the shutdown
+                    }
+                } else {
+                    tabEditors.removeTabAt(i);
+                    ed.close();
+                }
+                Option<T> identifier = ed.getIdentifier();
+                if (identifier.hasData()) {
+                    closingList.addFirst(identifier.getData());
+                    if (countTabIndex) {
+                        openTabIndex++;
+                    }
+                }
+            } else {
+                tabEditors.removeTabAt(i);
+            }
+            if (ed == currEditor) {
+                countTabIndex = true;
+            }
+        }
+        openTabIndex = Math.min(openTabIndex, closingList.size() - 1);
+        launcher.quit(LaunchState.toState(closingList, openTabIndex));
+    }//GEN-LAST:event_formWindowClosing
 
     public void newTab(Editor<T> def) {
         this.mnuFileNewActionPerformed(null);
@@ -1221,11 +1269,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             return;
         }
         Option<T> currentID = editor.getIdentifier();
-        int selection = JOptionPane.showConfirmDialog(this,
-                "Would you like to save your unsaved work" + (currentID.hasData() ? " in " + currentID.getData().getDisplayName() + "?" : "?"),
-                "Cutlass",
-                JOptionPane.YES_NO_CANCEL_OPTION,
-                JOptionPane.WARNING_MESSAGE);
+        int selection = showCloseConfirmDialog(currentID);
 
         switch (selection) {
             case JOptionPane.YES_OPTION:
@@ -1236,6 +1280,36 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
                 break;
             default:
                 break;
+        }
+    }
+
+    private int showCloseConfirmDialog(Option<T> currentID) {
+        return JOptionPane.showConfirmDialog(this,
+                "Would you like to save your unsaved work" + (currentID.hasData() ? " in " + currentID.getData().getDisplayName() + "?" : "?"),
+                "Cutlass",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+    }
+
+    private boolean openTab(T destId) {
+        try {
+            StringBuilder contents = new StringBuilder();
+            Iterator<String> it = io.getUserFile(destId).iterator();
+            while (true) {
+                contents.append(it.next());
+                if (it.hasNext()) {
+                    contents.append("\n");
+                } else {
+                    break;
+                }
+            }
+            Editor e = new PnlEditor(this, contents.toString());
+            e.setIdentifier(destId);
+            addClosableTab(tabEditors, e, destId.getDisplayName());
+            return true;
+        } catch (AbstractIOException ex) {
+            Lumberjack.log(Lumberjack.Level.WARN, ex);
+            return false;
         }
     }
 }
