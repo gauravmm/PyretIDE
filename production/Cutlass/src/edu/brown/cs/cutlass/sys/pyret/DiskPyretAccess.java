@@ -21,27 +21,29 @@ import java.util.List;
  * @author Dilip Arumugam
  */
 public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
-
-    private static final List<String> raco = new ArrayList<>(Arrays.asList("C:/Program Files (x86)/Racket/raco", "pyret"));
+    private static final List<String> raco = new ArrayList<>();
     private static final ProcessBuilder run_build = new ProcessBuilder(raco);
     private static DiskIdentifier identifier;
     private static String temp_file;
     private static Process run_proc;
+    private static String raco_path;
 
     private static final List<String> error_list = Arrays.asList("Avast, there be bugs!", "check-fun:", "check-method:", "apply-fun:", "Arity mismatch", "Expected", "Bad args to prim",
             "brand:", "was not found on", "Cannot lookup mutable field", "Cannot lookup immutable field", "field: expected string, got",
             "Updating non-existent field", "typecheck failed:", "Tried to set value in already-initialized placeholder", "expected Placeholder and got",
             "char-at: Index too large for string", "runtime:", "Division by zero", "has-field:", "substring:", "py-match doesn't work over", "py-match fell through on a",
-            "INTERNAL ERROR:", "Runtime link is already set to", "Runtime empty is already set to","This file doesn't look right.");
+            "INTERNAL ERROR:", "Runtime link is already set to", "Runtime empty is already set to","This file doesn't look right.","Error in type-checking");
     private static final HashSet<String> error_msgs = new HashSet<>();
 
     private static final List<PyretOutputValue> out_vals = new ArrayList<>();
     private static final List<PyretOutputValue> err_vals = new ArrayList<>();
 
-    public DiskPyretAccess(DiskIdentifier id) {
-        System.out.println("New DiskPyretAccess constructed");
+    public DiskPyretAccess(DiskIdentifier id, String rp) {
+        //System.out.println("New DiskPyretAccess constructed");
         identifier = id;
         error_msgs.addAll(error_list);
+        raco_path = rp;
+        raco.addAll(Arrays.asList(raco_path, "pyret"));
     }
     
     private boolean containsError(String out){
@@ -75,10 +77,8 @@ public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
                 run_proc.destroy();
             }
             //delete the temporary file
+            raco.clear();
             Files.delete(Paths.get(run_build.directory().getPath() + "/" + temp_file));
-            if (raco.size() != 2) {
-                raco.remove(raco.size()-1);
-            }
         } catch (IOException e) {
 
         }
@@ -106,8 +106,8 @@ public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
             Files.copy(identifier.getId(), Paths.get(user_file.getParent(), temp_file));
             raco.add(temp_file);
 
-            System.out.println(raco);
-            System.out.println(run_build.command());
+            //System.out.println(raco);
+            //System.out.println(run_build.command());
             run_proc = run_build.start();
             run_proc.waitFor();
 
@@ -116,7 +116,18 @@ public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
             byte[] out = new byte[out_size];
             output.read(out);
             String out_string = new String(out, "UTF-8").trim();
-            System.out.println(out_string);
+            //System.out.println(out_string);
+            
+            InputStream error = run_proc.getErrorStream();
+            int err_size = error.available();
+            byte[] err_out = new byte[err_size];
+            error.read(err_out);
+            String err_string = new String(err_out, "UTF-8").trim();
+            if (err_string != null && err_string.length() != 0) {
+                PyretOutputValue pev = new PyretOutputValue(AbstractPyretAccess.Stream.STDERR, err_string);
+                publish(pev);
+                err_vals.add(pev);
+            }
             
             if (containsError(out_string)) {
                 PyretOutputValue pev = new PyretOutputValue(AbstractPyretAccess.Stream.STDERR, out_string);

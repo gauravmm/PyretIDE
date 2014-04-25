@@ -68,7 +68,6 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
         scrlEditor.getViewport().addChangeListener(pnlLineNumber);
 
         // The output pane is outputPane
-        outputPane.setText("Hello! I am a placeholder.");
     }
 
     /**

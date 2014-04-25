@@ -4,6 +4,7 @@
  */
 package edu.brown.cs.cutlass.sys;
 
+import edu.brown.cs.cutlass.config.ConfigEngine;
 import edu.brown.cs.cutlass.sys.io.AbstractIO;
 import edu.brown.cs.cutlass.sys.io.disk.DiskIO;
 import edu.brown.cs.cutlass.sys.io.disk.DiskIdentifier;
@@ -20,10 +21,15 @@ public class DefaultSystemAbstraction implements SystemAbstraction<DiskIdentifie
 
     private final DefaultClipboard defaultClipboard;
     private final DiskIO diskIO;
+    private ConfigEngine cfg = null;
 
     public DefaultSystemAbstraction() {
         defaultClipboard = new DefaultClipboard();
         diskIO = new DiskIO();
+    }
+    
+    public void setConfigEngine(ConfigEngine ncfg){
+        cfg = ncfg;
     }
     
     @Override
@@ -38,7 +44,13 @@ public class DefaultSystemAbstraction implements SystemAbstraction<DiskIdentifie
 
     @Override
     public AbstractPyretAccess<DiskIdentifier> getPyretAccess(DiskIdentifier identifier) {
-        return new DiskPyretAccess(identifier);
+        if (cfg != null) {
+            String raco_path = cfg.getString("raco.path");
+            return new DiskPyretAccess(identifier,raco_path);
+        }
+        else{
+            throw new IllegalStateException("ConfigEngine has not been set yet");
+        }
     }
 
 }

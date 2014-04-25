@@ -73,7 +73,6 @@ public class LaskuraClient extends JSONServerClient {
                 new Pair<>("action", LaskuraCommand.READ.getCommandString()),
                 new Pair<>("sessionid", sessionid),
                 new Pair<>("filename", filename))).getAsJsonObject();
-        System.err.println(resp.toString());
         if (resp.getAsJsonPrimitive("success").getAsBoolean()) {
             return resp.getAsJsonObject().getAsJsonPrimitive("data").getAsString();
         } else {
