@@ -8,6 +8,8 @@ import edu.brown.cs.cutlass.editor.EditorJumpTo;
 import edu.brown.cs.cutlass.editor.EditorJumpToClient;
 import edu.brown.cs.cutlass.editor.callgraph.CallGraphEntry;
 import edu.brown.cs.cutlass.parser.tokenizer.*;
+import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleAnnotation;
+import edu.brown.cs.cutlass.parser.tokenizer.styles.TokenStyleError;
 import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.*;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
@@ -276,6 +278,42 @@ public class PyretFeatureExtractor {
                 start = wordToken.getData();
             }
 
+            Option<Token> openAngle = PyretFeatureExtractor.getNextToken(start, TokenTypeSinglePunct.getInstance());
+            if (openAngle.hasData()) {
+                Token opAngle = openAngle.getData();
+                if (opAngle.getValue().equals("<")) {
+                    // Get a list of all tokens until the matching closing angle brackets, pairing the angle brackets along the way.
+                    // Don't actually change the metadata in the tokens. We'll save that for when we write a full parser
+                    int angleBracketCount = 1;
+                    Token currToken = opAngle;
+                    while (true) {
+                        Option<Token> nextToken = getNextToken(currToken, TokenTypeSinglePunct.getInstance(), false);
+                        if (nextToken.hasData()) {
+                            switch (nextToken.getData().getValue()) {
+                                case "<":
+                                    angleBracketCount++;
+                                    break;
+                                case ">":
+                                    angleBracketCount--;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            if (angleBracketCount == 0) {
+                                start = nextToken.getData(); // Advance the current ann pointer to the end of the <> sequence.
+                                break; // Check for predicates
+                            }
+                        } else {
+                            return new Option<>(); // Error! set the angle bracket as unclosed and return
+                        }
+                        currToken = nextToken.getData();
+                    }
+                } else {
+                    // This is when a single punctuation exists that should not be here. Ignore it.
+                    return new Option<>();
+                }
+            }
+
             Option<Token> openParenToken = PyretFeatureExtractor.getNextToken(start, TokenTypePairedOpenParen.getInstance());
             if (openParenToken.hasData()) {
                 TokenPairedOpening opParen = (TokenPairedOpening) openParenToken.getData();
@@ -296,7 +334,7 @@ public class PyretFeatureExtractor {
         Option<Token> checkOpenBracket = getNextToken(starting, TokenTypePairedOpenParen.getInstance());
         if (!checkOpenBracket.hasData()) {
             /*
-            // Disable the pipe check.
+             // Disable the pipe check.
              Option<Token> checkPipe = getNextToken(starting, TokenTypeSinglePunct.getInstance());
              if (checkPipe.hasData() && checkPipe.getData().getValue().equals("|")) {
              return new Option<>("");

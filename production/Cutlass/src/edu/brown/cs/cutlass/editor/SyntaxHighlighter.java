@@ -168,6 +168,7 @@ public class SyntaxHighlighter {
             ann.setStyle(TokenStyleAnnotation.getInstance());
         }
 
+        // Skip <Patameterized type> 
         Option<Token> openAngle = PyretFeatureExtractor.getNextToken(ann, TokenTypeSinglePunct.getInstance());
         if (openAngle.hasData()) {
             Token opAngle = openAngle.getData();
