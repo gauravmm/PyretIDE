@@ -250,7 +250,7 @@ public class PyretFeatureExtractor {
         return getNextToken(start, type, true);
     }
 
-    private static Option<Token> getNextToken(Token start, TokenType type, boolean onlySkipWhitespace) {
+    public static Option<Token> getNextToken(Token start, TokenType type, boolean onlySkipWhitespace) {
         Token tok = start;
         while (true) {
             if (tok.hasNextToken()) {
