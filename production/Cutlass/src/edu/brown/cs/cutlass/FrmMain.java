@@ -30,6 +30,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -155,22 +157,22 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             List<T> openFiles = launchState.getOpenFiles();
             int cTabId = launchState.getCurrentTabId();
             int tabCount = 0;
-            
+
             for (T id : openFiles) {
-                if(this.openTab(id)){
+                if (this.openTab(id)) {
                     tabCount++;
                 } else {
-                    if(tabCount < cTabId){
+                    if (tabCount < cTabId) {
                         cTabId--;
                     }
                 }
             }
-            if(cTabId >= tabEditors.getTabCount()){
+            if (cTabId >= tabEditors.getTabCount()) {
                 cTabId = tabEditors.getTabCount() - 1;
-            } else if (cTabId < 0){
+            } else if (cTabId < 0) {
                 cTabId = 0; // This should not be possible.
             }
-            
+
             tabEditors.setSelectedIndex(cTabId);
         }
 
@@ -1045,7 +1047,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
      * @param c An Editor
      * @param title the title for the tab
      */
-    private void addClosableTab(final JTabbedPane tabbedPane, final Editor c, final String title) {
+    private void addClosableTab(final JTabbedPane tabbedPane, final Editor<T> c, final String title) {
         // Add the tab to the pane without any label
         tabbedPane.addTab(null, c);
         int pos = tabbedPane.indexOfComponent(c);
@@ -1087,6 +1089,9 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         // Add a thin border to keep the image below the top edge of the tab
         // when the tab is selected
         pnlTab.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
+
+        // Add MouseOver listener that displays the call graph
+        pnlTab.addMouseListener(new MouseAdapterImpl(this, c));
 
         // Now assign the component for the tab
         tabbedPane.setTabComponentAt(pos, pnlTab);
@@ -1311,6 +1316,55 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         } catch (AbstractIOException ex) {
             Lumberjack.log(Lumberjack.Level.WARN, ex);
             return false;
+        }
+    }
+
+    private void showDefaultCallGraph() {
+        Editor<T> currentEditor = this.getCurrentEditor();
+        if (currentEditor.isEditorWindow()) {
+            currentEditor.showCallGraph();
+        }
+    }
+
+    private void switchTo(Editor<T> ed) {
+        tabEditors.setSelectedComponent(ed);
+    }
+
+    private class MouseAdapterImpl implements MouseListener {
+
+        private final Editor<T> ed;
+        private final FrmMain<T> main;
+
+        private MouseAdapterImpl(FrmMain<T> aThis, Editor<T> c) {
+            this.main = aThis;
+            this.ed = c;
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            main.showDefaultCallGraph();
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            ed.showCallGraph();
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            /*
+             Consuming the mouse event appears to be a Swing issue (can't find the exact bug).
+             This is a simple enough workaround.
+             */
+            main.switchTo(ed);
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
         }
     }
 }

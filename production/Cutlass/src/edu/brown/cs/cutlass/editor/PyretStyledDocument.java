@@ -90,4 +90,8 @@ public class PyretStyledDocument extends DefaultStyledDocument {
         return highlighter.getLastLineStartOffsets();
     }
 
+    void showCallGraph() {
+        highlighter.showCallGraph();
+    }
+
 }

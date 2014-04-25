@@ -40,7 +40,7 @@ public class SyntaxHighlighter {
 
     private PyretStyledDocument sdoc;
     private final StyledUndoPane listener;
-    private List<Integer>  lastLineStartOffsets = Arrays.asList(0);
+    private List<Integer> lastLineStartOffsets = Arrays.asList(0);
 
     SyntaxHighlighter(PyretStyledDocument d, StyledUndoPane l) {
         this.sdoc = addAllStyles(d);
@@ -130,7 +130,7 @@ public class SyntaxHighlighter {
             List<Token> line_tokens = l.getContents();
             for (Token t : line_tokens) {
                 sdoc.insertStringWithoutHighlight(sdoc.getLength(), t.getValue(), t.getTokenStyle().getStyle());
-                if(t.getType() instanceof TokenTypeWhitespace && t.getValue().endsWith(Line.LINE_TERMINATOR)){
+                if (t.getType() instanceof TokenTypeWhitespace && t.getValue().endsWith(Line.LINE_TERMINATOR)) {
                     newLineStartOffsets.add(sdoc.getLength());
                 }
             }
@@ -139,6 +139,14 @@ public class SyntaxHighlighter {
 
         listener.highlighted(parseTokens, opt, listener);
         return charsBeforeAfter.getX() + charsBeforeAfter.getY();
+    }
+
+    public void showCallGraph() {
+        try {
+            listener.highlighted(TokenParser.parseTokens(sdoc.getText(0, sdoc.getLength())), new Option<Token>(), listener);
+        } catch (BadLocationException ex) {
+            Lumberjack.log(Lumberjack.Level.ERROR, ex);
+        }
     }
 
     public void updateDocument(PyretStyledDocument newdoc) {
@@ -205,7 +213,7 @@ public class SyntaxHighlighter {
         }
     }
 
-    public List<Integer>  getLastLineStartOffsets() {
+    public List<Integer> getLastLineStartOffsets() {
         return lastLineStartOffsets;
     }
 }

@@ -159,6 +159,9 @@ public abstract class Editor<T extends AbstractIdentifier> extends javax.swing.J
         this.changedSinceLastSave = changedSinceLastSave;
     }
 
+    public void showCallGraph() {
+    }
+    
     @Override
     public void close() throws RuntimeException {
 

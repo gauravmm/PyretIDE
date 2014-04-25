@@ -256,6 +256,10 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
         return false;
     }
 
+    void showCallGraph() {
+        document.showCallGraph();
+    }
+
     private class CaretListenerImpl implements CaretListener {
 
         public CaretListenerImpl() {

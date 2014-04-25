@@ -258,6 +258,11 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
     }
 
     @Override
+    public void showCallGraph() {
+        editorPane.showCallGraph();
+    }
+
+    @Override
     public void close() throws RuntimeException {
         this.removeAll();
     }
