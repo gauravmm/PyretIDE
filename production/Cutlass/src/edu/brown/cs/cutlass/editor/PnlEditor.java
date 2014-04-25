@@ -20,6 +20,8 @@ import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import java.awt.Color;
 import java.util.TreeSet;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -48,7 +50,7 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
         initComponents();
 
         this.editorClient = client;
-
+        
         // Prepare and add editor pane
         this.editorPane = new StyledUndoPane(initialContents, new PyretHighlightedListener() {
             @Override
@@ -61,6 +63,22 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
                 editorClient.handleQuickNavigationChange(callGraphEntries);
             }
         });
+        final PnlEditor<T> editor = this;
+        editorPane.getDocument().addDocumentListener(new DocumentListener(){
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                changedUpdate(e);
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                changedUpdate(e);
+            }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                editor.setChangedSinceLastSave(true);
+            } 
+        });
+        
         pnlLineNumber = new PnlLineNumbers(editorPane);
         pnlLineNumberContainer.add(pnlLineNumber);
         scrlEditor.getViewport().removeAll();

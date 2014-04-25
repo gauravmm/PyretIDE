@@ -8,6 +8,10 @@ import edu.brown.cs.cutlass.sys.io.AbstractIdentifier;
 import edu.brown.cs.cutlass.ui.FindClient;
 import edu.brown.cs.cutlass.ui.FrmFinder;
 import edu.brown.cs.cutlass.util.Option;
+import java.awt.event.ActionListener;
+import java.util.LinkedList;
+import java.util.List;
+import javax.swing.event.ChangeListener;
 
 /**
  * Interface exposing the interactions offered by the editor
@@ -151,12 +155,29 @@ public abstract class Editor<T extends AbstractIdentifier> extends javax.swing.J
         }
         return changedSinceLastSave;
     }
+    
+    private List<ChangeListener> tabChangedListener = new LinkedList<>();
 
+    public void addChangeListener(ChangeListener e) {
+        tabChangedListener.add(e);
+    }
+
+    public void removeChangeListener(ChangeListener o) {
+        tabChangedListener.remove(o);
+    }
+    
+    private void fireTabChangedListeners(){
+        for(ChangeListener l : tabChangedListener){
+            l.stateChanged(null);
+        }
+    }
+    
     public void setChangedSinceLastSave(boolean changedSinceLastSave) {
         if (!isEditorWindow()) {
             throw new IllegalStateException("This is not a valid editor window.");
         }
         this.changedSinceLastSave = changedSinceLastSave;
+        fireTabChangedListeners();
     }
 
     public void showCallGraph() {

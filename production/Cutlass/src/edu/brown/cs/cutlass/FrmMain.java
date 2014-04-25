@@ -30,8 +30,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -40,8 +38,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -56,6 +52,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -713,7 +711,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
                         io.setUserFile(id.getData(), e.getBuffer());
                         //e.setChangedSinceLastSave(false);
                     } catch (AbstractIOException ex) {
-                        Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+                        Lumberjack.log(Lumberjack.Level.ERROR, ex);
                     }
                 } else {
                     fileSaveAsAction();
@@ -776,6 +774,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
                 T destId = destination.getData();
                 io.setUserFile(destId, seq);
                 editor.setIdentifier(destId);
+                editor.setChangedSinceLastSave(false);
                 tabEditors.remove(tabEditors.getSelectedIndex());
                 addClosableTab(tabEditors, editor, destId.getDisplayName());
             }
@@ -788,7 +787,6 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         Editor e = getCurrentEditor();
         if (e.isEditorWindow()) {
             if (e.isChangedSinceLastSave()) {
-                // TODO: Save the file
                 this.save(e);
             }
         }
@@ -1026,9 +1024,9 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
                 //Save
                 id.getData();
                 io.setUserFile(id.getData(), e.getBuffer());
-                //e.setChangedSinceLastSave(false);
+                e.setChangedSinceLastSave(false);
             } catch (AbstractIOException ex) {
-                Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+                Lumberjack.log(Lumberjack.Level.ERROR, ex);
             }
         } else {
             mnuFileSaveAsActionPerformed(null);
@@ -1061,7 +1059,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         pnlTab.setOpaque(false);
 
         // Add a JLabel with title and the left-side tab icon
-        JLabel lblTitle = new JLabel(title);
+        final JLabel lblTitle = new JLabel(title);
 
         // Create a JButton for the close tab button
         JButton btnClose = new JButton();
@@ -1092,6 +1090,16 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
         // Add MouseOver listener that displays the call graph
         pnlTab.addMouseListener(new MouseAdapterImpl(this, c));
+        c.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                if(c.isChangedSinceLastSave()){
+                    lblTitle.setFont(lblTitle.getFont().deriveFont(Font.BOLD));
+                } else {
+                    lblTitle.setFont(lblTitle.getFont().deriveFont(Font.PLAIN));
+                }
+            }
+        });
 
         // Now assign the component for the tab
         tabbedPane.setTabComponentAt(pos, pnlTab);
@@ -1311,6 +1319,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             }
             Editor e = new PnlEditor(this, contents.toString());
             e.setIdentifier(destId);
+            e.setChangedSinceLastSave(false);
             addClosableTab(tabEditors, e, destId.getDisplayName());
             return true;
         } catch (AbstractIOException ex) {
