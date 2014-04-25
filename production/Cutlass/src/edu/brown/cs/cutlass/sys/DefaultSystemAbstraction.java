@@ -42,6 +42,8 @@ public class DefaultSystemAbstraction implements SystemAbstraction<DiskIdentifie
         if (System.getProperty("os.name").contains("win")) {
             File raco1 = new File(user_home.getAbsolutePath() + "\\Program Files\\Racket\\raco.exe");
             File raco2 = new File(user_home.getAbsolutePath() + "\\Program Files (x86)\\Racket\\raco.exe");
+            System.out.println("1 -- " + raco1.getAbsolutePath());
+            System.out.println("2 -- " + raco2.getAbsolutePath());
             if (raco1.exists() && raco1.isFile() && raco1.canExecute()) {
                 //System.out.println(raco.getAbsolutePath());
                 raco_path.add(raco1.getAbsolutePath());
@@ -53,6 +55,7 @@ public class DefaultSystemAbstraction implements SystemAbstraction<DiskIdentifie
             }
         } else {
             File raco1 = new File(user_home.getAbsolutePath() + "/Racket/bin/raco");
+            System.out.println("3 -- " + raco1.getAbsolutePath());
             if (raco1.exists() && raco1.isFile() && raco1.canExecute()) {
                 //System.out.println(raco.getAbsolutePath());
                 raco_path.add(raco1.getAbsolutePath());
