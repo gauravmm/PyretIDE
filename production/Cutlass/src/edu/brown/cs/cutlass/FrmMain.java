@@ -842,6 +842,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     private void mnuCloseAllTabsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCloseAllTabsActionPerformed
         int tabs = tabEditors.getTabCount();
         for (int i = tabs - 1; i >= 0; i--) {
+            tabEditors.setSelectedIndex(i);
             Editor<T> ed = (Editor<T>) tabEditors.getComponentAt(i);
             if (ed.isEditorWindow()) {
                 if (ed.isChangedSinceLastSave()) {
@@ -850,7 +851,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
                 }
             }
-            ed.close();
+            //ed.close();
 //            tabEditors.remove(i);
         }
     }//GEN-LAST:event_mnuCloseAllTabsActionPerformed
