@@ -160,10 +160,22 @@ public class Launcher {
             // Manually initialize the ConfigEngine:
             tmpConfig = new ConfigEngine();
             tmpConfig.setDimension("ui.toolbar.iconsize", new Dimension(60, 40));
+            // Post set-up for DefaultSystemAbstraction
+            if (sys instanceof DefaultSystemAbstraction) {
+                Option<String> racoPath = ((DefaultSystemAbstraction) sys).getRacoPath();
+                if (racoPath.hasData()) {
+                    tmpConfig.setString("raco.path", racoPath.getData());
+                } else {
+                    tmpConfig.setString("raco.path", "<UNKNOWN>");
+                    JOptionPane.showMessageDialog(null, "The path to raco could not be automatically determined.\n"
+                            + "You need to manually set the value in \"~/.cutlass/config.cfg\" before re-lauching Cutlass.", "raco Error", JOptionPane.WARNING_MESSAGE);
+                }
+            }
         }
+
         config = tmpConfig;
-        if(sys instanceof DefaultSystemAbstraction){
-            config.setString("raco.path", ((DefaultSystemAbstraction) sys).getRacoPath());
+
+        if (sys instanceof DefaultSystemAbstraction) {
             ((DefaultSystemAbstraction) sys).setConfigEngine(config);
         }
 
@@ -184,7 +196,7 @@ public class Launcher {
                 launchState = new Option<>();
             }
         }
-        
+
         assert launchState != null;
         assert sys != null;
 
@@ -225,6 +237,7 @@ public class Launcher {
     /**
      * Handle program termination. Save current program state to disk and quit.
      * If necessary, write log files to disk.
+     *
      * @param lState The current program state
      */
     public void quit(LaunchState lState) {
