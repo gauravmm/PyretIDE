@@ -67,6 +67,7 @@ public class FrmFinder extends javax.swing.JFrame {
         jLabel2.setText("Replace:");
 
         btnFind.setText("Find");
+        btnFind.setNextFocusableComponent(txtReplace);
         btnFind.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFindActionPerformed(evt);
@@ -74,8 +75,12 @@ public class FrmFinder extends javax.swing.JFrame {
         });
 
         txtFind.setFocusCycleRoot(true);
+        txtFind.setNextFocusableComponent(btnFind);
+
+        txtReplace.setNextFocusableComponent(btnReplace);
 
         btnReplace.setText("Replace");
+        btnReplace.setNextFocusableComponent(btnReplaceAll);
         btnReplace.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnReplaceActionPerformed(evt);
@@ -83,8 +88,10 @@ public class FrmFinder extends javax.swing.JFrame {
         });
 
         cmbType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Literal", "Wildcards (*?)", "Regular Expressions" }));
+        cmbType.setNextFocusableComponent(txtFind);
 
         btnReplaceAll.setText("Replace All");
+        btnReplaceAll.setNextFocusableComponent(tglMatchCase);
         btnReplaceAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnReplaceAllActionPerformed(evt);
@@ -93,8 +100,10 @@ public class FrmFinder extends javax.swing.JFrame {
 
         tglMatchCase.setSelected(true);
         tglMatchCase.setText("Match Case");
+        tglMatchCase.setNextFocusableComponent(tglWholeWords);
 
         tglWholeWords.setText("Whole Words");
+        tglWholeWords.setNextFocusableComponent(cmbType);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -108,8 +117,8 @@ public class FrmFinder extends javax.swing.JFrame {
                         .addComponent(tglMatchCase)
                         .addGap(10, 10, 10)
                         .addComponent(tglWholeWords)
-                        .addGap(26, 26, 26)
-                        .addComponent(cmbType, 0, 246, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cmbType, 0, 264, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
