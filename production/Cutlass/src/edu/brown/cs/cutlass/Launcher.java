@@ -149,9 +149,6 @@ public class Launcher {
             }
         } else {
             Lumberjack.log(Lumberjack.Level.INFO, "Starting DiskIO...");
-            //DefaultSystemAbstraction dsa = new DefaultSystemAbstraction();
-            //dsa.setConfigEngine(config);
-            //sys = dsa;
             sys = new DefaultSystemAbstraction();
             io = sys.getIO();
             Lumberjack.log(Lumberjack.Level.INFO, "Started DiskIO.");
@@ -167,10 +164,10 @@ public class Launcher {
             // Manually initialize the ConfigEngine:
             tmpConfig = new ConfigEngine();
             tmpConfig.setDimension("ui.toolbar.iconsize", new Dimension(60, 40));
-            tmpConfig.setString("raco.path", getRacoPath());
         }
         config = tmpConfig;
         if(sys instanceof DefaultSystemAbstraction){
+            config.setString("raco.path", ((DefaultSystemAbstraction) sys).getRacoPath());
             ((DefaultSystemAbstraction) sys).setConfigEngine(config);
         }
 
@@ -253,48 +250,5 @@ public class Launcher {
         }
 
         System.exit(ExitCode.OK.getCode());
-    }
-
-    private String getRacoPath() {
-        File user_home = new File(System.getProperty("user.home"));
-        final List<String> raco_path = new ArrayList<>();
-        if (System.getProperty("os.name").contains("win")) {
-            File[] matchingFiles = user_home.listFiles(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    if (dir.isDirectory()) {
-                        File prog_files = new File(dir.getAbsolutePath() + "/Program Files/");
-                        if (prog_files.exists() && prog_files.isDirectory()) {
-                            File raco = new File(prog_files.getAbsolutePath() + "/Racket/raco.exe");
-                            if (raco.exists() && raco.isFile() && raco.canExecute()) {
-                                //System.out.println(raco.getAbsolutePath());
-                                raco_path.add(raco.getAbsolutePath());
-                                return true;
-                            }
-                        }
-                    }
-                    raco_path.add("");
-                    return false;
-                }
-            });
-        } else {
-            File[] matchingFiles = user_home.listFiles(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    if (dir.isDirectory()) {
-                        File rack = new File(dir.getAbsolutePath() + "/Racket/");
-                        if (rack.exists() && rack.isDirectory()) {
-                            File raco = new File(rack.getAbsolutePath() + "/bin/raco");
-                            if (raco.exists() && raco.isFile() && raco.canExecute()) {
-                                //System.out.println(raco.getAbsolutePath());
-                                raco_path.add(raco.getAbsolutePath());
-                                return true;
-                            }
-                        }
-                    }
-                    raco_path.add("");
-                    return false;
-                }
-            });
-        }
-        return raco_path.get(0);
     }
 }

@@ -811,20 +811,21 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
     private void mnuSaveAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSaveAllActionPerformed
         int tabs = tabEditors.getTabCount();
-        for (int i = tabs - 1; i >= 0; i--) {
-            Editor<T> ed = (Editor<T>) tabEditors.getTabComponentAt(i);
+        for (int i = 0; i < tabs; i++) {
+            Editor<T> ed = (Editor<T>) tabEditors.getComponentAt(i);
             if (ed.isEditorWindow()) {
                 if (ed.isChangedSinceLastSave()) {
-                    // TODO: Save the file
-                    Option<T> id = ed.getIdentifier();
-                    if (id.hasData()) {
-                        // Save
-                        id.getData();
-                        throw new UnsupportedOperationException();
-                    } else {
-                        // Save as
-                        throw new UnsupportedOperationException();
-                    }
+                    save(ed);
+//                    // TODO: Save the file
+//                    Option<T> id = ed.getIdentifier();
+//                    if (id.hasData()) {
+//                        // Save
+//                        id.getData();
+//                        throw new UnsupportedOperationException();
+//                    } else {
+//                        // Save as
+//                        throw new UnsupportedOperationException();
+//                    }
                 }
             }
         }
@@ -848,7 +849,6 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
                 if (ed.isChangedSinceLastSave()) {
                     // TODO: Save the file
                     closeTab(ed);
-
                 }
             }
             //ed.close();
@@ -1005,7 +1005,8 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     }
 
     public void closeTab(Editor<T> e) {
-        this.closeTabMessagePrompt(e);
+        if (e.isEditorWindow() && e.isChangedSinceLastSave()) this.closeTabMessagePrompt(e);
+        else closeTabAndSave(e, false);
     }
 
     public void closeTabAndSave(Editor<T> e, boolean save) {
@@ -1253,6 +1254,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     public boolean findNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
         Editor<T> ed = getCurrentEditor();
         if (ed.isEditorWindow()) {
+            ed.requestFocus();
             return ed.findNext(type, matchCase, forwards, wholeWords, find);
         } else {
             return false;
