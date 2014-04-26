@@ -173,14 +173,19 @@ public class LaskuraIO implements AbstractIO<LaskuraIdentifier> {
                         filenames_filtered.add(in);
                     }
                 }
-                String selFile = (String) JOptionPane.showInputDialog(null, "Select a file to open:",
-                        "Open File on " + client.getServerAddr().toString(),
-                        JOptionPane.QUESTION_MESSAGE,
-                        null, filenames_filtered.toArray(), filenames_filtered.get(0));
-                if (selFile == null) {
+                if (filenames_filtered.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "There are no files saved on this account!", "Cutlass", JOptionPane.ERROR_MESSAGE);
                     return new Option<>();
                 } else {
-                    return new Option<>(new LaskuraIdentifier(selFile));
+                    String selFile = (String) JOptionPane.showInputDialog(null, "Select a file to open:",
+                            "Open File on " + client.getServerAddr().toString(),
+                            JOptionPane.QUESTION_MESSAGE,
+                            null, filenames_filtered.toArray(), filenames_filtered.get(0));
+                    if (selFile == null) {
+                        return new Option<>();
+                    } else {
+                        return new Option<>(new LaskuraIdentifier(selFile));
+                    }
                 }
             } catch (IOException ex) {
                 Lumberjack.log(Lumberjack.Level.WARN, ex);

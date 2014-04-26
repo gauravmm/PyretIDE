@@ -113,8 +113,12 @@ function handleRead($svar, $rq){
 	$fdat = $db->query("SELECT * FROM data WHERE user_id = ? AND filename = ?", array($svar["user_id"], $rq['filename']));
 	if($fdat){
 		$datarow = $fdat->fetchArray();
-		$rv["success"] = true;
-		$rv["data"] = $datarow["data"];
+		if(isset($datarow["data"])){
+			$rv["success"] = true;
+			$rv["data"] = $datarow["data"];
+		} else {
+			$rv["success"] = false;
+		}
 		return $rv;
 	} else {
 		return failure("File not found.");
