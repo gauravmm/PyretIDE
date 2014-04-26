@@ -4,16 +4,24 @@
  */
 package edu.brown.cs.cutlass.ui;
 
+import java.awt.Color;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+import javax.swing.InputVerifier;
+import javax.swing.JComponent;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 /**
  *
  * @author Gaurav Manek
  */
 public class FrmFinder extends javax.swing.JFrame {
-
+    
     private final FindClient client;
-
+    
     public enum FindType {
-
+        
         LITERAL, WILDCARD, REGEXP
     }
 
@@ -28,6 +36,40 @@ public class FrmFinder extends javax.swing.JFrame {
             throw new IllegalArgumentException("Client cannot be null.");
         }
         this.client = client;
+        
+        txtFind.setInputVerifier(new InputVerifier() {
+            @Override
+            public boolean verify(JComponent input) {
+                if (getFindType() == FindType.REGEXP) {
+                    try {
+                        Pattern p = Pattern.compile(txtFind.getText());
+                    } catch (PatternSyntaxException e) {
+                        txtFind.setForeground(Color.RED.darker());
+                        return false;
+                    }
+                }
+                txtFind.setForeground(Color.BLACK.darker());
+                return true;
+            }
+        });
+        
+        txtFind.getDocument().addDocumentListener(new DocumentListener() {
+            
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                txtFind.getInputVerifier().verify(txtFind);
+            }
+            
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                txtFind.getInputVerifier().verify(txtFind);
+            }
+            
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                txtFind.getInputVerifier().verify(txtFind);
+            }
+        });
     }
 
     /**
@@ -76,6 +118,11 @@ public class FrmFinder extends javax.swing.JFrame {
 
         txtFind.setFocusCycleRoot(true);
         txtFind.setNextFocusableComponent(btnFind);
+        txtFind.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtFindActionPerformed(evt);
+            }
+        });
 
         txtReplace.setNextFocusableComponent(btnReplace);
 
@@ -179,6 +226,10 @@ public class FrmFinder extends javax.swing.JFrame {
         txtFind.requestFocusInWindow();
     }//GEN-LAST:event_formWindowOpened
 
+    private void txtFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFindActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtFindActionPerformed
+    
     private FindType getFindType() {
         int i = cmbType.getSelectedIndex();
         if (i < 0 || i > FindType.values().length) {
