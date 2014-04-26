@@ -10,14 +10,22 @@ Launching
 ---------
 
 ```
-Usage: ./java -jar Cutlass.jar [OPTIONS] [FILES]
+Cutlass
+CSCI 0320, Brown University, Fall 2014
+Dilip Arumugam, Gaurav Manek, Miles Holland, Zachary Zagorski
+
+Usage: ./cutlass [OPTIONS] [FILES]
 
 OPTIONS
   -h --help      Display this help and exit.
+
+  -n --silent    Silent mode, do not output anything on the commandline.
   -v --verbose   Verbose mode, output all logged information.
   -w --warnings  Verbose mode, output all logged warnings and errors.
   -e --error     Verbose mode, output all errors.
+
   -f --fresh     Discard saved state and start a brand new session.
+  --laskura URL  Connect to a Laskura server at URL instead of using the local disk.
 
 FILES
    Paths of files to load on startup.
