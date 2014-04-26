@@ -903,8 +903,10 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     }//GEN-LAST:event_mnuSelectAllActionPerformed
 
     private void mnuBlockCommentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuBlockCommentActionPerformed
-        // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Editor<T> e = getCurrentEditor();
+        if (e.isEditorWindow()) {
+            e.toggleComment();
+        }
     }//GEN-LAST:event_mnuBlockCommentActionPerformed
 
     private void mnuDeleteLineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuDeleteLineActionPerformed

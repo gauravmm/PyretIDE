@@ -155,7 +155,7 @@ public abstract class Editor<T extends AbstractIdentifier> extends javax.swing.J
         }
         return changedSinceLastSave;
     }
-    
+
     private List<ChangeListener> tabChangedListener = new LinkedList<>();
 
     public void addChangeListener(ChangeListener e) {
@@ -165,13 +165,13 @@ public abstract class Editor<T extends AbstractIdentifier> extends javax.swing.J
     public void removeChangeListener(ChangeListener o) {
         tabChangedListener.remove(o);
     }
-    
-    private void fireTabChangedListeners(){
-        for(ChangeListener l : tabChangedListener){
+
+    private void fireTabChangedListeners() {
+        for (ChangeListener l : tabChangedListener) {
             l.stateChanged(null);
         }
     }
-    
+
     public void setChangedSinceLastSave(boolean changedSinceLastSave) {
         if (!isEditorWindow()) {
             throw new IllegalStateException("This is not a valid editor window.");
@@ -182,7 +182,10 @@ public abstract class Editor<T extends AbstractIdentifier> extends javax.swing.J
 
     public void showCallGraph() {
     }
-    
+
+    public void toggleComment() {
+    }
+
     @Override
     public void close() throws RuntimeException {
 

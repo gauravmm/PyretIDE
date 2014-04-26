@@ -261,6 +261,11 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
     }
 
     @Override
+    public void toggleComment() {
+        editorPane.toggleComment();
+    }
+
+    @Override
     public boolean findNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
         return editorPane.findNext(type, matchCase, forwards, wholeWords, find);
     }

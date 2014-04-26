@@ -12,9 +12,9 @@ import edu.brown.cs.cutlass.ui.FrmFinder.FindType;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
-import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,6 +57,11 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
         this.addCaretListener(new CaretListenerImpl());
         // Absorb the tab keypress
         this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_H, KeyEvent.CTRL_DOWN_MASK), new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
             }
@@ -216,6 +221,7 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
             Pair<Integer, Integer> nextMatch = locateNextMatch.getData();
             this.getCaret().setDot(nextMatch.getX());
             this.getCaret().moveDot(nextMatch.getY());
+            this.requestFocus();
             return true;
         } else {
             return false;
@@ -232,6 +238,7 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
                 this.setText(text.substring(0, nextMatch.getX()) + replace + text.substring(nextMatch.getY()));
                 this.getCaret().setDot(nextMatch.getX());
                 this.getCaret().moveDot(nextMatch.getX() + replace.length());
+                this.requestFocus();
                 return true;
             } catch (BadLocationException ex) {
                 Lumberjack.log(Lumberjack.Level.ERROR, ex);
@@ -248,6 +255,7 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
         if (createPattern.hasData()) {
             try {
                 this.setText(document.getText(0, document.getLength()).replaceAll(createPattern.getData().pattern(), type == FindType.REGEXP ? Matcher.quoteReplacement(replace) : replace));
+                this.requestFocus();
                 return true;
             } catch (BadLocationException ex) {
                 Lumberjack.log(Lumberjack.Level.ERROR, ex);
@@ -258,6 +266,45 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
 
     void showCallGraph() {
         document.showCallGraph();
+    }
+
+    void toggleComment() {
+        try {
+            List<Integer> lineStartOffsets = this.getLineStartOffsets();
+            // Get selection:
+            Integer curSt = this.getCaret().getDot();
+            Integer curEnd = this.getCaret().getMark();
+            int lnSt = processBinarySearch(Collections.binarySearch(lineStartOffsets, curSt));
+            int lnEnd = processBinarySearch(Collections.binarySearch(lineStartOffsets, curEnd));
+
+            String str = document.getText(0, document.getLength());
+
+            for (int ln = Math.max(lnSt, lnEnd); ln >= Math.min(lnSt, lnEnd); --ln) {
+                Integer pos = lineStartOffsets.get(ln);
+                if (pos + 1 < str.length()) {
+                    if (str.substring(pos, pos + 1).equals("#")) {
+                        str = str.substring(0, pos).concat(str.substring(pos + 1));
+                    } else {
+                        str = str.substring(0, pos).concat("#").concat(str.substring(pos));
+                    }
+                } else {
+                    str = str.substring(0, pos).concat("#").concat(str.substring(pos));
+                }
+            }
+            
+            document.remove(0, document.getLength());
+            document.insertString(0, str, null);
+        } catch (BadLocationException ex) {
+            Lumberjack.log(Lumberjack.Level.ERROR, ex);
+        }
+    }
+
+    private int processBinarySearch(int v) {
+        if (v >= 0) {
+            return v;
+        } else {
+            return -(v + 1) - 1;
+        }
     }
 
     private class CaretListenerImpl implements CaretListener {
