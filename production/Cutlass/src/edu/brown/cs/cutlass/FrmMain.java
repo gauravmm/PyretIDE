@@ -32,12 +32,16 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -917,8 +921,17 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     private void mnuPyretDocsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPyretDocsActionPerformed
         if (Desktop.isDesktopSupported()) {
             try {
-                Desktop.getDesktop().browse(new File("docs/index.html").toURI());
-            } catch (IOException ex) {
+                File docsPath = new File("docs/index.html");
+                if (docsPath.exists() && docsPath.canRead()) {
+                    Desktop.getDesktop().browse(docsPath.toURI());
+                    return;
+                }
+            } catch (IOException | SecurityException ex) {
+                Lumberjack.log(Lumberjack.Level.WARN, ex);
+            }
+            try {
+                Desktop.getDesktop().browse(new URI("http://www.pyret.org/docs/"));
+            } catch (URISyntaxException | IOException | SecurityException ex) {
                 Lumberjack.log(Lumberjack.Level.WARN, ex);
             }
         }
@@ -1005,8 +1018,11 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     }
 
     public void closeTab(Editor<T> e) {
-        if (e.isEditorWindow() && e.isChangedSinceLastSave()) this.closeTabMessagePrompt(e);
-        else closeTabAndSave(e, false);
+        if (e.isEditorWindow() && e.isChangedSinceLastSave()) {
+            this.closeTabMessagePrompt(e);
+        } else {
+            closeTabAndSave(e, false);
+        }
     }
 
     public void closeTabAndSave(Editor<T> e, boolean save) {
@@ -1093,10 +1109,10 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
         // Add MouseOver listener that displays the call graph
         pnlTab.addMouseListener(new MouseAdapterImpl(this, c));
-        c.addChangeListener(new ChangeListener(){
+        c.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                if(c.isChangedSinceLastSave()){
+                if (c.isChangedSinceLastSave()) {
                     lblTitle.setFont(lblTitle.getFont().deriveFont(Font.BOLD));
                 } else {
                     lblTitle.setFont(lblTitle.getFont().deriveFont(Font.PLAIN));

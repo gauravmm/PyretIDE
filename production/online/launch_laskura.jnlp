@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jnlp codebase="http://dev.gauravmanek.com/cutlass/" href="launch_laskura.jnlp" spec="1.0+">
+    <information>
+        <title>Cutlass</title>
+        <vendor>Gaurav Manek</vendor>
+        <homepage href=""/>
+        <description>Cutlass</description>
+        <description kind="short">Cutlass</description>
+    <offline-allowed/>
+</information>
+    <update check="background"/>
+    <security>
+<all-permissions/>
+</security>
+    <resources>
+        <j2se version="1.7+"/>
+        <jar href="Cutlass.jar" main="true"/>
+    <jar href="lib/gson-2.2.4.jar"/>
+</resources>
+    <application-desc main-class="edu.brown.cs.cutlass.Launcher">
+    <argument>--laskura http://dev.gauravmanek.com/laskura/</argument>
+</application-desc>
+</jnlp>
