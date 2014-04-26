@@ -6,6 +6,7 @@ package edu.brown.cs.cutlass.editor;
 
 import edu.brown.cs.cutlass.parser.PyretFeatureExtractor;
 import edu.brown.cs.cutlass.parser.tokenizer.Line;
+import edu.brown.cs.cutlass.parser.tokenizer.LineIndentMetadata;
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenPaired;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenPairedOpening;
@@ -112,13 +113,13 @@ public class SyntaxHighlighter {
         }
 
         // Handle reindent here:
-        Pair<Integer, Integer> charsBeforeAfter = new Pair(0, position);
+        LineIndentMetadata lineIM = new LineIndentMetadata(0, position, true);
         if (reindent) {
             List<Line> indentedLines = new ArrayList<>();
             for (Line l : tokenLines) {
-                Pair<Line, Pair<Integer, Integer>> toIndentedLine = l.toIndentedLine(charsBeforeAfter.getX(), charsBeforeAfter.getY());
+                Pair<Line, LineIndentMetadata> toIndentedLine = l.toIndentedLine(lineIM);
                 indentedLines.add(toIndentedLine.getX());
-                charsBeforeAfter = toIndentedLine.getY();
+                lineIM = toIndentedLine.getY();
             }
             tokenLines = indentedLines;
         }
@@ -139,7 +140,7 @@ public class SyntaxHighlighter {
         lastLineStartOffsets = Collections.unmodifiableList(newLineStartOffsets);
 
         listener.highlighted(parseTokens, opt, listener);
-        return charsBeforeAfter.getX() + charsBeforeAfter.getY();
+        return lineIM.charsBefore + lineIM.charsAfter;
     }
 
     public void showCallGraph() {
@@ -176,7 +177,7 @@ public class SyntaxHighlighter {
 
                 opAngle.setStyle(TokenStyleAnnotation.getInstance());
 
-            // Get a list of all tokens until the matching closing angle brackets, pairing the angle brackets along the way.
+                // Get a list of all tokens until the matching closing angle brackets, pairing the angle brackets along the way.
                 // Don't actually change the metadata in the tokens. We'll save that for when we write a full parser
                 int angleBracketCount = 1;
                 Token currToken = opAngle;

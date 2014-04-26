@@ -73,11 +73,14 @@ public class Line implements Comparable<Integer> {
      * NOTE: This function returns token offsets, lengths and links between
      * tokens in an inconsistent state.
      *
-     * @param charsBefore
-     * @param charsAfter
+     * @param m
      * @return A Pair containing the new line and the updated cursor position.
      */
-    public Pair<Line, Pair<Integer, Integer>> toIndentedLine(int charsBefore, int charsAfter) {
+    public Pair<Line, LineIndentMetadata> toIndentedLine(LineIndentMetadata m) {
+        int charsBefore = m.charsBefore;
+        int charsAfter = m.charsAfter;
+        boolean updateCharPositionIndent = m.updateCharPositionIndent;
+
         ArrayList<Token> nCont = new ArrayList<>();
         nCont.ensureCapacity(contents.size());
 
@@ -89,10 +92,6 @@ public class Line implements Comparable<Integer> {
         String indent = sb.toString();
 
         Token startingToken = TokenTypeWhitespace.getInstance().constructToken(indent, offset, indent.length(), new TokenScope());
-        if (charsAfter > 0) {
-            charsBefore += startingToken.getLength();
-        }
-        nCont.add(startingToken); // Add the leading whitespace
 
         Iterator<Token> ci = contents.iterator();
 
@@ -100,26 +99,21 @@ public class Line implements Comparable<Integer> {
         if (ci.hasNext()) {
             Token tok = ci.next();
             if (TokenTypes.isWhitespaceTokenType(tok.getType()) && !tok.getValue().equals(LINE_TERMINATOR)) {
+                nCont.add(startingToken); // Add the leading whitespace
                 if (charsAfter > 0) {
                     charsAfter -= tok.getLength();
+                    charsBefore += startingToken.getLength();
                 }
-                // Swap token into linked list
-                //startingToken.setPreviousToken(tok.getPreviousToken());
-                //startingToken.setNextToken(tok.getNextToken());
             } else {
-                // Insert token into linked list
-                /*
-                 if(tok.hasPreviousToken()){
-                 tok.getPreviousToken().setNextToken(startingToken);
-                 }
-                 startingToken.setPreviousToken(tok.getPreviousToken());
-                 startingToken.setNextToken(tok.getNextToken());
-                 tok.setPreviousToken(startingToken);
-                 */
+                nCont.add(startingToken); // Add the leading whitespace
                 nCont.add(tok); // Add the first token if its not whitespace:    
-                if (charsAfter > 0) {
+                if (charsAfter > 0 || (charsAfter == 0 && updateCharPositionIndent)) {
+                    charsBefore += startingToken.getLength();
                     charsBefore += tok.getLength();
                     charsAfter -= tok.getLength();
+                    if (charsAfter == 0) {
+                        updateCharPositionIndent = false;
+                    }
                 }
             }
 
@@ -143,7 +137,7 @@ public class Line implements Comparable<Integer> {
             // This line is empty, return it with just the leading spaces.
         }
 
-        return new Pair<>(new Line(this.number, this.offset, this.length, this.expectedIndentation, nCont), new Pair<>(charsBefore, charsAfter));
+        return new Pair<>(new Line(this.number, this.offset, this.length, this.expectedIndentation, nCont), new LineIndentMetadata(charsBefore, charsAfter, updateCharPositionIndent));
     }
 
     @Override
