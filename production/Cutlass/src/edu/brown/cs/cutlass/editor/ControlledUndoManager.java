@@ -10,7 +10,10 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 
-/**
+/** This undomanager can have the significance of events it receives manually
+ * be set to false. By changing this significance variable, this manager can deal with
+ * our highlighting scheme without creating a heap of significant events every 
+ * time the user types something in.
  *
  * @author miles
  */
@@ -18,24 +21,34 @@ import javax.swing.undo.UndoableEdit;
 public class ControlledUndoManager extends UndoManager {
     private boolean isHighlighting;
 
-    public ControlledUndoManager(){
+    public ControlledUndoManager() {
         super();
         this.setLimit(5000);
         isHighlighting = false;
     }
 
+    /** Sets the isHighlighting value
+     * 
+     * @param newSignificance 
+     */
     public void setIsHighlighting(boolean newSignificance) {
         isHighlighting = newSignificance;
     }
 
     @Override
     public boolean addEdit(UndoableEdit anEdit){
+       //overridded to make edits insignificant if highlighting
        if(isHighlighting){
            return super.addEdit(new ControlledEdit(anEdit, false));
        }
        return super.addEdit(anEdit);
     }
 
+    /** A hidden class of edits that serve solely to mask normal edits with
+     * a new significance variable. Had to be done this way due to the fact
+     * that edits cannot have their significance changed after instantiation
+     * for some reason.
+     */
     private class ControlledEdit implements UndoableEdit{
         private final UndoableEdit realEdit;
         private final boolean significance;

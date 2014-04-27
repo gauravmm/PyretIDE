@@ -51,7 +51,8 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
         this.setEditorKit(new StyledEditorKit());
         this.setDocument(document);
         document.insertString(0, fileContent.toString(), null);
-
+        document.undoer.die();
+        
         // Add listeners after content is updated.
         this.addKeyListener(new EditorKeyListener(document));
         this.addCaretListener(new CaretListenerImpl());
@@ -86,6 +87,9 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
      *
      */
     public void redo() {
+        System.out.println("redo attempt");
+        System.out.println(document.undoer.canRedo());
+        
         if (document.undoer.canRedo()) {
             document.undoer.redo();
         }

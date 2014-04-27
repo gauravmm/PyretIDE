@@ -10,7 +10,10 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 
-/**
+/** A Styled document that has special undo/redo/highlight interactions.
+ * This contains its own SyntaxHighlighter and ControlledUndoManager, which
+ * it uses to make sure that highlights happen after each user edit, without
+ * creating a massive heap of highlight-related edits.
  *
  * @author miles
  */
@@ -30,6 +33,7 @@ public class PyretStyledDocument extends DefaultStyledDocument {
 
         undoer = new ControlledUndoManager();
         this.addUndoableEditListener(undoer);
+        
     }
 
     @Override
