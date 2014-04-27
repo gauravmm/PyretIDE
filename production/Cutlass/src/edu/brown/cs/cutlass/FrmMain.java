@@ -939,7 +939,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
     private void mnuPyretStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPyretStopActionPerformed
         // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        getCurrentEditor().pyretClose();
     }//GEN-LAST:event_mnuPyretStopActionPerformed
 
     private void mnuPyretRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPyretRunActionPerformed
