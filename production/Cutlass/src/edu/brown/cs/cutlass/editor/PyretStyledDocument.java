@@ -6,6 +6,8 @@ package edu.brown.cs.cutlass.editor;
 
 import edu.brown.cs.cutlass.util.Lumberjack;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
@@ -98,4 +100,15 @@ public class PyretStyledDocument extends DefaultStyledDocument {
         highlighter.showCallGraph();
     }
 
+    @Override
+    public void replace(int start, int end, String replacement, AttributeSet s) {
+        try {
+            undoer.setIsHighlighting(true);
+            super.remove(start, (end - start));
+            undoer.setIsHighlighting(false);
+            super.insertString(start, replacement, s);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(PyretStyledDocument.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

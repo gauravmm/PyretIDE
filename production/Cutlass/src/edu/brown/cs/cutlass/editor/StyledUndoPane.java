@@ -12,7 +12,9 @@ import edu.brown.cs.cutlass.ui.FrmFinder.FindType;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Collections;
 import java.util.List;
@@ -22,13 +24,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import javax.swing.AbstractAction;
+import javax.swing.JButton;
 import javax.swing.JEditorPane;
+import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.PlainDocument;
 import javax.swing.text.StyledEditorKit;
+import javax.swing.undo.UndoManager;
 
 /**
  * An extended JEditorPane. Has the following features: ~Highlights contents
@@ -349,5 +356,5 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
             }
         }
     }
-
+    
 }

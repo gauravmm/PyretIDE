@@ -11,9 +11,13 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
-import org.junit.Test;
-
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Document;
+import javax.swing.text.PlainDocument;
+import javax.swing.text.StyledDocument;
+import javax.swing.undo.UndoManager;
 /**
  *
  * @author Gaurav Manek
@@ -23,9 +27,7 @@ public class StyledUndoPaneTest {
     public StyledUndoPaneTest() {
     }
 
-    @Test
-    public void testSomeMethod() {
-    }
+   
 
     public final static String testStr = "data BinTree:\n"
             + "  | leaf\n"
@@ -46,14 +48,19 @@ public class StyledUndoPaneTest {
             + "end";
 
     public static void main(String[] args) {
-        StyledUndoPane test;
+       /* StyledUndoPane test;
         test = new StyledUndoPane(testStr, new PyretHighlightedListener() {
             @Override
             public void highlighted(TokenParserOutput output, Option<Token> currentToken, EditorJumpToClient client) {
             }
-        });
+        });*/
+        JEditorPane test = new JEditorPane();
+        Document d = new DefaultStyledDocument(null);
+        UndoManager u = new UndoManager();
+        d.addUndoableEditListener(u);
+        test.setDocument(d);
 
-        PaneTester tester = new PaneTester(test);
+        PaneTester2 tester = new PaneTester2(u);
 
         JFrame j = new JFrame("test");
         j.setLayout(new BorderLayout());
@@ -84,6 +91,24 @@ public class StyledUndoPaneTest {
         private StyledUndoPane s;
 
         private PaneTester(StyledUndoPane s0) {
+            s = s0;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getActionCommand().equals("undo")) {
+                s.undo();
+            } else {
+                s.redo();
+            }
+        }
+    }
+    
+        private static class PaneTester2 implements ActionListener {
+
+        private UndoManager s;
+
+        private PaneTester2(UndoManager s0) {
             s = s0;
         }
 
