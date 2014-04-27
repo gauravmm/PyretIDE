@@ -190,6 +190,10 @@ public abstract class Editor<T extends AbstractIdentifier> extends javax.swing.J
     public void close() throws RuntimeException {
 
     }
+    
+    public void pyretClose() {
+
+    }
 
     @Override
     public boolean findNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {

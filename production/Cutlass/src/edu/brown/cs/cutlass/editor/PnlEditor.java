@@ -20,6 +20,8 @@ import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import java.awt.Color;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -38,6 +40,7 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
     private final EditorClient editorClient;
     private final StyledUndoPane editorPane;
     private final PnlLineNumbers pnlLineNumber;
+    private AbstractPyretAccess<T> pyret_instance;
 
     /**
      * Creates new form EditorPanel
@@ -86,6 +89,11 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
         scrlEditor.getViewport().addChangeListener(pnlLineNumber);
 
         // The output pane is outputPane
+        try {
+            pyret_instance = editorClient.getPyretAccess(this);
+        } catch (AbstractIOException ex) {
+            Lumberjack.log(Lumberjack.Level.ERROR, ex);
+        }
     }
 
     /**
@@ -159,9 +167,7 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
 
     @Override
     public void run() {
-        try {
             //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            AbstractPyretAccess<T> pyret_instance = editorClient.getPyretAccess(this);
             outputPane.setEditorKit(new StyledEditorKit());
             final StyledDocument sdoc = (StyledDocument) outputPane.getDocument();
             
@@ -198,9 +204,6 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
                 }
             });
             pyret_instance.execute();
-        } catch (AbstractIOException ex) {
-            Lumberjack.log(Lumberjack.Level.ERROR,ex);
-        }
     }
 
     @Override
@@ -288,5 +291,22 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
     @Override
     public void close() throws RuntimeException {
         this.removeAll();
+    }
+
+    @Override
+    public void pyretClose() {
+        try {
+            outputPane.setEditorKit(new StyledEditorKit());
+            final StyledDocument sdoc = (StyledDocument) outputPane.getDocument();
+
+            final Style stop_style = sdoc.addStyle("STOP STYLE", null);
+            StyleConstants.setForeground(stop_style, Color.red);
+
+            this.pyret_instance.close();
+
+            sdoc.insertString(sdoc.getLength(), "User halted program execution...", stop_style);
+        } catch (BadLocationException ex) {
+            Lumberjack.log(Lumberjack.Level.ERROR, ex);
+        }
     }
 }
