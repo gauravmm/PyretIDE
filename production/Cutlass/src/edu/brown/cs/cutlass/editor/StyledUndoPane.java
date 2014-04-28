@@ -8,7 +8,6 @@ import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
 import edu.brown.cs.cutlass.ui.FindClient;
 import edu.brown.cs.cutlass.ui.FrmFinder;
-import edu.brown.cs.cutlass.ui.FrmFinder.FindType;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
@@ -83,6 +82,7 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
      * maybe make these two methods synchronized??
      */
     public void undo() {
+        System.out.println("Can I undo? " + document.undoer.canUndo());
         if (document.undoer.canUndo()) {
             document.undoer.undo();
         }
@@ -94,8 +94,8 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
      *
      */
     public void redo() {
+        System.out.println("Can I redo? " + document.undoer.canRedo());
         System.out.println("redo attempt");
-        System.out.println(document.undoer.canRedo());
 
         if (document.undoer.canRedo()) {
             document.undoer.redo();
@@ -325,9 +325,14 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
                     str = str.substring(0, pos).concat("#").concat(str.substring(pos));
                 }
             }
-
-            document.remove(0, document.getLength());
-            document.insertString(0, str, null);
+            //document.insertString(0, " ", null);
+            //document.undoer.setIsHighlighting(true);
+            int currPos = this.getCaretPosition();
+            this.replaceNext(FrmFinder.FindType.LITERAL, false, true, false, document.getText(0, document.getLength()), str);
+            this.setCaretPosition(currPos + Math.abs(lnEnd - lnSt) + 1);
+            //document.remove(0, document.getLength());
+            //document.insertString(0, str, null);
+            //document.undoer.setIsHighlighting(false);
         } catch (BadLocationException ex) {
             Lumberjack.log(Lumberjack.Level.ERROR, ex);
         }

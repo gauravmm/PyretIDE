@@ -43,10 +43,10 @@ public class ControlledUndoManager extends UndoManager {
     public boolean addEdit(UndoableEdit anEdit){
        //overridded to make edits insignificant if highlighting
        if(isHighlighting){
-           System.out.println(canRedo());
+           //System.out.println(canRedo());
            return super.addEdit(new ControlledEdit(anEdit, false));
        }
-       System.out.println(canRedo());
+       //System.out.println(canRedo());
        return super.addEdit(anEdit);
     }
 
