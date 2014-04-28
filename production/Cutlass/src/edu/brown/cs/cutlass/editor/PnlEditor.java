@@ -89,11 +89,6 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
         scrlEditor.getViewport().addChangeListener(pnlLineNumber);
 
         // The output pane is outputPane
-//        try {
-//            pyret_instance = editorClient.getPyretAccess(this);
-//        } catch (AbstractIOException ex) {
-//            Lumberjack.log(Lumberjack.Level.ERROR, ex);
-//        }
     }
 
     /**
