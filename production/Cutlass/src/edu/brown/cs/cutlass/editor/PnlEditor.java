@@ -89,11 +89,11 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
         scrlEditor.getViewport().addChangeListener(pnlLineNumber);
 
         // The output pane is outputPane
-        try {
-            pyret_instance = editorClient.getPyretAccess(this);
-        } catch (AbstractIOException ex) {
-            Lumberjack.log(Lumberjack.Level.ERROR, ex);
-        }
+//        try {
+//            pyret_instance = editorClient.getPyretAccess(this);
+//        } catch (AbstractIOException ex) {
+//            Lumberjack.log(Lumberjack.Level.ERROR, ex);
+//        }
     }
 
     /**
@@ -167,7 +167,9 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
 
     @Override
     public void run() {
+        try {
             //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            pyret_instance = editorClient.getPyretAccess(this);
             outputPane.setEditorKit(new StyledEditorKit());
             final StyledDocument sdoc = (StyledDocument) outputPane.getDocument();
             
@@ -204,6 +206,9 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
                 }
             });
             pyret_instance.execute();
+        } catch (AbstractIOException ex) {
+            Lumberjack.log(Lumberjack.Level.ERROR, ex);
+        }
     }
 
     @Override
