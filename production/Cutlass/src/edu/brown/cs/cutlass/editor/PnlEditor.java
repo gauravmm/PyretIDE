@@ -31,7 +31,7 @@ import javax.swing.text.StyledDocument;
 import javax.swing.text.StyledEditorKit;
 
 /**
- *
+ *'2
  * @author Gaurav Manek
  * @param <T>
  */
@@ -236,8 +236,8 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
 
     @Override
     public void selectAll() {
-        jTextArea1.setSelectionStart(0);
-        jTextArea1.setSelectionEnd(jTextArea1.getText().length());
+        editorPane.setSelectionStart(0);
+        editorPane.setSelectionEnd(editorPane.getText().length());
     }
 
     @Override

@@ -607,6 +607,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         mnuEdit.add(jSeparator12);
 
         mnuFindAndReplace.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_MASK));
+        mnuFindAndReplace.setMnemonic('F');
         mnuFindAndReplace.setText("Find And Replace");
         mnuFindAndReplace.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
