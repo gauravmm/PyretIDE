@@ -34,6 +34,10 @@ public class ControlledUndoManager extends UndoManager {
     public void setIsHighlighting(boolean newSignificance) {
         isHighlighting = newSignificance;
     }
+    
+    public boolean getIsHighlighting(){
+        return isHighlighting;
+    }
 
     @Override
     public boolean addEdit(UndoableEdit anEdit){

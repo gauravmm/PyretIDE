@@ -103,10 +103,10 @@ public class PyretStyledDocument extends DefaultStyledDocument {
     @Override
     public void replace(int start, int end, String replacement, AttributeSet s) {
         try {
-            undoer.setIsHighlighting(true);
+            //undoer.setIsHighlighting(false);
             super.remove(start, (end - start));
-            undoer.setIsHighlighting(false);
             super.insertString(start, replacement, s);
+            //undoer.setIsHighlighting(true);
         } catch (BadLocationException ex) {
             Logger.getLogger(PyretStyledDocument.class.getName()).log(Level.SEVERE, null, ex);
         }

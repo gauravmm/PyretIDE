@@ -59,7 +59,7 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
         this.setDocument(document);
         document.insertString(0, fileContent.toString(), null);
         document.undoer.die();
-        
+
         // Add listeners after content is updated.
         this.addKeyListener(new EditorKeyListener(document));
         this.addCaretListener(new CaretListenerImpl());
@@ -96,7 +96,7 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
     public void redo() {
         System.out.println("redo attempt");
         System.out.println(document.undoer.canRedo());
-        
+
         if (document.undoer.canRedo()) {
             document.undoer.redo();
         }
@@ -227,11 +227,15 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
 
     @Override
     public boolean findNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
+        if (this.getSelectedText() != null){
+            this.setCaretPosition(this.getCaretPosition() + 1);
+        }
         Option<Pair<Integer, Integer>> locateNextMatch = this.locateNextMatch(type, matchCase, forwards, wholeWords, find);
         if (locateNextMatch.hasData()) {
             Pair<Integer, Integer> nextMatch = locateNextMatch.getData();
-            this.getCaret().setDot(nextMatch.getX());
-            this.getCaret().moveDot(nextMatch.getY());
+            this.getCaret().setDot(nextMatch.getY());
+            this.getCaret().moveDot(nextMatch.getX());
+            //this.getCaret().setDot(nextMatch.getX());
             this.requestFocus();
             return true;
         } else {
@@ -243,18 +247,27 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
     public boolean replaceNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
         Option<Pair<Integer, Integer>> locateNextMatch = this.locateNextMatch(type, matchCase, forwards, wholeWords, find);
         if (locateNextMatch.hasData()) {
-            try {
-                Pair<Integer, Integer> nextMatch = locateNextMatch.getData();
-                String text = document.getText(0, document.getLength());
-                this.setText(text.substring(0, nextMatch.getX()) + replace + text.substring(nextMatch.getY()));
-                this.getCaret().setDot(nextMatch.getX());
-                this.getCaret().moveDot(nextMatch.getX() + replace.length());
-                this.requestFocus();
-                return true;
-            } catch (BadLocationException ex) {
-                Lumberjack.log(Lumberjack.Level.ERROR, ex);
-                return false;
+            //try {
+            Pair<Integer, Integer> nextMatch = locateNextMatch.getData();
+            boolean multipleOps = document.undoer.getIsHighlighting();
+            int offset = 0;
+            if (!multipleOps) {
+                document.insertString(0, " ", null);
+                document.undoer.setIsHighlighting(true);
+                offset = 1;
             }
+            //Offset by one due to dummy insertion at beginning
+            document.replace(nextMatch.getX() + offset, nextMatch.getY() + offset, replace, null);
+            if (!multipleOps){
+                document.remove(0, 1);
+                document.undoer.setIsHighlighting(false);
+            }
+            this.requestFocus();
+            return true;
+            //} catch (BadLocationException ex) {
+            //   Lumberjack.log(Lumberjack.Level.ERROR, ex);
+            //   return false;
+            //}
         } else {
             return false;
         }
@@ -262,17 +275,27 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
 
     @Override
     public boolean replaceAll(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find, String replace) {
-        Option<Pattern> createPattern = this.createPattern(type, matchCase, forwards, wholeWords, find);
-        if (createPattern.hasData()) {
-            try {
-                this.setText(document.getText(0, document.getLength()).replaceAll(createPattern.getData().pattern(), type == FindType.REGEXP ? Matcher.quoteReplacement(replace) : replace));
-                this.requestFocus();
-                return true;
-            } catch (BadLocationException ex) {
-                Lumberjack.log(Lumberjack.Level.ERROR, ex);
-            }
+        document.insertString(0, " ", null);
+        document.undoer.setIsHighlighting(true);
+
+        boolean replacedSomething = true;
+        while (replacedSomething) {
+            replacedSomething = this.replaceNext(type, matchCase, forwards, wholeWords, find, replace);
         }
-        return false;
+//        Option<Pattern> createPattern = this.createPattern(type, matchCase, forwards, wholeWords, find);
+//        if (createPattern.hasData()) {
+//            try {
+//                this.setText(document.getText(0, document.getLength()).replaceAll(createPattern.getData().pattern(), type == FindType.REGEXP ? Matcher.quoteReplacement(replace) : replace));
+//                this.requestFocus();
+//                return true;
+//            } catch (BadLocationException ex) {
+//                Lumberjack.log(Lumberjack.Level.ERROR, ex);
+//            }
+//        }
+        document.remove(0, 1);
+        document.undoer.setIsHighlighting(false);
+
+        return true;
     }
 
     void showCallGraph() {
@@ -302,7 +325,7 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
                     str = str.substring(0, pos).concat("#").concat(str.substring(pos));
                 }
             }
-            
+
             document.remove(0, document.getLength());
             document.insertString(0, str, null);
         } catch (BadLocationException ex) {
@@ -356,5 +379,5 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
             }
         }
     }
-    
+
 }
