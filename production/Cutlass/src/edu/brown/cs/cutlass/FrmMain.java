@@ -23,6 +23,7 @@ import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -32,8 +33,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -42,6 +45,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -93,6 +97,8 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         this.config = configEngine;
         this.io = sys.getIO();
         this.systemAbstraction = sys;
+
+        this.setIconImage(loadImageIcon("/edu/brown/cs/cutlass/assets/icon.png"));
 
         this.lstCallGraph.setCellRenderer(new CallGraphEntryRenderer());
         this.lstCallGraph.addMouseListener(new MouseAdapter() {
@@ -199,6 +205,24 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         }
         if (isSK) {
             this.setTitle(this.getTitle() + " - Aspire Higher");
+        }
+    }
+
+    /**
+     * Returns an ImageIcon, or null if the path was invalid.
+     * http://stackoverflow.com/a/6420563
+     */
+    private static Image loadImageIcon(String path) {
+        try {
+            InputStream img = FrmMain.class.getResourceAsStream(path);
+            if (img == null) {
+                Lumberjack.log(Lumberjack.Level.ERROR, "Icon not found.");
+                return null;
+            }
+            return ImageIO.read(img);
+        } catch (IOException ex) {
+            Lumberjack.log(Lumberjack.Level.ERROR, "Icon not loaded.");
+            return null;
         }
     }
 

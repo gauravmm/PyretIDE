@@ -29,7 +29,7 @@ public class PnlLaskuraLogin extends javax.swing.JPanel {
         dialog.dispose();
 
         Object value = pane.getValue();
-        if (value.equals("Login")) {
+        if (value != null && value.equals("Login")) {
             return new Option<>(pnlLogin.getLoginData());
         } else {
             return new Option<>();
@@ -62,12 +62,11 @@ public class PnlLaskuraLogin extends javax.swing.JPanel {
 
         txtPassword.setText("edward");
 
-        jLabel1.setBackground(new java.awt.Color(255, 0, 0));
+        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("<html><center>REMOVE<br />BEFORE<br />FLIGHT</center></html>");
-        jLabel1.setOpaque(true);
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edu/brown/cs/cutlass/assets/laskura-splash.png"))); // NOI18N
 
         lblServer.setFont(lblServer.getFont().deriveFont((float)10));
         lblServer.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -83,13 +82,13 @@ public class PnlLaskuraLogin extends javax.swing.JPanel {
                     .addComponent(txtUsername)
                     .addComponent(txtPassword)
                     .addComponent(lblServer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(lblServer)
                 .addGap(10, 10, 10)
