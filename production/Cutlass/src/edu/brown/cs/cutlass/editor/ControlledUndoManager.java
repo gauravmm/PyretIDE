@@ -40,6 +40,17 @@ public class ControlledUndoManager extends UndoManager {
     }
 
     @Override
+    public void redo(){
+        super.redo();
+        if(canRedo()){
+            this.redoTo(edits.get(edits.indexOf(this.editToBeRedone())- 1));
+        }
+        else{
+            this.redoTo(edits.get(edits.size()- 1));
+        }
+    }
+    
+    @Override
     public boolean addEdit(UndoableEdit anEdit){
        //overridded to make edits insignificant if highlighting
        if(isHighlighting){

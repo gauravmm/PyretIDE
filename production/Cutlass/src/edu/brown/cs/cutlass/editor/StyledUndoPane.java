@@ -75,31 +75,16 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
         });
     }
 
-    /**
-     * Tries to undo the last change to the document. Checks to see if it can
-     * undo first.
-     *
-     * maybe make these two methods synchronized??
+    /**Just a link to the document's undo method.
      */
     public void undo() {
-        System.out.println("Can I undo? " + document.undoer.canUndo());
-        if (document.undoer.canUndo()) {
-            document.undoer.undo();
-        }
+        document.undo();
     }
 
-    /**
-     * Tries to redo the last change to the document. Checks to see if it can
-     * redo first.
-     *
+    /**Just a link to the document's redo method.
      */
     public void redo() {
-        System.out.println("Can I redo? " + document.undoer.canRedo());
-        System.out.println("redo attempt");
-
-        if (document.undoer.canRedo()) {
-            document.undoer.redo();
-        }
+        document.redo();
     }
 
     @Override
@@ -347,8 +332,8 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
     }
 
     private class CaretListenerImpl implements CaretListener {
-
-        public CaretListenerImpl() {
+        int temp;
+        public CaretListenerImpl() {temp = 0;
         }
 
         final Object isReindentingMutex = new Object();
@@ -357,7 +342,9 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
 
         @Override
         public void caretUpdate(CaretEvent e) {
-            if (lastPos != e.getDot()) {
+            System.out.println("event received" + temp);
+            temp++;
+            if (true || lastPos != e.getDot()) {
                 synchronized (isReindentingMutex) {
                     if (isReindenting) {
                         return;
@@ -366,23 +353,41 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
                 }
 
                 lastPos = e.getDot();
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            document.highlight();
-                        } catch (Exception e) {
-                            Lumberjack.log(Lumberjack.Level.WARN, e);
-                        } finally {
-                            // We don't need to bother locking the release
-                            synchronized (isReindentingMutex) {
-                                isReindenting = false;
-                            }
-                        }
-                    }
-                });
+                boolean actuallyRun = document.isUndoing();
+                System.out.println(actuallyRun);
+                SwingUtilities.invokeLater(new HighlightRunnable(actuallyRun));
             }
         }
+        
+        private class HighlightRunnable implements Runnable{
+        boolean wasUndoing;
+        
+            private HighlightRunnable(boolean wasUndoing0){
+                wasUndoing = wasUndoing0;
+            }
+
+            @Override
+            public void run() {
+                if(wasUndoing){
+                    synchronized (isReindentingMutex) {
+                        isReindenting = false;
+                    }
+                    return;
+                }
+                try {
+                    document.highlight();
+                } catch (Exception e) {
+                    Lumberjack.log(Lumberjack.Level.WARN, e);
+                } finally {
+                    // We don't need to bother locking the release
+                    synchronized (isReindentingMutex) {
+                        isReindenting = false;
+                    }
+                }
+            }
     }
+    }
+    
+    
 
 }

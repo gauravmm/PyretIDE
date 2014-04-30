@@ -48,19 +48,19 @@ public class StyledUndoPaneTest {
             + "end";
 
     public static void main(String[] args) {
-       /* StyledUndoPane test;
+        StyledUndoPane test;
         test = new StyledUndoPane(testStr, new PyretHighlightedListener() {
             @Override
             public void highlighted(TokenParserOutput output, Option<Token> currentToken, EditorJumpToClient client) {
             }
-        });*/
-        JEditorPane test = new JEditorPane();
+        });
+        /*JEditorPane test = new JEditorPane();
         Document d = new DefaultStyledDocument(null);
         UndoManager u = new UndoManager();
         d.addUndoableEditListener(u);
-        test.setDocument(d);
+        test.setDocument(d);*/
 
-        PaneTester2 tester = new PaneTester2(u);
+        PaneTester tester = new PaneTester(test);
 
         JFrame j = new JFrame("test");
         j.setLayout(new BorderLayout());

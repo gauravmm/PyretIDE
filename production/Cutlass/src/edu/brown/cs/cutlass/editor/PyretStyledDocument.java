@@ -24,9 +24,14 @@ public class PyretStyledDocument extends DefaultStyledDocument {
     private final SyntaxHighlighter highlighter;
     private final StyledUndoPane parent;
     public final ControlledUndoManager undoer;
+    
+    private boolean undoing;
 
     PyretStyledDocument(StyledUndoPane parent) {
         super();
+        
+        undoing = false;
+        
         highlighter = new SyntaxHighlighter(this, parent);
         if (parent == null) {
             throw new IllegalArgumentException("parent must not be null!");
@@ -41,15 +46,15 @@ public class PyretStyledDocument extends DefaultStyledDocument {
     @Override
     public void insertString(int offset, String content, AttributeSet s) {
         insertStringWithoutHighlight(offset, content, s);
-        highlight();
+        highlight();   
     }
 
     @Override
     public void remove(int offset, int amt) {
         removeWithoutHighlight(offset, amt);
-        highlight();
+        highlight(); 
     }
-
+    
     public void highlight() {
         int posDot = parent.getCaret().getDot();
         int posMark = parent.getCaret().getMark();
@@ -59,7 +64,7 @@ public class PyretStyledDocument extends DefaultStyledDocument {
         highlighter.highlight(posMark == posDot ? posDot : -1, false);
 
         undoer.setIsHighlighting(false);
-
+        
         parent.getCaret().setDot(posMark);
         parent.getCaret().moveDot(posDot);
     }
@@ -110,5 +115,40 @@ public class PyretStyledDocument extends DefaultStyledDocument {
         } catch (BadLocationException ex) {
             Logger.getLogger(PyretStyledDocument.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    
+    
+      /**
+     * Tries to undo the last change to the document. Checks to see if it can
+     * undo first.
+     *
+     * maybe make these two methods synchronized??
+     */
+    public void undo(){
+        undoing = true;
+        if (undoer.canUndo()) {
+            undoer.undo();
+        }
+        undoing = false;
+    }
+    
+    
+     /**
+     * Tries to redo the last change to the document. Checks to see if it can
+     * redo first.
+     *
+     */
+    public void redo(){
+        undoing = true;
+
+        if (undoer.canRedo()) {
+            undoer.redo();
+        }
+        undoing = false;
+    }
+    
+    public boolean isUndoing(){
+        return undoing;
     }
 }
