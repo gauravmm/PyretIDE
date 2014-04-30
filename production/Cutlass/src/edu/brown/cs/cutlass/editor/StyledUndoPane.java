@@ -6,35 +6,27 @@ package edu.brown.cs.cutlass.editor;
 
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
+import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.TokenTypeDefault;
 import edu.brown.cs.cutlass.ui.FindClient;
 import edu.brown.cs.cutlass.ui.FrmFinder;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import javax.swing.AbstractAction;
-import javax.swing.JButton;
 import javax.swing.JEditorPane;
-import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.PlainDocument;
 import javax.swing.text.StyledEditorKit;
-import javax.swing.undo.UndoManager;
 
 /**
  * An extended JEditorPane. Has the following features: ~Highlights contents
@@ -75,13 +67,15 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
         });
     }
 
-    /**Just a link to the document's undo method.
+    /**
+     * Just a link to the document's undo method.
      */
     public void undo() {
         document.undo();
     }
 
-    /**Just a link to the document's redo method.
+    /**
+     * Just a link to the document's redo method.
      */
     public void redo() {
         document.redo();
@@ -127,41 +121,36 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
     }
 
     private Option<Pattern> createPattern(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
-        Pattern toMatch = null;
         switch (type) {
             case LITERAL:
                 find = Pattern.quote(find);
                 if (wholeWords) {
                     find = "\\b" + find + "\\b";
                 }
-                try {
-                    if (matchCase) {
-                        toMatch = Pattern.compile(find);
-                    } else {
-                        toMatch = Pattern.compile(find, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
-                    }
-                } catch (PatternSyntaxException ex) {
-                    Lumberjack.log(Lumberjack.Level.ERROR, ex);
-                }
                 break;
             case WILDCARD:
+                find = Pattern.quote(find);
+                if (wholeWords) {
+                    find = "\\b" + find + "\\b";
+                }
+                find = find.replaceAll("\\*", "\\\\E" + TokenTypeDefault.wordCharRegex + "*\\\\Q");
+                find = find.replaceAll("\\?", "\\\\E" + TokenTypeDefault.wordCharRegex + "\\\\Q");
+                find = find.replaceAll("\\\\Q\\\\E", "");
                 break;
             case REGEXP:
-                try {
-                    if (matchCase) {
-                        toMatch = Pattern.compile(find);
-                    } else {
-                        toMatch = Pattern.compile(find, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
-                    }
-                } catch (PatternSyntaxException ex) {
-                    return new Option<>();
-                }
-                break;
             default:
                 throw new AssertionError(type.name());
         }
 
-        if (toMatch == null) {
+        Pattern toMatch = null;
+        try {
+            if (matchCase) {
+                toMatch = Pattern.compile(find);
+            } else {
+                toMatch = Pattern.compile(find, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+            }
+        } catch (PatternSyntaxException ex) {
+            Lumberjack.log(Lumberjack.Level.ERROR, ex);
             return new Option<>();
         }
 
@@ -212,7 +201,7 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
 
     @Override
     public boolean findNext(FrmFinder.FindType type, boolean matchCase, boolean forwards, boolean wholeWords, String find) {
-        if (this.getSelectedText() != null){
+        if (this.getSelectedText() != null) {
             this.setCaretPosition(this.getCaretPosition() + 1);
         }
         Option<Pair<Integer, Integer>> locateNextMatch = this.locateNextMatch(type, matchCase, forwards, wholeWords, find);
@@ -220,7 +209,6 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
             Pair<Integer, Integer> nextMatch = locateNextMatch.getData();
             this.getCaret().setDot(nextMatch.getY());
             this.getCaret().moveDot(nextMatch.getX());
-            //this.getCaret().setDot(nextMatch.getX());
             this.requestFocus();
             return true;
         } else {
@@ -243,16 +231,12 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
             }
             //Offset by one due to dummy insertion at beginning
             document.replace(nextMatch.getX() + offset, nextMatch.getY() + offset, replace, null);
-            if (!multipleOps){
+            if (!multipleOps) {
                 document.remove(0, 1);
                 document.undoer.setIsHighlighting(false);
             }
             this.requestFocus();
             return true;
-            //} catch (BadLocationException ex) {
-            //   Lumberjack.log(Lumberjack.Level.ERROR, ex);
-            //   return false;
-            //}
         } else {
             return false;
         }
@@ -267,16 +251,7 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
         while (replacedSomething) {
             replacedSomething = this.replaceNext(type, matchCase, forwards, wholeWords, find, replace);
         }
-//        Option<Pattern> createPattern = this.createPattern(type, matchCase, forwards, wholeWords, find);
-//        if (createPattern.hasData()) {
-//            try {
-//                this.setText(document.getText(0, document.getLength()).replaceAll(createPattern.getData().pattern(), type == FindType.REGEXP ? Matcher.quoteReplacement(replace) : replace));
-//                this.requestFocus();
-//                return true;
-//            } catch (BadLocationException ex) {
-//                Lumberjack.log(Lumberjack.Level.ERROR, ex);
-//            }
-//        }
+
         document.remove(0, 1);
         document.undoer.setIsHighlighting(false);
 
@@ -310,14 +285,9 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
                     str = str.substring(0, pos).concat("#").concat(str.substring(pos));
                 }
             }
-            //document.insertString(0, " ", null);
-            //document.undoer.setIsHighlighting(true);
             int currPos = this.getCaretPosition();
             this.replaceNext(FrmFinder.FindType.LITERAL, false, true, false, document.getText(0, document.getLength()), str);
             this.setCaretPosition(currPos + Math.abs(lnEnd - lnSt) + 1);
-            //document.remove(0, document.getLength());
-            //document.insertString(0, str, null);
-            //document.undoer.setIsHighlighting(false);
         } catch (BadLocationException ex) {
             Lumberjack.log(Lumberjack.Level.ERROR, ex);
         }
@@ -332,8 +302,11 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
     }
 
     private class CaretListenerImpl implements CaretListener {
+
         int temp;
-        public CaretListenerImpl() {temp = 0;
+
+        public CaretListenerImpl() {
+            temp = 0;
         }
 
         final Object isReindentingMutex = new Object();
@@ -342,7 +315,6 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
 
         @Override
         public void caretUpdate(CaretEvent e) {
-            System.out.println("event received" + temp);
             temp++;
             if (true || lastPos != e.getDot()) {
                 synchronized (isReindentingMutex) {
@@ -354,21 +326,21 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
 
                 lastPos = e.getDot();
                 boolean actuallyRun = document.isUndoing();
-                System.out.println(actuallyRun);
                 SwingUtilities.invokeLater(new HighlightRunnable(actuallyRun));
             }
         }
-        
-        private class HighlightRunnable implements Runnable{
-        boolean wasUndoing;
-        
-            private HighlightRunnable(boolean wasUndoing0){
+
+        private class HighlightRunnable implements Runnable {
+
+            boolean wasUndoing;
+
+            private HighlightRunnable(boolean wasUndoing0) {
                 wasUndoing = wasUndoing0;
             }
 
             @Override
             public void run() {
-                if(wasUndoing){
+                if (wasUndoing) {
                     synchronized (isReindentingMutex) {
                         isReindenting = false;
                     }
@@ -379,15 +351,11 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
                 } catch (Exception e) {
                     Lumberjack.log(Lumberjack.Level.WARN, e);
                 } finally {
-                    // We don't need to bother locking the release
                     synchronized (isReindentingMutex) {
                         isReindenting = false;
                     }
                 }
             }
+        }
     }
-    }
-    
-    
-
 }
