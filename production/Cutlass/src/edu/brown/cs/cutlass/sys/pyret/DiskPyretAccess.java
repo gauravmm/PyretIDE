@@ -155,7 +155,11 @@ public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
                 
             }
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            //String msg = e.getMessage();
+            String msg = "There appears to be an error when attempting to run your program\n"
+                    + "Please make sure that you have the latest versions of both Racket and Pyret installed on your current machine\n"
+                    + "You may also wish to check your raco.path in the Cutlass configuration file and ensure it is set to the correct location of the raco executable on your machine";
+            publish(new PyretOutputValue(AbstractPyretAccess.Stream.STDERR,msg));
             return new PyretTerminationValue(1);
         }
     }
