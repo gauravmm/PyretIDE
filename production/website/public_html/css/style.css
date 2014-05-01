@@ -69,7 +69,7 @@ em, i
 
 a
 {
-    color: #35b88f;
+    color: #f15a24;
     text-shadow: 0 0 0.5px rgba(53,184,143,0.25);
     -moz-transition: border-color 0.35s ease-in-out, color 0.35s ease-in-out;
     -webkit-transition: border-color 0.35s ease-in-out, color 0.35s ease-in-out;
@@ -177,7 +177,7 @@ article:last-child
 .image img
 {
     display: block;
-    width: 100%;
+    /* width: 100%; */
 }
 
 .image.featured
@@ -449,7 +449,7 @@ table.default tbody
     position: relative;
     display: inline-block;
     border: 0;
-    background: #35b88f;
+    background: #f15a24;
     color: #fff;
     text-shadow: 0 0 0.5px rgba(255,255,255,0.25);
     cursor: pointer;
@@ -468,7 +468,7 @@ table.default tbody
 
 .button:hover
 {
-    background: #45c89f;
+    background: #f58b65;
 }
 
 .button.style2
@@ -553,8 +553,9 @@ table.default tbody
     top: 0;
     width: 50%;
     height: 100%;
-    background: #152E33;
+    background: #CCC;
     overflow: hidden;
+    vertical-align: top;
 }
 
 .box.style1 .image img
@@ -682,9 +683,25 @@ table.default tbody
     padding: 3em;
 }
 
+.box.style3 p
+{
+    text-align: center;
+}
+
+.box.style3 p .smalltext
+{
+    font-size: 0.8em;
+    line-height: 0px;
+}
+
 .box.style3 header
 {
     text-align: center;
+}
+
+.box.style3 .image img
+{
+    margin: auto;
 }
 
 /*********************************************************************************/
@@ -1304,7 +1321,7 @@ table.default tbody
 
 #footer a:hover
 {
-    color: #35b88f;
+    color: #f15a24;
     text-shadow: 0 0 0.5px rgba(69,200,159,0.25);
     border-bottom-color: rgba(53,184,143,0.5);
 }
@@ -1487,4 +1504,16 @@ table.default tbody
 .poptrox-popup:hover .closer:hover
 {
     opacity: 1.0;
+}
+
+.webStart a
+{
+    text-decoration: none;
+    border-bottom: none;
+}
+
+.webStart a:hover
+{
+    text-decoration: none;
+    border-bottom: none;
 }
