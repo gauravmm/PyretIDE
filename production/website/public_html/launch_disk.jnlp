@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<jnlp codebase="http://dev.gauravmanek.com/cutlass/" href="launch_disk.jnlp" spec="1.0+">
+<jnlp codebase="http://codewithcutlass.es/" href="launch_disk.jnlp" spec="1.0+">
     <information>
         <title>Cutlass</title>
         <vendor>Gaurav Manek</vendor>
