@@ -14,7 +14,7 @@
 
 body
 {
-    background: #183026 url('../images/bg.jpg') no-repeat;
+    background: #B5C2D2 url('../images/bg.jpg') no-repeat;
     background-size: cover;
     background-position: center 0;
     background-attachment: fixed;
@@ -702,6 +702,8 @@ table.default tbody
 .box.style3 .image img
 {
     margin: auto;
+    max-width: 100%;
+    height: auto;
 }
 
 /*********************************************************************************/
@@ -1339,6 +1341,12 @@ table.default tbody
 {
     margin: 0 0 9em 0;
     font-size: 0.8em;
+}
+
+#downloadBox #fbLike
+{
+    margin-top: 40px;
+    width:100%;
 }
 
 /*********************************************************************************/
