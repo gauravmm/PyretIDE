@@ -618,7 +618,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         });
         mnuEdit.add(mnuAutoIndent);
 
-        mnuBlockComment.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_7, java.awt.event.InputEvent.CTRL_MASK));
+        mnuBlockComment.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         mnuBlockComment.setMnemonic('B');
         mnuBlockComment.setText("Block Comment Selected");
         mnuBlockComment.setToolTipText("Comment out anything on selected line, or current line if no text selected");
