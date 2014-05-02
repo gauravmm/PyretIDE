@@ -7,7 +7,7 @@ Dilip Arumugam, Gaurav Manek, Miles Holland, Zachary Zagorski
 
 Website: http://codewithcutlass.es
 
-Laskura Server (for testing): laskura.codewithcutlass.es
+Laskura Server (for testing): http://laskura.codewithcutlass.es
 
 
 Launching
