@@ -70,19 +70,19 @@ em, i
 a
 {
     color: #f15a24;
-    text-shadow: 0 0 0.5px rgba(53,184,143,0.25);
+    text-shadow: 0 0 0.5px rgba(53,53,53,0.25);
     -moz-transition: border-color 0.35s ease-in-out, color 0.35s ease-in-out;
     -webkit-transition: border-color 0.35s ease-in-out, color 0.35s ease-in-out;
     -o-transition: border-color 0.35s ease-in-out, color 0.35s ease-in-out;
     -ms-transition: border-color 0.35s ease-in-out, color 0.35s ease-in-out;
     transition: border-color 0.35s ease-in-out, color 0.35s ease-in-out;
     text-decoration: none;
-    border-bottom: dotted 1px rgba(53,184,143,0.5);
+    border-bottom: dotted 1px rgba(53,53,53,0.5);
 }
 
 a:hover
 {
-    border-bottom-color: rgba(53,184,143,0);
+    border-bottom-color: rgba(53,53,53,0);
 }
 
 sub
@@ -1524,4 +1524,30 @@ table.default tbody
 {
     text-decoration: none;
     border-bottom: none;
+}
+
+.name-holder {
+    display: block;
+    height:176px;
+    width:176px;
+    padding: .3em;
+    background: #f58b65;
+    text-align: left;
+    position: relative;
+    margin:auto;
+}
+
+.name-holder span {
+    position: absolute;
+}
+
+.name-holder span:last-child {
+    color: #fff;
+    font-weight: bold;
+    bottom:0;
+}
+
+.name-holder span:first-child {
+    color: #000;
+    bottom:1em;
 }
