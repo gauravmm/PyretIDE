@@ -272,22 +272,32 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
             int lnEnd = processBinarySearch(Collections.binarySearch(lineStartOffsets, curEnd));
 
             String str = document.getText(0, document.getLength());
-
+            int currPos = this.getCaretPosition();
+            int offset = 0;
             for (int ln = Math.max(lnSt, lnEnd); ln >= Math.min(lnSt, lnEnd); --ln) {
                 Integer pos = lineStartOffsets.get(ln);
                 if (pos + 1 < str.length()) {
                     if (str.substring(pos, pos + 1).equals("#")) {
                         str = str.substring(0, pos).concat(str.substring(pos + 1));
+                        if (pos < currPos) {
+                            offset--;
+                        }
                     } else {
                         str = str.substring(0, pos).concat("#").concat(str.substring(pos));
+
+                        if (pos < currPos) {
+                            offset++;
+                        }
                     }
                 } else {
                     str = str.substring(0, pos).concat("#").concat(str.substring(pos));
+                    if (pos < currPos) {
+                        offset++;
+                    }
                 }
             }
-            int currPos = this.getCaretPosition();
             this.replaceNext(FrmFinder.FindType.LITERAL, false, true, false, document.getText(0, document.getLength()), str);
-            this.setCaretPosition(currPos + Math.abs(lnEnd - lnSt) + 1);
+            this.setCaretPosition(currPos + offset);
         } catch (BadLocationException ex) {
             Lumberjack.log(Lumberjack.Level.ERROR, ex);
         }
