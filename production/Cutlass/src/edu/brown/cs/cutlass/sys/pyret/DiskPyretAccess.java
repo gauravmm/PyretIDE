@@ -135,7 +135,7 @@ public class DiskPyretAccess extends AbstractPyretAccess<DiskIdentifier> {
                 err_vals.add(pev);
                 return new PyretTerminationValue(0);
             }
-            if (out_string.contains("Looks shipshape")) {
+            if (out_string.contains("Looks shipshape") || out_string.contains("WARNING: Your program didn't define any tests.")) {
                 PyretOutputValue pov = new PyretOutputValue(AbstractPyretAccess.Stream.STDOUT, out_string);
                 publish(pov);
                 out_vals.add(pov);

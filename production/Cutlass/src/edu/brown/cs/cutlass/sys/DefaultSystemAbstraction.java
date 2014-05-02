@@ -52,6 +52,12 @@ public class DefaultSystemAbstraction implements SystemAbstraction<DiskIdentifie
                     return new Option<>(raco.getAbsolutePath());
                 }
             }
+        }
+        if (System.getProperty("os.name").contains("Mac")) {
+            File raco = new File("/Applications/Racketv6.0/bin/raco");
+            if (raco.exists() && raco.isFile() && raco.canExecute()) {
+                return new Option<>(raco.getAbsolutePath());
+            }
         } else {
             File raco1 = new File(user_home.getAbsolutePath() + "/Racket/bin/raco");
             File raco2 = new File("/local/projects/racket/6.0/x86_64/bin/raco");
