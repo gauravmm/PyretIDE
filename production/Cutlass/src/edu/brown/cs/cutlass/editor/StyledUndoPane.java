@@ -138,6 +138,7 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
                 find = find.replaceAll("\\\\Q\\\\E", "");
                 break;
             case REGEXP:
+                break;
             default:
                 throw new AssertionError(type.name());
         }
