@@ -126,6 +126,10 @@ public abstract class Editor<T extends AbstractIdentifier> extends javax.swing.J
             return new UnsupportedOperationException("Not supported yet.");
         }
     }
+    
+    public void deleteLine() {
+        throw defaultResponse();
+    }
 
     public void deleteSelection() {
         throw defaultResponse();

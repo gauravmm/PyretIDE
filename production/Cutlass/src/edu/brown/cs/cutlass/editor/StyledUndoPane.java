@@ -262,6 +262,22 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
         document.showCallGraph();
     }
 
+    void deleteLine(){
+        try {
+            List<Integer> lineStartOffsets = this.getLineStartOffsets();
+            Integer curSt = this.getCaretPosition();
+            int lnSt = processBinarySearch(Collections.binarySearch(lineStartOffsets, curSt));
+            int startPos = lineStartOffsets.get(lnSt);
+            int endPos = lineStartOffsets.get(lnSt + 1);
+            String str = document.getText(0, document.getLength());
+            str = str.substring(0, startPos).concat(str.substring(endPos));
+            this.replaceNext(FrmFinder.FindType.LITERAL, false, true, false, document.getText(0, document.getLength()), str);
+            this.setCaretPosition(startPos);
+        } catch (BadLocationException ex) {
+            Lumberjack.log(Lumberjack.Level.ERROR, ex);
+        }
+    }
+    
     void toggleComment() {
         try {
             List<Integer> lineStartOffsets = this.getLineStartOffsets();
@@ -270,7 +286,6 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
             Integer curEnd = this.getCaret().getMark();
             int lnSt = processBinarySearch(Collections.binarySearch(lineStartOffsets, curSt));
             int lnEnd = processBinarySearch(Collections.binarySearch(lineStartOffsets, curEnd));
-
             String str = document.getText(0, document.getLength());
             int currPos = this.getCaretPosition();
             int offset = 0;

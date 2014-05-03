@@ -244,6 +244,11 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
     }
 
     @Override
+    public void deleteLine() {
+        editorPane.deleteLine();
+    }
+    
+    @Override
     public void deleteSelection() {
         int dot = editorPane.getCaret().getDot();
         String current = editorPane.getText();
