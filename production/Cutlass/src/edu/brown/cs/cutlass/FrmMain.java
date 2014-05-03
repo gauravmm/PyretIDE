@@ -618,7 +618,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         });
         mnuEdit.add(mnuAutoIndent);
 
-        mnuBlockComment.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_7, java.awt.event.InputEvent.CTRL_MASK));
+        mnuBlockComment.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         mnuBlockComment.setMnemonic('B');
         mnuBlockComment.setText("Block Comment Selected");
         mnuBlockComment.setToolTipText("Comment out anything on selected line, or current line if no text selected");
@@ -753,7 +753,6 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     }//GEN-LAST:event_tbSaveMouseClicked
 
     private void tbRunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbRunMouseClicked
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         this.mnuPyretRunActionPerformed(null);
         //getCurrentEditor().close();
     }//GEN-LAST:event_tbRunMouseClicked
@@ -850,10 +849,8 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 //                    if (id.hasData()) {
 //                        // Save
 //                        id.getData();
-//                        throw new UnsupportedOperationException();
 //                    } else {
 //                        // Save as
-//                        throw new UnsupportedOperationException();
 //                    }
                 }
             }
@@ -940,7 +937,10 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
 
     private void mnuDeleteLineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuDeleteLineActionPerformed
         // TODO add your handling code here:
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Editor<T> e = getCurrentEditor();
+        if (e.isEditorWindow()) {
+            e.deleteLine();
+        }
     }//GEN-LAST:event_mnuDeleteLineActionPerformed
 
     private void mnuPyretDocsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPyretDocsActionPerformed

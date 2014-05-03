@@ -139,6 +139,9 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
         pnlOut.setLayout(new java.awt.CardLayout());
 
         scrlCMD.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        outputPane.setEditable(false);
+        outputPane.setBackground(new java.awt.Color(0, 0, 0));
         scrlCMD.setViewportView(outputPane);
 
         pnlOut.add(scrlCMD, "card2");
@@ -172,7 +175,7 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
             StyleConstants.setForeground(output_style, Color.green);
             
             final Style error_style = sdoc.addStyle("ERROR STYLE", null);
-            StyleConstants.setForeground(error_style, Color.red);
+            StyleConstants.setForeground(error_style, new Color(255, 70, 70));
             
             pyret_instance.addPyretAccessListener(new PyretAccessListener() {
                 
@@ -240,6 +243,11 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
         editorPane.setSelectionEnd(editorPane.getText().length());
     }
 
+    @Override
+    public void deleteLine() {
+        editorPane.deleteLine();
+    }
+    
     @Override
     public void deleteSelection() {
         int dot = editorPane.getCaret().getDot();
