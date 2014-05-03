@@ -140,6 +140,7 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
 
         scrlCMD.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
+        outputPane.setEditable(false);
         outputPane.setBackground(new java.awt.Color(0, 0, 0));
         scrlCMD.setViewportView(outputPane);
 
