@@ -179,6 +179,15 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
 
             final Style error_style = sdoc.addStyle("ERROR STYLE", null);
             StyleConstants.setForeground(error_style, new Color(255, 70, 70));
+            
+            final Style generic_style = sdoc.addStyle("GENERIC STYLE",null);
+            StyleConstants.setForeground(generic_style, new Color(139, 22, 139));
+            
+            try {
+                sdoc.insertString(sdoc.getLength(), "Running....\n", generic_style);
+            } catch (BadLocationException ex) {
+                Lumberjack.log(Lumberjack.Level.ERROR, ex);
+            }
 
             pyret_instance.addPyretAccessListener(new PyretAccessListener() {
 
@@ -302,6 +311,11 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
     @Override
     public void close() throws RuntimeException {
         this.removeAll();
+    }
+    
+    @Override
+    public void requestFocus() {
+        editorPane.requestFocus();
     }
 
     @Override
