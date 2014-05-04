@@ -23,22 +23,28 @@ public class CallGraphEntryRenderer implements ListCellRenderer<CallGraphEntry> 
 
     private static final Color COL_CURRENT = new Color(27, 161, 226);
     private static final Color COL_DEFAULT = Color.WHITE;
-    private static final Color COL_DATAOFNAME = Color.WHITE;
 
     @Override
     public Component getListCellRendererComponent(JList<? extends CallGraphEntry> list, final CallGraphEntry value, int index, boolean isSelected, boolean cellHasFocus) {
         JPanel lbl = new JPanel();
         lbl.setLayout(new BorderLayout());
         lbl.add(new JLabel(value.name), BorderLayout.CENTER);
+        lbl.setOpaque(true);
+        
         if (value.dataOf.hasData()) {
             JLabel lblDataOf = new JLabel(value.dataOf.getData() + " ");
             lblDataOf.setHorizontalAlignment(SwingConstants.RIGHT);
-            lblDataOf.setForeground(COL_DATAOFNAME);
+            lblDataOf.setOpaque(true);
+            lblDataOf.setForeground(value.dataColor.hasData() ? value.dataColor.getData() : COL_DEFAULT);
+            //lblDataOf.setForeground(COL_DATAOFNAME);
+            //lbl.setBackground(COL_DATA);
             lbl.add(lblDataOf, BorderLayout.EAST);
+        } else {
+            lbl.setBackground(Color.WHITE);
         }
+        
         lbl.add(new CallGraphIcon(value.isCurrent, value.callsCurrent, value.isCalledByCurrent), BorderLayout.WEST);
-        lbl.setOpaque(true);
-        lbl.setBackground(value.backgroundColor.hasData() ? value.backgroundColor.getData() : COL_DEFAULT);
+        
         if (value.isCurrent) {
             lbl.setBackground(COL_CURRENT);
         }

@@ -1151,8 +1151,10 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             public void stateChanged(ChangeEvent e) {
                 if (c.isChangedSinceLastSave()) {
                     lblTitle.setFont(lblTitle.getFont().deriveFont(Font.BOLD));
+                    lblTitle.setForeground(Color.RED.darker().darker());
                 } else {
                     lblTitle.setFont(lblTitle.getFont().deriveFont(Font.PLAIN));
+                    lblTitle.setForeground(Color.BLACK);
                 }
             }
         });
