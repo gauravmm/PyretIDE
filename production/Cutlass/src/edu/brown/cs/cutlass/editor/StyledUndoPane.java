@@ -7,12 +7,14 @@ package edu.brown.cs.cutlass.editor;
 import edu.brown.cs.cutlass.parser.tokenizer.Token;
 import edu.brown.cs.cutlass.parser.tokenizer.TokenParserOutput;
 import edu.brown.cs.cutlass.parser.tokenizer.tokentypes.TokenTypeDefault;
+import edu.brown.cs.cutlass.ui.EasterEggFloat;
 import edu.brown.cs.cutlass.ui.FindClient;
 import edu.brown.cs.cutlass.ui.FrmFinder;
 import edu.brown.cs.cutlass.util.Lumberjack;
 import edu.brown.cs.cutlass.util.Option;
 import edu.brown.cs.cutlass.util.Pair;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Collections;
 import java.util.List;
@@ -66,29 +68,20 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
             public void actionPerformed(ActionEvent e) {
             }
         });
-        this.getInputMap().put(KeyStroke.getKeyStroke((char)KeyEvent.VK_ENTER), new AbstractAction() {
+        this.getInputMap().put(KeyStroke.getKeyStroke((char) KeyEvent.VK_ENTER), new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 reindent();
             }
         });
-        this.getInputMap().put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_K, java.awt.event.InputEvent.CTRL_MASK), new EasterEggAction(this));
+        this.getInputMap().put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_K, java.awt.event.InputEvent.CTRL_MASK), new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new EasterEggFloat();
+            }
+        });
     }
 
-    private class EasterEggAction extends AbstractAction {
-
-        private final StyledUndoPane pane;
-        
-        public EasterEggAction(StyledUndoPane pane){
-            this.pane = pane;
-        }
-        
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            JOptionPane.showMessageDialog(pane, "Text");
-        }
-        
-    }
     /**
      * Just a link to the document's undo method.
      */
@@ -285,7 +278,7 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
         document.showCallGraph();
     }
 
-    void deleteLine(){
+    void deleteLine() {
         try {
             List<Integer> lineStartOffsets = this.getLineStartOffsets();
             Integer curSt = this.getCaretPosition();
@@ -303,7 +296,7 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
             Lumberjack.log(Lumberjack.Level.ERROR, ex);
         }
     }
-    
+
     void toggleComment() {
         try {
             List<Integer> lineStartOffsets = this.getLineStartOffsets();
