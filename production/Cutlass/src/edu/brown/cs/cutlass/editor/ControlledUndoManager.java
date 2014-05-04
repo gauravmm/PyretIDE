@@ -23,7 +23,7 @@ public class ControlledUndoManager extends UndoManager {
 
     public ControlledUndoManager() {
         super();
-        this.setLimit(15000);
+        this.setLimit(10000);
         isHighlighting = false;
     }
 
