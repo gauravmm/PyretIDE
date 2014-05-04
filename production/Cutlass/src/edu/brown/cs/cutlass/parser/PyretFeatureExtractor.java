@@ -76,7 +76,7 @@ public class PyretFeatureExtractor {
         return rv;
     }
 
-    private static final Color[] dataColors = new Color[]{new Color(147, 223, 184), new Color(255, 200, 186), new Color(227, 170, 214), new Color(181, 216, 235), new Color(255, 189, 216), new Color(238, 221, 153), new Color(238, 170, 136)};
+    private static final Color[] dataColors = new Color[]{new Color(147, 223, 184).darker(), new Color(255, 200, 186).darker(), new Color(227, 170, 214).darker(), new Color(181, 216, 235).darker(), new Color(255, 189, 216).darker(), new Color(238, 221, 153).darker(), new Color(238, 170, 136).darker()};
 
     public static CallGraphEntry makeCGE(PyretFunction fun, boolean isCurrent, boolean isCalledFrom, boolean calls, EditorJumpTo jump, ArrayList<PyretData> pyretData) {
         Option<String> constructorOf = new Option<>();
