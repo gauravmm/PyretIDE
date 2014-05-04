@@ -55,8 +55,10 @@ import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
@@ -206,6 +208,8 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         if (isSK) {
             this.setTitle(this.getTitle() + " - Aspire Higher");
         }
+
+        
     }
 
     /**
@@ -791,7 +795,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         //Open a new empty tab
         addClosableTab(tabEditors, new PnlEditor(this, isSK ? "# I'm sorry, Dave. I'm afraid I can't do that." : "#lang pyret"), "New Tab");
         Editor<T> e = this.getCurrentEditor();
-        if (e.isEditorWindow()){
+        if (e.isEditorWindow()) {
             e.requestFocus();
         }
     }//GEN-LAST:event_mnuFileNewActionPerformed
@@ -830,7 +834,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             if (destination.hasData()) {
                 openTab(destination.getData());
                 Editor<T> e = this.getCurrentEditor();
-                if (e.isEditorWindow()){
+                if (e.isEditorWindow()) {
                     e.requestFocus();
                 }
             }

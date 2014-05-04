@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import javax.swing.AbstractAction;
 import javax.swing.JEditorPane;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
@@ -71,8 +72,23 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
                 reindent();
             }
         });
+        this.getInputMap().put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_K, java.awt.event.InputEvent.CTRL_MASK), new EasterEggAction(this));
     }
 
+    private class EasterEggAction extends AbstractAction {
+
+        private final StyledUndoPane pane;
+        
+        public EasterEggAction(StyledUndoPane pane){
+            this.pane = pane;
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            JOptionPane.showMessageDialog(pane, "Text");
+        }
+        
+    }
     /**
      * Just a link to the document's undo method.
      */
@@ -278,7 +294,10 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
             int endPos = lineStartOffsets.get(lnSt + 1);
             String str = document.getText(0, document.getLength());
             str = str.substring(0, startPos).concat(str.substring(endPos));
-            this.replaceNext(FrmFinder.FindType.LITERAL, false, true, false, document.getText(0, document.getLength()), str);
+            document.insertStringWithoutHighlight(0, str, null);
+            document.undoer.setIsHighlighting(true);
+            document.removeWithoutHighlight(str.length(), document.getLength() - str.length());
+            document.undoer.setIsHighlighting(false);
             this.setCaretPosition(startPos);
         } catch (BadLocationException ex) {
             Lumberjack.log(Lumberjack.Level.ERROR, ex);
