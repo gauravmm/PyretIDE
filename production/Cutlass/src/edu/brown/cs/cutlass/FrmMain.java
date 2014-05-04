@@ -790,6 +790,10 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
     private void mnuFileNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileNewActionPerformed
         //Open a new empty tab
         addClosableTab(tabEditors, new PnlEditor(this, isSK ? "# I'm sorry, Dave. I'm afraid I can't do that." : "#lang pyret"), "New Tab");
+        Editor<T> e = this.getCurrentEditor();
+        if (e.isEditorWindow()){
+            e.requestFocus();
+        }
     }//GEN-LAST:event_mnuFileNewActionPerformed
 
     private void mnuFileSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFileSaveAsActionPerformed
@@ -825,6 +829,10 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
             Option<T> destination = io.requestUserFileSource();
             if (destination.hasData()) {
                 openTab(destination.getData());
+                Editor<T> e = this.getCurrentEditor();
+                if (e.isEditorWindow()){
+                    e.requestFocus();
+                }
             }
         } catch (AbstractIOException ex) {
             Lumberjack.log(Lumberjack.Level.ERROR, ex);

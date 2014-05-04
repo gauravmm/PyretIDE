@@ -312,6 +312,11 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
     public void close() throws RuntimeException {
         this.removeAll();
     }
+    
+    @Override
+    public void requestFocus() {
+        editorPane.requestFocus();
+    }
 
     @Override
     public void pyretClose() {
