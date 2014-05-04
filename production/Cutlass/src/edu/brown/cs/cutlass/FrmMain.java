@@ -297,7 +297,7 @@ public class FrmMain<T extends AbstractIdentifier> extends javax.swing.JFrame im
         mnuHelpAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Cutlass - Your Weapon of Choice");
+        setTitle("Cutlass - Your Tool of Choice");
         setMinimumSize(new java.awt.Dimension(400, 120));
         setPreferredSize(new java.awt.Dimension(900, 700));
         addWindowListener(new java.awt.event.WindowAdapter() {
