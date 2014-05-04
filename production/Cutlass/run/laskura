@@ -1,0 +1,2 @@
+#! /bin/bash
+java -jar dist/Cutlass.jar --laskura http://laskura.codewithcutlass.es
