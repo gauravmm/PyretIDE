@@ -1,0 +1,2 @@
+#! /bin/bash
+java -jar dist/Cutlass.jar --laskura http://127.0.0.1/laskura/
