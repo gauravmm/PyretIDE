@@ -31,7 +31,8 @@ import javax.swing.text.StyledDocument;
 import javax.swing.text.StyledEditorKit;
 
 /**
- *'2
+ * '2
+ *
  * @author Gaurav Manek
  * @param <T>
  */
@@ -53,7 +54,7 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
         initComponents();
 
         this.editorClient = client;
-        
+
         // Prepare and add editor pane
         this.editorPane = new StyledUndoPane(initialContents, new PyretHighlightedListener() {
             @Override
@@ -67,21 +68,23 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
             }
         });
         final PnlEditor<T> editor = this;
-        editorPane.getDocument().addDocumentListener(new DocumentListener(){
+        editorPane.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 changedUpdate(e);
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
                 changedUpdate(e);
             }
+
             @Override
             public void changedUpdate(DocumentEvent e) {
                 editor.setChangedSinceLastSave(true);
-            } 
+            }
         });
-        
+
         pnlLineNumber = new PnlLineNumbers(editorPane);
         pnlLineNumberContainer.add(pnlLineNumber);
         scrlEditor.getViewport().removeAll();
@@ -170,19 +173,19 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
             pyret_instance = editorClient.getPyretAccess(this);
             outputPane.setEditorKit(new StyledEditorKit());
             final StyledDocument sdoc = (StyledDocument) outputPane.getDocument();
-            
+
             final Style output_style = sdoc.addStyle("OUTPUT STYLE", null);
             StyleConstants.setForeground(output_style, Color.green);
-            
+
             final Style error_style = sdoc.addStyle("ERROR STYLE", null);
             StyleConstants.setForeground(error_style, new Color(255, 70, 70));
-            
+
             pyret_instance.addPyretAccessListener(new PyretAccessListener() {
-                
+
                 @Override
                 public void handlePyretAccessOutput(final PyretOutputValue output) {
                     javax.swing.SwingUtilities.invokeLater(new Runnable() {
-                        
+
                         @Override
                         public void run() {
                             try {
@@ -247,7 +250,7 @@ public class PnlEditor<T extends AbstractIdentifier> extends Editor<T> {
     public void deleteLine() {
         editorPane.deleteLine();
     }
-    
+
     @Override
     public void deleteSelection() {
         int dot = editorPane.getCaret().getDot();

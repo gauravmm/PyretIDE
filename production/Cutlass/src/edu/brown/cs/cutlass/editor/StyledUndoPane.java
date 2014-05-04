@@ -65,6 +65,12 @@ public class StyledUndoPane extends JEditorPane implements PyretHighlightedListe
             public void actionPerformed(ActionEvent e) {
             }
         });
+        this.getInputMap().put(KeyStroke.getKeyStroke((char)KeyEvent.VK_ENTER), new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                reindent();
+            }
+        });
     }
 
     /**
