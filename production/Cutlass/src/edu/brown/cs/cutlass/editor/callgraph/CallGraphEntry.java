@@ -22,7 +22,7 @@ public class CallGraphEntry implements Comparable<CallGraphEntry> {
     public final boolean isCalledByCurrent;
     public final Option<String> dataOf;
     public final EditorJumpTo jumpTo;
-    public final Option<Color> backgroundColor;
+    public final Option<Color> dataColor;
 
     public CallGraphEntry(String name, boolean isCurrent, boolean callsCurrent, boolean isCalledByCurrent, Option<String> dataOf, EditorJumpTo jumpTo, Option<Color> backgroundColor) {
         this.name = name;
@@ -31,7 +31,7 @@ public class CallGraphEntry implements Comparable<CallGraphEntry> {
         this.isCalledByCurrent = isCalledByCurrent;
         this.dataOf = dataOf;
         this.jumpTo = jumpTo;
-        this.backgroundColor = backgroundColor;
+        this.dataColor = backgroundColor;
     }
 
     @Override
