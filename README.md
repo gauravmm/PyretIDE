@@ -15,7 +15,7 @@ Launching
 
 ```
 Cutlass
-CSCI 0320, Brown University, Fall 2014
+CSCI 0320, Brown University, Spring 2014
 Dilip Arumugam, Gaurav Manek, Miles Holland, Zachary Zagorski
 
 Usage: ./cutlass [OPTIONS] [FILES]
